@@ -1,10 +1,12 @@
 # Session 3 handoff — design system, continuation
 
-Written 2026-11-22 by the first Session 3 (design) at Franco's request,
+Updated 2026-11-22 (end of the second Session 3 sitting: F6, F4, F5, C1,
+C5, C14-C15, C6-C7, C12, C8-C10-C11 validated). First written
+2026-11-22 by the first Session 3 (design) at Franco's request,
 for the session that continues the design system. Read this file, then
 [../docs/BRIEF_03_DESIGN.md](../docs/BRIEF_03_DESIGN.md) (the method and
 the screen-by-screen data), then [README.md](README.md) (validated items,
-inventory, build order, decisions D1-D7).
+inventory, build order, decisions D1-D9).
 
 ## Goal (unchanged)
 
@@ -28,12 +30,13 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C5 Amount and change | validated 2026-11-22 | [components/amount.md](components/amount.md) |
 | C14 + C15 Tags, score badge | validated 2026-11-22 | [components/tags-score.md](components/tags-score.md) |
 | C6 + C7 List row, card | validated 2026-11-22 | [components/list-row-card.md](components/list-row-card.md) |
-| C12 Navigation | validated 2026-11-22 | [components/navigation.md](components/navigation.md) |
-| Tokens | v0.11.0 (+ navigation): all foundations + components button, amount, changeTag, tag, scoreBadge, listRow, card; all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
+| C12 Navigation (4 tabs, header, section pills, period bar) | validated 2026-11-22 | [components/navigation.md](components/navigation.md) |
+| C8 Banner + C10 Dialog + C11 Toast | validated 2026-11-22 | [components/feedback.md](components/feedback.md) |
+| Tokens | v0.12.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast) | [tokens.json](tokens.json) |
 
 **Next items, in order** (README "Build order"): base components
-C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
-C17, C20, C21, C22 → G0 + G1 + G2 → Home blocks → S2 Home layout → …
+**C9 Bottom sheet**, C18 + C19, C13 + C16 + C17, C20, C21, C22 → G0 + G1 +
+G2 → Home blocks → S2 Home layout → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -62,6 +65,16 @@ yet merged into `main`; Franco merges through a pull request).
 - He prefers **Lucide icons over hand-drawn glyphs** (trending-up/down,
   score icons) and light-theme texts darkened so both themes look
   equally crisp (C5, C15).
+- He often validates **with a change in the same message** ("je valide
+  mais …"): apply the change, write the files, commit, push, send the
+  updated preview, and say the detail can still be adjusted.
+- Animated previews (motion, toast) are one HTML page with embedded
+  fonts sent with SendUserFile (display "render"); the repo copy in
+  `previews/` points to `../fonts/`.
+- Decisions this sitting: D8 no Alertes tab; D9 period = expandable bar
+  "Période"; bottom-bar tabs **not animated**; toasts at the **bottom**
+  with an unfold-from-centre animation; badges in operation lists only
+  when there is a risk; no haptics; no chevrons except in Settings.
 - He wants **clean screens like Finary** (few icons, one header action)
   and **light tap animations** on icons (icons.md §7-8, D8).
 - An ambiguous answer: state the interpretation in one line in the reply
@@ -125,6 +138,12 @@ yet merged into `main`; Franco merges through a pull request).
   (`#111111`, `#FFFFFF`).
 - Annotated previews: measure element boxes with JS in the page and draw
   the spacing marks from them (do not hand-place marks).
+- Lucide icons for previews: `npm pack lucide-static` (v1.77.0 checked)
+  → extract → inline the SVGs from `package/icons/` (set width/height and
+  scale `stroke-width` so the stroke stays 2 dp at 24, 1.75 dp at 20/16/14).
+- The Home glow C as CSS: build the stops from
+  `tokens.json → colour.glow.homeHeader.layers` (bloom radial
+  `55% 45% at 76% 0%` over the vertical wash).
 
 ## Rules (from the brief, still binding)
 
