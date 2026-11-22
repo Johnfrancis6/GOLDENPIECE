@@ -1,0 +1,246 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>B4</title><style>@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+body{margin:0;background:#2a2a2a;font:15px/22px P}.w{display:flex;gap:16px;padding:16px;width:max-content;align-items:flex-start}.col{display:flex;flex-direction:column;gap:8px;align-items:center}.cap{font:500 13px P;color:#ddd}
+.ph{width:360px;box-sizing:border-box;padding:8px 20px 24px;background:var(--bg);color:var(--tp)}
+.dark{--bg:#060606;--s1:#111111;--s3:#222222;--tp:#F5F5F5;--ts:#A3A3A3;--hl:rgba(255,255,255,.07);--br:#FF7A2F;--nf:rgba(255,107,122,.16);--nt:#FF6B7A;--cf:rgba(242,201,76,.16);--ct:#F2C94C;--of:rgba(61,214,140,.16);--ot:#3DD68C}
+.light{--bg:#F4F4F4;--s1:#FFFFFF;--s3:#E5E5E5;--tp:#0A0A0A;--ts:#5C5C5C;--hl:rgba(0,0,0,.07);--br:#B4410F;--nf:#FCE3E6;--nt:#B21F33;--cf:#FBF0CC;--ct:#735200;--of:#DDF3E7;--ot:#0B6B3A}
+.lbl{font:500 11px/14px P;color:var(--ts);opacity:.7;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.4px}
+.st{font:600 18px/26px P;margin-bottom:12px}
+.card{position:relative;overflow:hidden;background:var(--s1);border-radius:12px;padding:16px;margin-bottom:12px}
+.card.hl::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,#E8452A,#FF7A2F 45%,#FFB45C)}
+.r1{display:flex;align-items:center;justify-content:space-between;gap:8px}.tm{font:400 13px/18px P;color:var(--ts)}
+.sb,.tg{display:inline-flex;align-items:center;gap:4px;font:600 12px/16px P;padding:2px 6px;border-radius:4px}
+.sb.notified{background:var(--nf);color:var(--nt)}.sb.confirm{background:var(--cf);color:var(--ct)}.sb.normal{background:var(--of);color:var(--ot)}.tg{background:var(--s3);color:var(--ts)}
+.rs{font:500 15px/22px P;margin-top:8px}
+.tx{display:flex;align-items:center;gap:8px;margin-top:12px}.mo{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 10px P;color:#060606;flex:none}
+.tl{font:400 13px/18px P;color:var(--ts);flex:1}.am{font:600 15px/22px P;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ft{margin-top:12px;font:600 13px/18px P;color:var(--br)}
+.lk{font:600 13px/18px P;color:var(--br);padding:3px 0 15px;margin-top:-4px}
+.lc{background:var(--s1);border-radius:12px}.row{display:flex;gap:12px;padding:12px 16px;min-height:40px;align-items:flex-start}.tt{flex:1;display:flex;flex-direction:column}.tt b{font:400 15px/22px P}.tt small{font:400 13px/18px P;color:var(--ts)}
+.vv{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.ra{font:600 15px/22px P;white-space:nowrap}.sep{height:1px;background:var(--hl);margin-left:16px}
+</style><body><div class="w"><div class="col"><div class="ph dark">
+<div class="lbl">Accueil · bandeau</div><div class="st">Alertes</div><div class="card"><div class="r1"><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span><span class="tm"></span></div><div class="rs">Montant 6 fois plus élevé que d’habitude pour ce bénéficiaire</div><div class="ft">C’est bien vous ? Répondez</div></div><div class="lk">Voir les 3 alertes</div>
+<div class="lbl">L1 · liste des alertes</div><div class="card hl"><div class="r1"><span class="sb notified"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" />
+</svg>Banque prévenue</span><span class="tm">il y a 2 min</span></div><div class="rs">Retrait de nuit depuis un nouvel appareil</div><div class="tx"><span class="mo" style="background:#9085E9">KM</span><span class="tl">Kola Money · retrait, 03:10</span><span class="am">−450 000 F</span></div><div class="ft">Suivre l’analyse</div></div><div class="card"><div class="r1"><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span><span class="tm">il y a 1 h</span></div><div class="rs">Montant 6 fois plus élevé que d’habitude pour ce bénéficiaire</div><div class="tx"><span class="mo" style="background:#199E70">SP</span><span class="tl">Savane Pay · Awa K.</span><span class="am">−180 000 F</span></div><div class="ft">C’est bien vous ? Répondez</div></div><div class="card"><div class="r1"><span class="tg"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+  <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg>Budget</span><span class="tm">hier</span></div><div class="rs">Courses : 80 % du budget du mois utilisé</div><div class="ft">Voir le budget</div></div>
+<div class="lbl">Variante compacte (résolues, file du tableau de bord)</div><div class="lc"><div class="row"><div class="tt"><b>Nouveau bénéficiaire</b><small>C’était vous · 18&nbsp;nov.</small></div><div class="vv"><span class="ra">−25 000 F</span><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span></div></div>
+<div class="sep"></div><div class="row"><div class="tt"><b>Envois rapprochés</b><small>Légitime · 12&nbsp;nov.</small></div><div class="vv"><span class="ra">−60 000 F</span><span class="sb notified"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" />
+</svg>Banque prévenue</span></div></div></div>
+</div><div class="cap">B4 · sombre</div></div><div class="col"><div class="ph light">
+<div class="lbl">Accueil · bandeau</div><div class="st">Alertes</div><div class="card"><div class="r1"><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span><span class="tm"></span></div><div class="rs">Montant 6 fois plus élevé que d’habitude pour ce bénéficiaire</div><div class="ft">C’est bien vous ? Répondez</div></div><div class="lk">Voir les 3 alertes</div>
+<div class="lbl">L1 · liste des alertes</div><div class="card hl"><div class="r1"><span class="sb notified"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" />
+</svg>Banque prévenue</span><span class="tm">il y a 2 min</span></div><div class="rs">Retrait de nuit depuis un nouvel appareil</div><div class="tx"><span class="mo" style="background:#9085E9">KM</span><span class="tl">Kola Money · retrait, 03:10</span><span class="am">−450 000 F</span></div><div class="ft">Suivre l’analyse</div></div><div class="card"><div class="r1"><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span><span class="tm">il y a 1 h</span></div><div class="rs">Montant 6 fois plus élevé que d’habitude pour ce bénéficiaire</div><div class="tx"><span class="mo" style="background:#199E70">SP</span><span class="tl">Savane Pay · Awa K.</span><span class="am">−180 000 F</span></div><div class="ft">C’est bien vous ? Répondez</div></div><div class="card"><div class="r1"><span class="tg"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+  <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg>Budget</span><span class="tm">hier</span></div><div class="rs">Courses : 80 % du budget du mois utilisé</div><div class="ft">Voir le budget</div></div>
+<div class="lbl">Variante compacte (résolues, file du tableau de bord)</div><div class="lc"><div class="row"><div class="tt"><b>Nouveau bénéficiaire</b><small>C’était vous · 18&nbsp;nov.</small></div><div class="vv"><span class="ra">−25 000 F</span><span class="sb confirm"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3a9.75 9.75 0 0 1 6.74 2.74" />
+  <path d="M18.74 5.74 21 8" />
+  <path d="M21 8V3" />
+  <path d="M7.5 19.794c-6-3.464-6-12.124 0-15.588" />
+  <path d="M7.5 4.206A9 9 0 0 1 12 3" />
+  <path d="M12 7v5l4 2" />
+  <path d="M14 20.775A9 9 0 0 1 12 21" />
+  <path d="M19 17.656a9 9 0 0 1-1.5 1.456" />
+  <path d="M21 12a9 9 0 0 1-.228 2" />
+  <path d="M21 8h-5" />
+</svg>À confirmer</span></div></div>
+<div class="sep"></div><div class="row"><div class="tt"><b>Envois rapprochés</b><small>Légitime · 12&nbsp;nov.</small></div><div class="vv"><span class="ra">−60 000 F</span><span class="sb notified"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.00"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" />
+</svg>Banque prévenue</span></div></div></div>
+</div><div class="cap">B4 · clair</div></div></div></body></html>
