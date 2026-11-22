@@ -67,9 +67,9 @@ animation except M13), drawn once.
 
 | Token | Dark | Light | Meaning | Always paired with |
 |---|---|---|---|---|
-| `gain` | `#3DD68C` | `#0E7A43` | gain, income, success, score < 40 ("Normal") | "+" sign and `trending-up` icon (C5), or ● + word |
-| `loss` | `#FF6B7A` | `#C8283C` | loss, spending sign, error, score > 70 ("Banque prévenue") | "−" sign and `trending-down` icon (C5), or ◆ + word |
-| `warning` | `#F2C94C` | `#8A6200` | warning, stale data, score 40-70 ("À confirmer") | ▲ + word |
+| `gain` | `#3DD68C` | `#0E7A43` | gain, income, success, score < 40 ("Normal") | "+" sign and `trending-up` icon (C5), or `circle-check-big` + word (C15) |
+| `loss` | `#FF6B7A` | `#C8283C` | loss, spending sign, error, score > 70 ("Banque prévenue") | "−" sign and `trending-down` icon (C5), or `shield-check` + word (C15) |
+| `warning` | `#F2C94C` | `#8A6200` | warning, stale data, score 40-70 ("À confirmer") | `rotate-cw-fading-clock` + word (C15) |
 | `info` | `#6AA8FF` | `#1F5FBF` | neutral information | ⓘ |
 | `tint.*` | 13 % of the colour over the surface | `#DDF3E7`, `#FCE3E6`, `#FBF0CC`, `#E3EDFB` | chip and banner backgrounds | text in the full colour |
 
@@ -77,7 +77,7 @@ Choices:
 - **Loss is pink-red**, not orange-red, so it is never confused with the brand.
 - **Warning is a pure yellow**, far enough from the gold of the glow.
 - **Colour is never alone** (WCAG 1.4.1): amounts carry sign + arrow;
-  score badges carry a shape (● ▲ ◆) and a word.
+  score badges carry a Lucide icon and a word (C15).
 - Spending rows show "−35 500 F" in `loss` only when the screen is about
   gains and losses (Home, account detail); category lists show spending
   in `text.primary` (spending is not an error).

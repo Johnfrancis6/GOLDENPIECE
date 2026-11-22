@@ -26,10 +26,11 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | F5 Motion (+ glow C, sheen, bank card) | validated 2026-11-22 | [foundations/motion.md](foundations/motion.md) |
 | C1 Button | validated 2026-11-22 | [components/button.md](components/button.md) |
 | C5 Amount and change | validated 2026-11-22 | [components/amount.md](components/amount.md) |
-| Tokens | v0.8.0: all foundations + `component.button`, `component.amount`, `component.changeTag`; all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
+| C14 + C15 Tags, score badge | validated 2026-11-22 | [components/tags-score.md](components/tags-score.md) |
+| Tokens | v0.9.0: all foundations + components button, amount, changeTag, tag, scoreBadge; all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
 
 **Next items, in order** (README "Build order"): base components
-C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
+C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
 C17, C20, C21, C22 → G0 + G1 + G2 → Home blocks → S2 Home layout → …
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
@@ -56,6 +57,9 @@ yet merged into `main`; Franco merges through a pull request).
 - Motion: he found 150-600 ms **too fast** and wants **soft, refined
   endings** and **smooth gradients harmonised like Finary** (motion.md).
   Previews of motion are an animated HTML sent with SendUserFile (render).
+- He prefers **Lucide icons over hand-drawn glyphs** (trending-up/down,
+  score icons) and light-theme texts darkened so both themes look
+  equally crisp (C5, C15).
 - He wants **clean screens like Finary** (few icons, one header action)
   and **light tap animations** on icons (icons.md §7-8, D8).
 - An ambiguous answer: state the interpretation in one line in the reply

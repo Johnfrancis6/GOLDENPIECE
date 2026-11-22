@@ -12,8 +12,8 @@
 - Change direction uses Lucide **`trending-up` / `trending-down`**
   (Franco, C5, 2026-11-22; replaces the ▲ ▼ triangles), 16 dp in change
   lines, 14 dp in change tags (the only size under 16).
-- Our own filled glyphs, drawn as tiny SVGs, only for the status shapes
-  ● ▲ ◆ (10 dp), always with a word (colour.md §4). "≈" (Poppins lacks it, formats.md §2) is an
+- Score levels use Lucide `circle-check-big` / `rotate-cw-fading-clock` /
+  `shield-check` (Franco, C15, 2026-11-22). No hand-drawn glyphs remain. "≈" (Poppins lacks it, formats.md §2) is an
   own glyph too.
 - No real bank or operator logos (public repo, brief).
 
