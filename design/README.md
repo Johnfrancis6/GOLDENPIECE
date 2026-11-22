@@ -10,8 +10,9 @@ Files are in English; UI copy is French first, then English.
 |---|---|---|
 | Inventory and build order (this page) | [README.md](README.md) | 2026-11-22 |
 | F1 Colour | [foundations/colour.md](foundations/colour.md) · [tokens.json](tokens.json) · [preview](previews/f1-colour.png) | 2026-11-22 |
+| F2 Typography (Poppins GP) | [foundations/typography.md](foundations/typography.md) · [fonts/](fonts/) · [preview](previews/f2-typography.png) | 2026-11-22 |
 
-Next item: **F2 Typography**.
+Next item: **F3 Spacing, grid, radii, elevation**.
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -178,7 +179,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 
 ## Build order
 
-1. **Foundations:** F1 Colour ✓ → F2 Typography → F3 Spacing / radii / elevation → F6 Formats → F4 Icons → F5 Motion (+ `tokens.json`).
+1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation → F6 Formats → F4 Icons → F5 Motion (+ `tokens.json`).
 2. **Base components:** C1, C5, C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 + C17, C20, C21, C22.
 3. **Chart base G0**, then G1 + G2.
 4. **Home blocks:** B1, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
