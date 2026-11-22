@@ -27,10 +27,11 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C1 Button | validated 2026-11-22 | [components/button.md](components/button.md) |
 | C5 Amount and change | validated 2026-11-22 | [components/amount.md](components/amount.md) |
 | C14 + C15 Tags, score badge | validated 2026-11-22 | [components/tags-score.md](components/tags-score.md) |
-| Tokens | v0.9.0: all foundations + components button, amount, changeTag, tag, scoreBadge; all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
+| C6 + C7 List row, card | validated 2026-11-22 | [components/list-row-card.md](components/list-row-card.md) |
+| Tokens | v0.10.0: all foundations + components button, amount, changeTag, tag, scoreBadge, listRow, card; all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
 
 **Next items, in order** (README "Build order"): base components
-C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
+C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
 C17, C20, C21, C22 → G0 + G1 + G2 → Home blocks → S2 Home layout → …
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
