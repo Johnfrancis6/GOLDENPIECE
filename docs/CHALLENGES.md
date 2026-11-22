@@ -210,23 +210,23 @@ Sources and dates are in [TOOLS.md](TOOLS.md) (all checked 2026-11-22).
 # Session 2 — decisions questioned by the architecture agent (2026-11-22)
 
 Format: decision → problem → alternative → trade-off → recommendation →
-**Franco's answer**. Details in [ARCHITECTURE.md](ARCHITECTURE.md);
-the documents are written as recommended, pending these answers.
+**Franco's answer**. Details in [ARCHITECTURE.md](ARCHITECTURE.md). Franco answered on
+2026-11-22 (table and end of this section); documents updated.
 
 | # | Decision challenged | Recommendation | Franco's answer |
 |---|---|---|---|
-| S2-1 | Card: store first 6 + last 4, brand, expiry, holder name (C10) | Store only BIN6 + last 4 + brand + bank | pending |
-| S2-2 | ML Kit OCR model inside the APK (C10, implicit) | Unbundled model from Google Play services | pending |
-| S2-3 | 3 shared pre-seeded demo accounts (TECH_ANALYSIS §1.2) | Private demo copy per tester (anonymous sign-in + template) | pending |
-| S2-4 | No demo console (Franco): > 70 alerts wait for a human analyst | "Simulated analyst" decides unattended demo alerts after 10 min | pending |
-| S2-5 | Play Integrity as a score factor (G9) | Phase 2; factor kept at 0 | pending |
-| S2-6 | Sensitive actions protected by the app (implicit) | Prototype: local gate + session; device-key signature later | pending |
-| S2-7 | "Learning phase without alerts" (idea 8) | Silences anomalies only; fraud rules active from day one | pending |
-| S2-8 | "Analyst feedback adjusts the thresholds" (idea 10) | 40/70 bands fixed; feedback tunes parameters below, bounded and logged | pending |
-| S2-9 | Learning: 30 days AND 30 operations (idea 8) | Imported history counts | pending |
-| S2-10 | Supabase built-in e-mail (implicit) | Custom SMTP; Resend if Franco has a domain, else Brevo | pending (question) |
-| S2-11 | APK builds on Expo cloud (15/month) | Build on GitHub Actions (free, public repo); Expo for OTA + push | pending |
-| S2-12 | Risk needs "1 quoted asset and 30 days of history" (TECH_ANALYSIS §1.6) | Current holdings × historical prices; per-figure minimums | pending |
+| S2-1 | Card: store first 6 + last 4, brand, expiry, holder name (C10) | Store only BIN6 + last 4 + brand + bank | validated 2026-11-22 |
+| S2-2 | ML Kit OCR model inside the APK (C10, implicit) | Unbundled model from Google Play services | no objection (technical) |
+| S2-3 | 3 shared pre-seeded demo accounts (TECH_ANALYSIS §1.2) | Private demo copy per tester (anonymous sign-in + template) | validated; demo data **kept** on "Créer mon compte" |
+| S2-4 | No demo console (Franco): > 70 alerts wait for a human analyst | "Simulated analyst" decides unattended demo alerts after 10 min | validated (10 min) |
+| S2-5 | Play Integrity as a score factor (G9) | Phase 2; factor kept at 0 | no objection (technical) |
+| S2-6 | Sensitive actions protected by the app (implicit) | Prototype: local gate + session; device-key signature later | no objection (technical) |
+| S2-7 | "Learning phase without alerts" (idea 8) | Silences anomalies only; fraud rules active from day one | validated |
+| S2-8 | "Analyst feedback adjusts the thresholds" (idea 10) | 40/70 bands fixed; feedback tunes parameters below, bounded and logged | validated |
+| S2-9 | Learning: 30 days AND 30 operations (idea 8) | Imported history counts | validated (history counts) |
+| S2-10 | Supabase built-in e-mail (implicit) | Custom SMTP; Resend if Franco has a domain, else Brevo | **free option, no domain** → Brevo (fallback: dedicated Gmail SMTP) |
+| S2-11 | APK builds on Expo cloud (15/month) | Build on GitHub Actions (free, public repo); Expo for OTA + push | validated |
+| S2-12 | Risk needs "1 quoted asset and 30 days of history" (TECH_ANALYSIS §1.6) | Current holdings × historical prices; per-figure minimums | no objection (technical) |
 
 ## S2-1 — What the card scan stores
 
@@ -384,3 +384,23 @@ the documents are written as recommended, pending these answers.
   value series (≥ 30 days). Assets below the minimum are listed and
   excluded.
 - **Recommendation:** adopt.
+
+## Franco's answers to the Session 2 questions (2026-11-22)
+
+| # | Question | Answer |
+|---|---|---|
+| 1 | Region RTT test | Run 1 done: London 131, Paris 137, Ireland 142, Frankfurt 143 ms → **eu-west-3 (Paris)** by tie-break (< 10 ms) |
+| 4 | Demo data on "Créer mon compte" | **Kept** (anonymous user upgraded in place) |
+| 5 | Simulated analyst (S2-4) | OK |
+| 6 | Demo scenario cadence | Yes (one every ~3 days, 08:00-21:00, first at +3 min, > 70 next day 10:00) |
+| 7 | Fraud rules during learning (S2-7) | OK |
+| 8 | Imported history counts (S2-9) | Yes |
+| 9 | Bands fixed, bounded tuning (S2-8) | OK |
+| 10 | E-mail provider (S2-10) | A **free alternative** (no domain purchase) → Brevo free, verified sender; fallback dedicated Gmail SMTP |
+| 11 | APK builds on GitHub Actions (S2-11) | OK (Franco keeps an offline copy of the keystore) |
+| 12 | Firebase App Distribution + GitHub link | OK |
+| 13 | Card: BIN6 + last 4 + brand + bank (S2-1) | OK |
+| 14 | Bank names | **Fictitious banks only** |
+| 15 | Country needing dedicated data | No |
+| 2 | Tecno Spark 50 specs | pending (needed before B6, 2026-12-15) |
+| 3 | Deadline 2027-01-29 and ~3 sessions/week | pending |

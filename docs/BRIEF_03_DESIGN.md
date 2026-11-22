@@ -28,7 +28,7 @@ architecture agent (Session 2) at Franco's request.
    Design with these fields; if a screen needs a field that is not
    there, say so (it is a contract change).
 5. [CHALLENGES.md](CHALLENGES.md): validated decisions and the
-   Session 2 challenges (some pending Franco).
+   Session 2 challenges (answered by Franco on 2026-11-22).
 
 ## The product in one paragraph
 
@@ -137,7 +137,7 @@ Field names refer to API.md §2. "→" = navigation.
 | O5 | Create account or continue in demo | two buttons | — |
 | O6 | Demo persona picker | 3 personas: salarié à Dakar, commerçante à Abidjan, investisseur de la diaspora | loading ≤ 2 s ("Préparation de votre démo"); error → retry |
 | O7 | Sign-up | email, password (≥ 10 chars, strength hint, paste allowed) | field errors; "déjà un compte ?" → O9 |
-| O8 | Email code | 6-digit code, resend (cool-down) | wrong / expired code |
+| O8 | Email code | 6-digit code, resend (cool-down), hint "Vérifiez vos spams" (free e-mail sender, S2-10) | wrong / expired code |
 | O9 | Login | email, password, "mot de passe oublié" | rate-limited message |
 | O10 | Device security setup | detected level (strong / weak biometric / phone secret / none) → explanation + choice | 4 variants (TECH_ANALYSIS §1.2b); "none" shows warning "Votre téléphone n'est pas verrouillé" + leads to O11 |
 | O11 | App PIN create / confirm | 6-digit keypad | trivial code refused; mismatch |
@@ -256,7 +256,7 @@ légitime** + comment; "Réglages du modèle" (parameters, bounds, change
 log, reset); Ops tab (push latency, batch status, quotas, model
 evaluation, funnel); `/legal`. Same tokens as the app, denser layout,
 keyboard shortcuts for decisions. Simulated decisions labelled
-"Décision simulée" (if S2-4 is accepted).
+"Décision simulée" (S2-4, accepted).
 
 ---
 

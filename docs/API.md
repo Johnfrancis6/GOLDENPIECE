@@ -187,7 +187,7 @@ country list, fonts and tour data are in the APK).
 | `market-eod` | pg_cron 22:30 UTC Mon-Fri; FRED 14:00 UTC daily | daily bars, Frankfurter, FRED |
 | `notify` | pg_net from `api.analyst_decide`, reminders, budget alerts | `{user_id, alert_id, kind}` → Expo push (amount hidden unless setting) |
 | `dispatch-batch` | pg_cron 02:00 UTC + every 5 min if `ops.recompute_queue` not empty | GitHub `POST /repos/Johnfrancis6/GOLDENPIECE/actions/workflows/<file>/dispatches` |
-| `simulated-analyst` | pg_cron every 2 min (S2-4, if accepted) | decides escalated demo alerts older than 10 min from ground truth, `simulated=true` |
+| `simulated-analyst` | pg_cron every 2 min (S2-4, accepted) | decides escalated alerts of persona-based users older than 10 min from ground truth, `simulated=true` |
 | `account-cleanup` | pg_cron 03:00 UTC | deletes expired demo clones, exports, old rows (DATA_MODEL §5) |
 | `health` | UptimeRobot | `200 {ok}` / `503 {failing:[…]}` |
 
@@ -353,5 +353,5 @@ sequenceDiagram
   FN->>DB: copy past entries → core.transactions (shifted), trades, real estate, profiles, learning done
   FN-->>APP: ready (< 2 s target)
   Note over DB: first-session guarantee: a 40-70 entry at +3 min, a > 70 next day 10:00 local
-  Note over APP: "Créer mon compte" later = upgrade anonymous user (link e-mail) keeping or resetting data (question to Franco)
+  Note over APP: "Créer mon compte" later = upgrade the anonymous user (link e-mail + password, same user_id) — demo data is KEPT (Franco); is_anonymous=false, so the 7-day cleanup no longer applies
 ```
