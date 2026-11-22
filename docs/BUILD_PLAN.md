@@ -24,7 +24,7 @@ gantt
   title GOLDENPIECE — build sessions
   section Specs
   S2 Architecture (this)        :done, s2, 2026-11-22, 2d
-  S3 Design system + mock-ups   :s3, 2026-11-24, 5d
+  S3 Design system block by block :s3, 2026-11-24, 18d
   section Backend
   B1 Foundations                :b1, 2026-11-24, 4d
   B2 Fake bank + provider       :b2, after b1, 3d
@@ -42,7 +42,7 @@ gantt
   Client handover               :milestone, m1, 2027-01-29, 0d
 ```
 
-Critical path: **S3 → B6 → B7 → B8 → B10**. Backend sessions B1-B5 run
+Critical path: **S3 (foundations, components, onboarding/home blocks) → B6 → B7 → B8 → B10**; later design blocks run in parallel with B6-B7. Backend sessions B1-B5 run
 while design is in progress; B9 fits the holiday slot.
 
 ---
@@ -52,14 +52,14 @@ while design is in progress; B9 fits the holiday slot.
 Each row: scope, what must exist before, what Franco does, done
 criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 
-### S3 — Design (design agent) · 2026-11-24 → 2026-11-28
+### S3 — Design system (block by block with Franco) · 2026-11-24 → 2026-12-11
 
 | Item | Content |
 |---|---|
 | Input | [BRIEF_03_DESIGN.md](BRIEF_03_DESIGN.md) + this folder |
-| Output | design tokens (light/dark), components, all screens and states, motion, tour script, push texts FR/EN, icons, chart styles |
+| Output | inventory of displays and animations (validated first), then foundations → components → blocks → charts → screens → widgets/notifications/dashboard, each previewed, validated by Franco, written in `design/` |
 | Franco | validates the mock-ups |
-| Done | every screen of BRIEF_03 §3 has its states; contrast script passes; Franco validated |
+| Done | **foundations, components and the onboarding + home blocks validated before B6 (2026-12-15)**; every remaining item validated before the session that builds it (B7, B8, B9) |
 
 ### B1 — Foundations · 2026-11-24 → 2026-11-27
 

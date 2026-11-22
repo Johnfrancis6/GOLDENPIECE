@@ -1,34 +1,85 @@
-# Brief — Session 3: Design system, interactions, mock-ups
+# Brief — Session 3: Design system of the GOLDENPIECE app
 
-You are the **design agent** of GOLDENPIECE, a mobile personal-wealth
-app prototype for French-speaking Africa. You start cold: everything you
-need is in this brief and the files it links. Written by the
-architecture agent (Session 2) at Franco's request.
+Written by Session 2 (architecture) at Franco's request. This session
+starts cold: everything it needs is in this brief and the files it links.
 
-## Repository and rules
+## Franco's goal for this session
 
-- Repository `Johnfrancis6/GOLDENPIECE` (public), documents in `docs/`.
-  Work on a branch, `git fetch` before every push, pull request to
-  `main`; Franco merges.
+Define **everything the app shows and how it moves**: screen layout,
+how each section is structured, the arrangement of blocks, button
+shapes, colours, typography, spacing, radii, animations (interface and
+charts), widgets, accessibility — everything display needs. The result
+is a **reference design system**: a fixed set of blocks and specific
+components, each validated by Franco, that the build sessions copy
+instead of inventing.
+
+The app must feel **smooth to handle** on a low/mid-range Android phone
+(Tecno Spark 50): fast feedback, light animations, no jank.
+
+## How the session runs
+
+1. **Read** the files below (in order). They describe the data each
+   screen displays and the blocks the app needs.
+2. **Inventory (first answer to Franco):** a structured list of
+   everything the app has to display and animate — screens grouped by
+   section, the **blocks** they are made of, the **components** inside
+   the blocks, the charts, the animations (navigation, feedback, charts,
+   loading), the widgets, and the states each block must handle (§2.1).
+   Group similar items: a block or component used in several screens is
+   listed **once** with the screens that use it. End the inventory with
+   a proposed **order** to build the blocks (foundations first:
+   colours, type, spacing, motion; then components; then blocks).
+   Franco validates or corrects it before anything is designed.
+3. **Block by block**, in the validated order:
+   - Franco gives **references** (apps, screenshots, links) and his
+     **preferences**.
+   - The session proposes a **preview of only what is needed** to
+     decide that block (one representative variant, the key states,
+     light and dark when relevant) — not the whole block in every
+     screen. Previews are HTML pages rendered to PNG (Playwright and
+     Chromium are installed) or HTML files Franco opens in the app;
+     free tools only.
+   - **No repetition:** a block or component similar to one already
+     validated reuses it (and its tokens); only the difference is shown.
+   - Franco validates or asks for changes. Nothing moves to the next
+     block until the current one is validated.
+4. **On validation**, the block is written as a Markdown file in the
+   repository folder **`design/`** (one file per foundation, component
+   or block — see §4), committed and pushed. Validated files are the
+   reference; later blocks may not contradict them without Franco's
+   agreement.
+
+## Repository and working rules
+
+- Repository `Johnfrancis6/GOLDENPIECE` (public). Project documents in
+  `docs/`, design system in `design/`. Work on a branch, `git fetch`
+  before every push, pull request to `main`; Franco merges.
 - Public repository: **no secrets, no real personal data**. Every name,
-  phone number, IBAN and amount in mock-ups is fictitious.
-- Franco writes in French: answer in French; deliverables in English,
-  **UI copy in French first, then English**.
+  phone number, IBAN and amount in previews is fictitious; banks are
+  fictitious (Franco); no real operator or bank logos unless their brand
+  rules allow it.
+- Franco writes in French: answer in French. Files in `design/` in
+  English; **UI copy in French first, then English**.
 - Ask questions a few at a time; for an ambiguous point, state your
   understanding in ≤ 5 lines and wait for validation.
+- No app code in this session (tokens as JSON are expected).
 
 ## Read, in this order
 
-1. [MEMOIRE.md](MEMOIRE.md) (French): the 11 validated ideas.
-2. [TECH_ANALYSIS.md](TECH_ANALYSIS.md): screens, flows, accessibility
-   (§5), performance budgets (§6), device-security matrix (§1.2b).
-3. [ARCHITECTURE.md](ARCHITECTURE.md): §6 card OCR, §7 scoring (what an
-   alert says and why), §8 offline rules, §12.1 countries.
-4. [API.md](API.md) §2: **the exact data fields each screen receives**.
-   Design with these fields; if a screen needs a field that is not
-   there, say so (it is a contract change).
-5. [CHALLENGES.md](CHALLENGES.md): validated decisions and the
-   Session 2 challenges (answered by Franco on 2026-11-22).
+1. [MEMOIRE.md](MEMOIRE.md) (French): the 11 validated ideas (idea 4:
+   charts).
+2. [TECH_ANALYSIS.md](TECH_ANALYSIS.md): screens and flows (§1-§2),
+   widgets (§3), notifications (§4), accessibility (§5), performance
+   budgets (§6), device-security matrix (§1.2b).
+3. [API.md](API.md) §2: **the exact data fields each screen receives**.
+   Design with these fields; a field that is missing is a contract
+   change to raise with Franco.
+4. [ARCHITECTURE.md](ARCHITECTURE.md): §6 card scan, §7 scoring (what an
+   alert says and why), §8 offline and freshness rules, §12.1 countries.
+5. [CHALLENGES.md](CHALLENGES.md): decisions already taken (C1-C10,
+   S2-1 … S2-12) and Franco's answers.
+6. §2-§3 of this brief: constraints, and the screen-by-screen list of
+   blocks, fields and states.
 
 ## The product in one paragraph
 
@@ -46,31 +97,34 @@ like a toy.
 
 ---
 
-## 1. Your scope
+## 1. What the design system covers
 
-1. **Design system:** tokens (colour, type, spacing, radius, elevation,
-   motion), light + dark themes, components (buttons, inputs, numeric
-   keypad, amount display, list rows, cards, banners, bottom sheets,
-   tabs, chips, progress, skeletons, empty states, toasts, dialogs,
-   score badge, freshness label, "simulation" tag, "en attente" badge).
-2. **Charts style** (drawn on device with Victory Native XL + Skia):
+1. **Foundations:** colour (light + dark), typography, spacing, grid and
+   layout, radii, elevation, iconography, motion (durations, easing,
+   reduced-motion variants).
+2. **Components:** buttons, inputs, numeric keypad, amount display,
+   list rows, cards, banners, bottom sheets, tabs and navigation, chips,
+   progress, skeletons, empty states, toasts, dialogs, score badge,
+   freshness label, "simulation"/"Démo" tag, "en attente" badge.
+3. **Blocks** (assemblies reused across screens): e.g. net-worth header,
+   account row, transaction row, alert card, budget bar, stat tiles,
+   period selector + chart, "?" explanation sheet.
+4. **Charts** (drawn on the device with Victory Native XL + Skia):
    line/area (net worth, drawdown), bars (spending), donut
-   (allocation), Sankey (flows), candlestick (assets), sparkline, stat
-   tiles, progress bars. Tooltips, period selector, scrub behaviour,
+   (allocation), Sankey (flows), candlestick (assets), sparkline,
+   progress bars; tooltips, scrub, period change, entry animations,
    "Voir en tableau" alternative.
-3. **Every screen and every state** listed in §3 (mock-ups, phone size
-   360 × 800 dp and 200 % font).
-4. **Interactions and motion:** transitions, pull-to-refresh, scrub,
-   bottom sheets, reduced-motion variants.
-5. **Guided demo tour** (5-7 steps, skippable, replayable) and the
-   in-app explanations ("?" sheets ≤ 3 sentences).
-6. **Notification texts and look** (Android channels), FR/EN, amounts
-   hidden by default.
-7. **Iconography** (categories, operators as generic marks — no real
-   logos unless their brand rules allow it), illustrations for empty
-   states (light, small).
+5. **Screen layouts:** how the blocks are arranged per section (§3),
+   phone size 360 × 800 dp and at 200 % font.
+6. **Interactions and animations:** transitions, pull-to-refresh,
+   press feedback, sheets, swipe, loading → loaded, live alert arrival.
+7. **Guided demo tour** (5-7 steps) and "?" explanations (≤ 3 sentences).
+8. **Notifications** (Android channels, FR/EN, amounts hidden by default).
+9. **Home-screen widgets** (net worth, budget left, open alerts; built in
+   phase 2, designed now — TECH_ANALYSIS §3, amounts hideable "•••").
+10. **Bank dashboard** (web): same tokens, denser layout (§3.10).
 
-Out of scope: app code, data model, API (you may challenge them).
+Out of scope: app code, data model, API (they may be challenged).
 
 ---
 
@@ -156,7 +210,7 @@ Field names refer to API.md §2. "→" = navigation.
 | O17 | Update required | `min_version` | blocking, one button |
 | O18 | Lock / unlock | biometric prompt, phone secret, or app PIN | 5 failures → wait 1 min; 10 → full re-login |
 
-### 3.2 Main navigation (proposal — you may change it)
+### 3.2 Main navigation (proposal — open to change)
 
 Five tabs: **Accueil**, **Comptes**, **Placements** (portfolio, markets,
 risk, performance), **Dépenses**, **Alertes** (badge = open count).
@@ -260,26 +314,49 @@ keyboard shortcuts for decisions. Simulated decisions labelled
 
 ---
 
-## 4. Deliverables
+### 3.11 Home-screen widgets (phase 2, designed now)
 
-In `docs/design/` (or a Figma-free format: SVG/PNG exports + Markdown
-specs, since all tools must be free):
+| Widget | Data | Constraints |
+|---|---|---|
+| Net worth | last snapshot + day change | refreshed ≥ 30 min (Android floor) or on app open/push; "•••" option |
+| Budget left | month budget left | same |
+| Open alerts | count | refreshed by push |
 
-1. `DESIGN_SYSTEM.md` — tokens (with contrast table light/dark),
-   components, chart styles, motion.
-2. `SCREENS.md` — every screen of §3 with every state, mock-up images,
-   field mapping to API.md.
-3. `COPY_FR_EN.md` — all UI strings, reason codes, notification texts,
-   tour script, "?" explanations (≤ 3 sentences each).
-4. `tokens.json` — machine-readable tokens for the app and dashboard.
-5. Updates to [CHALLENGES.md](CHALLENGES.md), section "Session 3".
+Widgets read local data only; no market-ticker widget (C9). Sizes:
+Android 2×1 and 2×2 cells [assumed]; light/dark.
 
-Done when Franco has validated the five items.
+## 4. Output in `design/`
 
-## 5. Authority to challenge
+One Markdown file per validated item, written only after Franco
+validates it, plus the machine-readable tokens:
 
-You may challenge any decision (Franco's, Session 1's, Session 2's) if
-you judge it underperforming. Format: decision → problem → alternative
-→ trade-off → recommendation. Do not apply it yourself: Franco decides.
-A field you need that API.md does not give is a challenge to Session 2's
-contract, written the same way.
+```
+design/
+  README.md               index: validated items, date, link to each file
+  tokens.json             colours, type, spacing, radii, motion (light/dark)
+  foundations/            colour.md, typography.md, spacing-layout.md, motion.md, icons.md
+  components/             button.md, input.md, amount.md, chip.md, sheet.md, …
+  blocks/                 networth-header.md, transaction-row.md, alert-card.md, …
+  charts/                 line.md, bars.md, donut.md, sankey.md, candlestick.md
+  screens/                one file per section: layout + which blocks, all states
+  widgets.md, notifications.md, tour.md, dashboard.md
+  copy/fr-en.md           UI strings, reason codes, "?" texts
+  previews/               validated preview images (PNG, small)
+```
+
+Each file states: purpose, anatomy, tokens used, variants, states,
+behaviour/animation (durations, easing, reduced-motion), accessibility
+(contrast, labels, target sizes), performance notes, where it is used,
+and the validation date. A later item that reuses it links to it
+instead of repeating it.
+
+Done when every item of the validated inventory has its file in
+`design/`, validated by Franco.
+
+## 5. Right to challenge
+
+Any decision (Franco's, Session 1's, Session 2's) may be challenged if
+it hurts the display or the handling. Format: decision → problem →
+alternative → trade-off → recommendation. Do not apply it: Franco
+decides. Record it in [CHALLENGES.md](CHALLENGES.md), section
+"Session 3".
