@@ -204,3 +204,183 @@ Sources and dates are in [TOOLS.md](TOOLS.md) (all checked 2026-11-22).
   [assumed, to measure against the 30 MB APK budget].
 - **Franco's answer (2026-11-22):** the card is used **only to identify
   the user's bank** (from its first 6 digits). No payment, no other use.
+
+---
+
+# Session 2 — decisions questioned by the architecture agent (2026-11-22)
+
+Format: decision → problem → alternative → trade-off → recommendation →
+**Franco's answer**. Details in [ARCHITECTURE.md](ARCHITECTURE.md);
+the documents are written as recommended, pending these answers.
+
+| # | Decision challenged | Recommendation | Franco's answer |
+|---|---|---|---|
+| S2-1 | Card: store first 6 + last 4, brand, expiry, holder name (C10) | Store only BIN6 + last 4 + brand + bank | pending |
+| S2-2 | ML Kit OCR model inside the APK (C10, implicit) | Unbundled model from Google Play services | pending |
+| S2-3 | 3 shared pre-seeded demo accounts (TECH_ANALYSIS §1.2) | Private demo copy per tester (anonymous sign-in + template) | pending |
+| S2-4 | No demo console (Franco): > 70 alerts wait for a human analyst | "Simulated analyst" decides unattended demo alerts after 10 min | pending |
+| S2-5 | Play Integrity as a score factor (G9) | Phase 2; factor kept at 0 | pending |
+| S2-6 | Sensitive actions protected by the app (implicit) | Prototype: local gate + session; device-key signature later | pending |
+| S2-7 | "Learning phase without alerts" (idea 8) | Silences anomalies only; fraud rules active from day one | pending |
+| S2-8 | "Analyst feedback adjusts the thresholds" (idea 10) | 40/70 bands fixed; feedback tunes parameters below, bounded and logged | pending |
+| S2-9 | Learning: 30 days AND 30 operations (idea 8) | Imported history counts | pending |
+| S2-10 | Supabase built-in e-mail (implicit) | Custom SMTP; Resend if Franco has a domain, else Brevo | pending (question) |
+| S2-11 | APK builds on Expo cloud (15/month) | Build on GitHub Actions (free, public repo); Expo for OTA + push | pending |
+| S2-12 | Risk needs "1 quoted asset and 30 days of history" (TECH_ANALYSIS §1.6) | Current holdings × historical prices; per-figure minimums | pending |
+
+## S2-1 — What the card scan stores
+
+- **Decision (C10):** store first 6 + last 4 digits, brand, expiry,
+  holder name.
+- **Problem:** Franco later fixed the card's only purpose: **identify
+  the user's bank**. Expiry and holder name serve nothing then, yet they
+  are personal data, and the name is useful to a fraudster. Collecting
+  data without a purpose goes against the minimisation principle of the
+  data-protection laws listed in TECH_ANALYSIS §7.
+- **Alternative:** the parser reads only the number; the server stores
+  `bin6`, `last4` (so the user recognises "•••• 1111"), `brand`, `bank_id`.
+- **Trade-off:** + less data, simpler parser, fewer OCR errors to
+  correct; − if a later feature needs expiry (card-expiry reminder), a
+  new scan is needed.
+- **Recommendation:** adopt.
+
+## S2-2 — Where the OCR model lives
+
+- **Decision (implicit in C10):** ML Kit text recognition bundled in the app.
+- **Problem:** the bundled model adds a few MB per ABI [assumed ~4 MB]
+  to an APK budget of 30 MB that already carries Skia, Reanimated,
+  Vision Camera and SQLCipher.
+- **Alternative:** the "unbundled" ML Kit variant, downloaded by Google
+  Play services on first use (Tecno phones ship Play services).
+- **Trade-off:** + ≈ 0 MB in the APK; − first scan needs network for
+  the model download (≈ a few MB, once) and fails on phones without
+  Play services → manual entry.
+- **Recommendation:** unbundled; measure in B8; switch to bundled if
+  the APK stays under budget anyway.
+
+## S2-3 — Demo accounts: shared or private
+
+- **Decision (TECH_ANALYSIS §1.2):** 3 pre-seeded demo profiles.
+- **Problem:** if the client and testers log into the **same** demo
+  account, one person's answer to "C'est vous ?" changes the others'
+  screens, alerts disappear, data drifts; credentials must be shared.
+- **Alternative:** "Continuer en démo" creates a **private copy**:
+  Supabase anonymous sign-in + a copy of the chosen persona whose
+  history ends "now" and whose future scenarios unfold over the next
+  days. Copies are deleted after 7 days without use.
+- **Trade-off:** + each tester has a clean, realistic demo, no shared
+  password, scenarios timed to their session; − ≈ 2 MB per copy (cap
+  40 copies in the size estimate), anonymous sign-ins need a rate limit.
+- **Recommendation:** adopt. **Question:** when a demo user taps
+  "Créer mon compte", keep their demo data or start empty?
+
+## S2-4 — Who decides > 70 alerts when nobody watches the dashboard
+
+- **Decision (Franco):** no demo console in the bank dashboard; demo
+  alerts come from scheduled scenarios.
+- **Problem:** the client tests alone. A > 70 alert reaches the bank
+  queue and stays "en analyse" forever unless Franco or an analyst is
+  online — the end of the flow (bank decision → push → status) is
+  never seen.
+- **Alternative:** a "simulated analyst" job: for **demo copies only**,
+  an escalated alert not decided by a human within 10 minutes is
+  decided from the scenario's ground truth, labelled "Décision simulée"
+  in the dashboard. Not a console: nobody triggers anything.
+- **Trade-off:** + the client sees the whole flow; − the decision is
+  scripted (honest label needed); a human can still decide first.
+- **Recommendation:** adopt, 10 min delay. **Question for Franco.**
+
+## S2-5 — Play Integrity (G9)
+
+- **Decision (TECH_ANALYSIS §7, G9):** Play Integrity verdict as a score
+  factor.
+- **Problem:** the APK is sideloaded, so the "app recognised" verdict is
+  always negative [assumed from Play Integrity's design]; using it needs
+  a Google Cloud project and server-side decryption; on fake data its
+  value for the demo is low.
+- **Alternative:** phase 2; the factor stays in the formula at 0.
+- **Recommendation:** defer.
+
+## S2-6 — Server-side proof of the sensitive-action unlock
+
+- **Problem:** the server cannot know that the biometric/PIN prompt
+  really ran before `answer_alert` or `account-delete`; a stolen session
+  token could call the API directly.
+- **Alternative (later):** a Keystore key pair per device, usable only
+  after user authentication, signs a server nonce for sensitive calls.
+- **Trade-off:** + strong proof; − native module, key lifecycle, more
+  build time.
+- **Recommendation:** prototype = local gate + session + rate limits;
+  signatures in phase 2.
+
+## S2-7 — Fraud rules during the learning phase
+
+- **Decision (idea 8):** "phase d'apprentissage sans alerte".
+- **Problem:** fraud patterns (SIM swap then transfer, mule account)
+  don't need learned habits; a new user is the most exposed to account
+  takeover. Silencing everything for 30 days misses them.
+- **Alternative:** the learning phase silences the **anomaly** part only
+  (thresholds and Isolation Forest); fraud rules and context are active
+  from day one.
+- **Recommendation:** adopt.
+
+## S2-8 — What analyst feedback changes
+
+- **Decision (idea 10):** the analyst's answer "ajuste les seuils".
+- **Problem:** moving the 40/70 bands per decision would change Franco's
+  validated rule for everyone and can drift after a few wrong clicks.
+- **Alternative:** bands fixed; feedback tunes the parameters under
+  them: per user-category anomaly threshold (±0.25 per decision, bounded
+  2.5-4.5) and, weekly, each fraud rule's weight from its 28-day
+  precision (±3, bounded). Every change logged and reversible
+  (ARCHITECTURE §7.5). User answers "c'est moi" never lower fraud-rule
+  weights.
+- **Recommendation:** adopt.
+
+## S2-9 — Does imported history count for learning?
+
+- **Problem:** a linked account arrives with months of history. If the
+  30 days / 30 operations count only from sign-up, a user with a year of
+  history still waits a month for anomaly alerts; if history counts,
+  the "learning" card is rarely seen.
+- **Alternative:** history counts (what real systems do); the learning
+  card is shown with new wallets (a "nouveau portefeuille" template) and
+  users with little history.
+- **Recommendation:** history counts. **Question for Franco.**
+
+## S2-10 — Sign-up e-mails
+
+- **Problem:** Supabase's built-in sender is for testing (low rate
+  limits) [assumed, to verify in B6]; real testers need a free SMTP
+  provider. Resend's free tier needs a **domain** you own; Brevo's works
+  with a verified sender address but deliverability to Gmail may be
+  weaker [assumed].
+- **Recommendation:** Resend if Franco has (or buys, ≈ 10 USD/year
+  [assumed]) a domain; otherwise Brevo. **Question for Franco.**
+
+## S2-11 — Where Android builds run
+
+- **Decision (TOOLS §1):** Expo cloud builds, 15 Android builds/month.
+- **Problem:** with B6-B10 and fixes, 15 builds/month can run out at the
+  worst time (client fixes); the free queue is low priority.
+- **Alternative:** `expo prebuild` + Gradle release build on GitHub
+  Actions (public repo = free minutes), signed with the keystore held in
+  GitHub secrets; Expo stays for OTA updates and push.
+- **Trade-off:** + unlimited builds; − we manage the keystore ourselves
+  (Franco keeps an offline copy).
+- **Recommendation:** adopt.
+
+## S2-12 — When risk figures appear
+
+- **Decision (TECH_ANALYSIS §1.6, §2.6):** "at least 1 quoted asset and
+  30 days of history"; 60 daily returns to show a figure.
+- **Problem:** VaR/vol/beta of a portfolio are computed from the
+  **assets'** price history applied to current holdings (standard
+  method); the user's own history is irrelevant there. 60 returns are
+  too few for a 95 % historical VaR (3 tail points).
+- **Alternative:** current holdings × asset history (backfilled 5
+  years); per-figure minimums: vol 60 returns, beta 120, VaR/CVaR 250,
+  1-month overlapping check 500; only drawdown uses the user's own
+  value series (≥ 30 days). Assets below the minimum are listed and
+  excluded.
+- **Recommendation:** adopt.
