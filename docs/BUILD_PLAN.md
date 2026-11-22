@@ -107,7 +107,7 @@ criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 | Item | Content |
 |---|---|
 | Scope | Expo SDK 58 dev build, navigation, i18n FR/EN, design tokens from S3, language → country → tour → demo/sign-up, Supabase Auth + SMTP, device security matrix (§1.2b), app PIN, lock, consents, questionnaire, SQLite + SQLCipher, sync engine + outbox, home screen, Sentry, min-version screen |
-| Before | S3 validated; **Tecno Spark 50 specs (SETUP §2)**; **Expo account**; **Brevo account** (S2-10, free, verified sender); **Sentry account** |
+| Before | S3 foundations, components, onboarding + home blocks validated; **Tecno Spark 50 specs (SETUP §2)**; **Expo account**; **Brevo account** (S2-10, free, verified sender); **Sentry account** |
 | Done | cold start ≤ 3 s p50 measured on the Tecno; airplane-mode test passes on home; tour works offline |
 
 ### B9 — Bank dashboard · 2026-12-21 → 2026-12-23
