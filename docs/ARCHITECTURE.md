@@ -9,18 +9,20 @@ Companion files: [DATA_MODEL.md](DATA_MODEL.md) (tables, RLS, size),
 [BRIEF_03_DESIGN.md](BRIEF_03_DESIGN.md) (design agent).
 Decisions questioned in this session: [CHALLENGES.md](CHALLENGES.md),
 section "Session 2" (S2-1 … S2-12). Where a section depends on one, it
-is tagged (S2-n) and written **as recommended**, pending Franco.
+is tagged (S2-n). Franco answered on 2026-11-22: all accepted except
+S2-10, replaced by a free provider without a domain (see CHALLENGES.md).
 
 **Tags:** **[verified]** = read on an official page in Session 1
 (2026-11-22, see TOOLS.md); **[assumed]** = my estimate or memory, to
 check in the build session named; **[decision]** = validated by Franco;
 **[mine]** = architecture decision taken here (Franco may overrule).
 
-**Not yet known (blocking or shaping):** the RTT results (SETUP §1) and
-the Tecno Spark 50 specs (SETUP §2) are not filled in. This document
-uses **eu-west-3 (Paris)** as the provisional region and the budgets of
-TECH_ANALYSIS §6 as provisional targets. Both are revisited before build
-session B1 (region) and B6 (device).
+**Region:** **eu-west-3 (Paris)**. Franco's first RTT run (2026-11-22):
+London 131 ms, Paris 137 ms, Ireland 142 ms, Frankfurt 143 ms. London
+and Paris are within 10 ms → Paris by the SETUP §1 tie-break. Two more
+runs (other hours) can still change it only if London leads by > 10 ms
+on the median. **Not yet known:** the Tecno Spark 50 specs (SETUP §2);
+the budgets of TECH_ANALYSIS §6 stay provisional targets until B6.
 
 ---
 
@@ -511,7 +513,8 @@ du modèle" panel; "Rétablir les valeurs par défaut" is one RPC.
 - Real sign-ups' simulated accounts get injected events every ~10 days
   (less noise).
 - Unattended > 70 alerts in demo accounts: simulated analyst decision
-  after 10 min (S2-4, **pending Franco**).
+  after 10 min (S2-4, accepted): applies to users whose data comes from a
+  demo persona, including those who upgraded to a real account.
 
 ---
 
@@ -749,7 +752,7 @@ digits, labels in clear for Groq, tokens, amounts in push texts.
 | # | Aspect | Decision [mine unless tagged] |
 |---|---|---|
 | G1 | Distribution and updates | Signed release APK built on GitHub Actions; **Firebase App Distribution** for invites and update e-mails [assumed free]; same APK attached to a GitHub Release as fallback link. JS fixes via **Expo Updates** (channel `demo`, ≤ 1,000 MAU [verified]). `ops.app_config.min_version` returned by `api.bootstrap`; below it, blocking "Mettre à jour" screen. Onboarding page "Installer hors Play Store" (Play Protect warning). |
-| G2 | Sign-up emails | Custom SMTP required (Supabase default sender is rate-limited and meant for testing [assumed]). Provider depends on a domain (S2-10, **question**): with a domain → Resend free; without → Brevo free with a verified sender address [assumed limits]. Templates FR/EN. Email OTP code (6 digits), not magic links. |
+| G2 | Sign-up emails | Custom SMTP required (Supabase default sender is rate-limited and meant for testing [assumed, verify in B6]). Franco wants a **free option without buying a domain** (S2-10): **Brevo free plan** with a verified sender address (≈ 300 e-mails/day [assumed]); fallback: Gmail SMTP of a **dedicated new Gmail account** with an app password (≈ 500/day [assumed]), never Franco's personal address. Templates FR/EN. Email OTP code (6 digits), not magic links. Risk: weaker deliverability (spam folder) → the code screen says "Vérifiez vos spams". |
 | G3 | Money arithmetic | `bigint` minor units + `char(3)` currency everywhere; exponents: XOF 0, XAF 0, EUR 2, USD 2. FX math in `numeric` (SQL), `Decimal` (Python), `bigint`/decimal lib (TS: `big.js`). Rounding **half-even** at the last step only. XOF/XAF↔EUR via the exact peg 655.957; USD via EUR cross (Frankfurter). One fixture file of 200 cases run by all three languages in CI. |
 | G4 | Time zones | `timestamptz` UTC everywhere; `profiles.timezone` IANA from country default (choice offered when a country has several zones); local-time features computed in SQL with `AT TIME ZONE`. Server time only for scoring; phone clock used for display only. |
 | G5 | Corporate actions | `core.corporate_actions` (split ratio, cash dividend) entered by the user or seeded; demo universe chosen without splits in the last 2 years [to check in B3]; dividends = cash flows for TWR/IRR. Vendor split feeds not used (unverified on free plans). |
@@ -808,7 +811,7 @@ marked [secondary] in TECH_ANALYSIS §7 stay to verify.
 | GitHub PAT expiry | batch stops | ≤ 1 year PAT, reminder; `health` red on dispatch failure | — |
 | Cloudflare Pages 500 builds/month | dashboard not updated | build on `dashboard/**` changes only | ≫ 50 % |
 | Sentry 5k errors/month | events dropped | sampling 100 % errors, 10 % traces | 90 % |
-| SMTP free tier (Brevo ≈ 300/day or Resend ≈ 100/day [assumed]) | sign-up blocked | ≤ 20 emails/day | ≥ 80 % |
+| SMTP free tier (Brevo ≈ 300/day [assumed]) | sign-up blocked | ≤ 20 emails/day | ≥ 80 % |
 | Push delivery not guaranteed (FCM) | missed alert | Realtime when open + alerts list fetched on open | — |
 | Firebase App Distribution free [assumed] | no updates | GitHub Release link | — |
 | Vendor terms change (commercial use) | must remove a source | every vendor behind `market-*` adapters; attribution texts in G13 | — |
@@ -829,5 +832,5 @@ from secure-store); IF parity drift (CI gate); region RTT unknown
 | Minimum data for risk figures | Risk uses **current holdings × historical prices** (S2-12), so it does not wait for the user's own history. Per instrument: vol ≥ 60 daily returns; beta ≥ 120 returns overlapping its benchmark; VaR/CVaR 1-day historical ≥ 250 portfolio returns (≥ 12 tail points at 95 %); 1-month = 1-day × √21 (C5) with overlapping 21-day historical as "détails" if ≥ 500 returns; drawdown from the user's **own** value series ≥ 30 days. Instruments below thresholds are listed "historique insuffisant" and excluded from the figure (with their weight shown). |
 | Frequency of replayed scenarios | §7.8. |
 | Analyst-feedback bounds | §7.5. |
-| Supabase region | Provisional eu-west-3; final from SETUP §1 before B1. |
+| Supabase region | **eu-west-3 (Paris)** (RTT run 1, tie-break rule). |
 | Reference phone specs | Pending SETUP §2; budgets unchanged until then. |

@@ -26,9 +26,14 @@ Result table (Franco fills in):
 
 | Run | Date/time | Network (operator, 3G/4G/Wi-Fi) | City | Paris | London | Frankfurt | Ireland |
 |---|---|---|---|---|---|---|---|
-| 1 | | | | | | | |
+| 1 | 2026-11-22 | to fill (operator, 3G/4G/Wi-Fi) | to fill | 137 | 131 | 143 | 142 |
 | 2 | | | | | | | |
 | 3 | | | | | | | |
+
+**Decision (Session 2, 2026-11-22): eu-west-3 (Paris)** — London leads
+by 6 ms only (< 10 ms tie-break). Runs 2-3 are optional; they change the
+choice only if London leads the median by > 10 ms, and only before B1
+creates the projects.
 
 Rule: pick the region with the lowest **median**; if two are within
 10 ms, prefer Paris (eu-west-3) [assumed tie-break: French-speaking
@@ -60,13 +65,16 @@ session].
 | # | Service | What for | Sign-in tip | When |
 |---|---|---|---|---|
 | 1 | GitHub — **new public repository** | code, CI, batch jobs | your existing GitHub account; name to agree with the architecture session | architecture |
-| 2 | Supabase | database, auth, realtime, functions | "Sign in with GitHub"; region from §1 | first build session |
+| 2 | Supabase | database, auth, realtime, functions | "Sign in with GitHub"; region **eu-west-3 (Paris)**; 2 projects: `goldenpiece-dev`, `goldenpiece-demo` | B1 |
 | 3 | Expo (expo.dev) | Android builds, push service | email | first build session |
 | 4 | Firebase (Google) | FCM credentials for Android push | Google account; Spark (free) plan | when push is built |
 | 5 | Cloudflare | bank dashboard hosting (Pages) | email | when the dashboard is built |
 | 6 | Groq | categorisation AI | email / Google | when categorisation is built |
 | 7 | Twelve Data, Finnhub, CoinGecko (Demo), FRED | market data keys | email | when market data is built |
 | 8 | Sentry, UptimeRobot | errors and uptime | email / GitHub | before the client test |
+| 9 | Brevo (free) | sign-up e-mails (S2-10), verified sender address | email | B6 |
+
+Order by build session: [BUILD_PLAN.md](BUILD_PLAN.md) §3.
 
 Frankfurter needs no account. Apple Developer: not needed (Android-only
 prototype, C3).

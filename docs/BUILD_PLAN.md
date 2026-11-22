@@ -24,7 +24,7 @@ gantt
   title GOLDENPIECE — build sessions
   section Specs
   S2 Architecture (this)        :done, s2, 2026-11-22, 2d
-  S3 Design system + mock-ups   :s3, 2026-11-24, 5d
+  S3 Design system block by block :s3, 2026-11-24, 18d
   section Backend
   B1 Foundations                :b1, 2026-11-24, 4d
   B2 Fake bank + provider       :b2, after b1, 3d
@@ -42,7 +42,7 @@ gantt
   Client handover               :milestone, m1, 2027-01-29, 0d
 ```
 
-Critical path: **S3 → B6 → B7 → B8 → B10**. Backend sessions B1-B5 run
+Critical path: **S3 (foundations, components, onboarding/home blocks) → B6 → B7 → B8 → B10**; later design blocks run in parallel with B6-B7. Backend sessions B1-B5 run
 while design is in progress; B9 fits the holiday slot.
 
 ---
@@ -52,21 +52,21 @@ while design is in progress; B9 fits the holiday slot.
 Each row: scope, what must exist before, what Franco does, done
 criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 
-### S3 — Design (design agent) · 2026-11-24 → 2026-11-28
+### S3 — Design system (block by block with Franco) · 2026-11-24 → 2026-12-11
 
 | Item | Content |
 |---|---|
 | Input | [BRIEF_03_DESIGN.md](BRIEF_03_DESIGN.md) + this folder |
-| Output | design tokens (light/dark), components, all screens and states, motion, tour script, push texts FR/EN, icons, chart styles |
+| Output | inventory of displays and animations (validated first), then foundations → components → blocks → charts → screens → widgets/notifications/dashboard, each previewed, validated by Franco, written in `design/` |
 | Franco | validates the mock-ups |
-| Done | every screen of BRIEF_03 §3 has its states; contrast script passes; Franco validated |
+| Done | **foundations, components and the onboarding + home blocks validated before B6 (2026-12-15)**; every remaining item validated before the session that builds it (B7, B8, B9) |
 
 ### B1 — Foundations · 2026-11-24 → 2026-11-27
 
 | Item | Content |
 |---|---|
 | Scope | monorepo skeleton (ARCHITECTURE §10.2), CI `ci.yml` + `deploy-dev.yml`, Supabase dev + demo projects, schemas + all tables of DATA_MODEL §2 as migrations, RLS + pgTAP, `api` schema skeleton, money library (TS/SQL/Python) + shared fixtures, `ref` seed (countries, categories, operators, fictitious banks, BINs), JSON Schemas of payloads, `health` function |
-| Before | **RTT results (SETUP §1)** → region; **Supabase account** (2 projects); GitHub secret scanning on |
+| Before | region = eu-west-3 (RTT done); **Supabase account** (2 projects); GitHub secret scanning on |
 | Franco | creates Supabase projects, adds `SUPABASE_ACCESS_TOKEN`, DB passwords as GitHub env secrets |
 | Done | CI green; `supabase db push` to dev works; pgTAP RLS tests pass; money fixtures pass in 3 languages |
 
@@ -98,7 +98,7 @@ criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 
 | Item | Content |
 |---|---|
-| Scope | features (SQL), profiles + learning status, IF training/export/parity, TS scorer, fraud rules R1-R6 **with verified official sources**, combination, alerts, reminders, `notify` (Expo push call stubbed until B8), `answer_alert`, `analyst_*` RPCs, parameter tuning + log, `simulated-analyst` (if S2-4 accepted), evaluation G7, `categorise-llm` (Groq) |
+| Scope | features (SQL), profiles + learning status, IF training/export/parity, TS scorer, fraud rules R1-R6 **with verified official sources**, combination, alerts, reminders, `notify` (Expo push call stubbed until B8), `answer_alert`, `analyst_*` RPCs, parameter tuning + log, `simulated-analyst` (S2-4), evaluation G7, `categorise-llm` (Groq) |
 | Before | **Groq account** (key in secrets) |
 | Done | parity |Δ| ≤ 1e-9; G7 targets met on dev; ingest → alert row ≤ 2 s p95 (push measured in B8) |
 
@@ -107,7 +107,7 @@ criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 | Item | Content |
 |---|---|
 | Scope | Expo SDK 58 dev build, navigation, i18n FR/EN, design tokens from S3, language → country → tour → demo/sign-up, Supabase Auth + SMTP, device security matrix (§1.2b), app PIN, lock, consents, questionnaire, SQLite + SQLCipher, sync engine + outbox, home screen, Sentry, min-version screen |
-| Before | S3 validated; **Tecno Spark 50 specs (SETUP §2)**; **Expo account**; **SMTP provider** (S2-10); **Sentry account** |
+| Before | S3 foundations, components, onboarding + home blocks validated; **Tecno Spark 50 specs (SETUP §2)**; **Expo account**; **Brevo account** (S2-10, free, verified sender); **Sentry account** |
 | Done | cold start ≤ 3 s p50 measured on the Tecno; airplane-mode test passes on home; tour works offline |
 
 ### B9 — Bank dashboard · 2026-12-21 → 2026-12-23
@@ -153,12 +153,12 @@ Fixes from Franco's own test as a "client"; nothing new enters.
 | When | Account (SETUP §3) | Session |
 |---|---|---|
 | now | GitHub repository (exists), secret scanning on | B1 |
-| before 2026-11-24 | **RTT test** (not an account, but blocks Supabase) | B1 |
+| done 2026-11-22 | RTT test → Paris (eu-west-3) | B1 |
 | before 2026-11-24 | Supabase (dev + demo projects) | B1 |
 | before 2026-12-03 | Twelve Data, Finnhub, CoinGecko Demo, FRED | B3 |
 | before 2026-12-07 | GitHub fine-grained PAT (Actions: write) | B4 |
 | before 2026-12-10 | Groq | B5 |
-| before 2026-12-15 | Expo, SMTP provider (Brevo or Resend, S2-10), Sentry; **Tecno specs** | B6 |
+| before 2026-12-15 | Expo, Brevo (S2-10), Sentry; **Tecno specs** | B6 |
 | before 2026-12-21 | Cloudflare | B9 |
 | before 2027-01-11 | Firebase (FCM + App Distribution) | B8 |
 | before 2027-01-18 | UptimeRobot | B10 |

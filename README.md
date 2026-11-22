@@ -16,4 +16,4 @@ fictitious data only, no secrets.
 - [docs/DATA_MODEL.md](docs/DATA_MODEL.md): tables, RLS, size estimate, retention.
 - [docs/API.md](docs/API.md): RPC contracts per screen and event flows.
 - [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md): build sessions, order, deadline.
-- [docs/BRIEF_03_DESIGN.md](docs/BRIEF_03_DESIGN.md): brief for the design agent (Session 3).
+- [docs/BRIEF_03_DESIGN.md](docs/BRIEF_03_DESIGN.md): brief of Session 3 (design system, block by block, output in `design/`).

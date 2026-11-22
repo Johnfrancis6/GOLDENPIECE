@@ -1,0 +1,67 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C9 Bottom sheet</title><style>
+@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}
+@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}
+@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+
+body{margin:0;background:#2a2a2a;font:15px/22px P;color:#ddd;display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px}
+.ph{width:360px;height:720px;position:relative;overflow:hidden;background:#060606;color:#F5F5F5;touch-action:none}
+.bar{height:56px}.big{font:600 24px/32px P;padding:0 20px 8px}.hero{font:600 34px/42px P;padding:8px 20px 4px}.sub{color:#A3A3A3;font-size:13px;padding:0 20px 16px}
+.card{margin:12px 20px 0;border-radius:12px;background:#111;height:64px;display:flex;align-items:center;padding:0 16px;cursor:pointer}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.64);opacity:0;pointer-events:none}
+.sh{position:absolute;left:0;right:0;bottom:0;background:#181818;border-radius:20px 20px 0 0;display:flex;flex-direction:column;transform:translateY(105%);will-change:transform}
+.hdl{height:20px;display:flex;justify-content:center;align-items:center;cursor:grab}.hdl i{width:32px;height:4px;border-radius:2px;background:#737373}
+.hd{height:56px;display:flex;align-items:center;padding:0 8px 0 20px;cursor:grab}.hd b{flex:1;font:600 18px/26px P}
+.ib{width:48px;height:48px;display:grid;place-items:center;cursor:pointer}
+.bd{padding:0 20px 8px;overflow:auto;flex:1}.bd p{margin:0 0 12px;color:#A3A3A3}.bd p.lead{color:#F5F5F5}
+.sec{font:600 13px/18px P;color:#A3A3A3;margin:16px 0 4px}.opt{height:48px;display:flex;align-items:center;justify-content:space-between}.opt.on{font-weight:600;color:#FF9A5C}.opt svg{color:#FF7A2F}
+.ft{padding:16px 20px;border-top:1px solid rgba(255,255,255,.07)}.btn{height:52px;border-radius:999px;background:#FF7A2F;color:#060606;font:600 15px P;display:grid;place-items:center;cursor:pointer}
+.sys{height:24px}.lab{font:500 13px P;min-height:20px}
+.finger{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.35);border:2px solid rgba(255,255,255,.7);left:162px;opacity:0;pointer-events:none;z-index:9}
+button{font:500 13px P;padding:6px 10px;border-radius:999px;border:0;background:#444;color:#eee;margin:0 3px}
+</style><body>
+<div class="lab" id="lab">Démo automatique</div>
+<div class="ph" id="ph">
+ <div class="bar"></div><div class="big">Placements</div><div class="hero">8 412 500 F CFA</div><div class="sub">au 22 nov., 14:05</div>
+ <div class="card" onclick="openS('s1')">Volatilité  ⓘ (court)</div><div class="card" onclick="openS('s2')">Filtres (grand)</div><div class="card"></div><div class="card"></div>
+ <div class="scrim" id="scrim"></div>
+ <div class="sh" id="s1" style="max-height:60%"><div class="hdl"><i></i></div><div class="hd"><b>Volatilité</b><span class="ib" onclick="closeS()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></div>
+  <div class="bd"><p class="lead">La volatilité mesure l'ampleur des variations de votre portefeuille.</p><p>Plus elle est élevée, plus la valeur peut monter ou baisser fortement en peu de temps.</p><p>Calculée sur les variations quotidiennes des 12 derniers mois.</p></div><div class="sys"></div></div>
+ <div class="sh" id="s2" style="height:92%"><div class="hdl"><i></i></div><div class="hd"><b>Filtres</b><span class="ib" onclick="closeS()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></div>
+  <div class="bd"><div class="sec">Période</div><div class="opt on">Ce mois-ci <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="opt">Mois dernier</div><div class="opt">Personnalisée</div><div class="sec">Type</div><div class="opt on">Toutes <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="opt">Dépenses</div><div class="opt">Revenus</div><div class="sec">Compte</div><div class="opt on">Tous les comptes <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="opt">Banque Baobab ···4821</div><div class="opt">Kola Money ···0937</div><div class="opt">Caisse Sahel ···2210</div></div>
+  <div class="ft"><div class="btn" onclick="closeS()">Appliquer</div></div><div class="sys"></div></div>
+ <div class="finger" id="fg"></div>
+</div>
+<div><button onclick="demo()">Rejouer la démo</button><button id="rm" onclick="RM=!RM;this.textContent='Mouvements réduits : '+(RM?'oui':'non')">Mouvements réduits : non</button></div>
+<div style="font-size:12px;color:#aaa;max-width:360px;text-align:center">Touchez une carte pour ouvrir ; glissez la poignée ou le titre vers le bas pour fermer.</div>
+<script>
+const EN='cubic-bezier(.22,1,.36,1)',EX='cubic-bezier(.4,0,1,1)';let RM=false,cur=null,run=0;
+const $=i=>document.getElementById(i),sc=$('scrim');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function tr(el,v,ms,e){el.style.transition=ms?`transform ${ms}ms ${e}`:'none';el.style.transform=v}
+function fade(o,ms,e){sc.style.transition=ms?`opacity ${ms}ms ${e||'linear'}`:'none';sc.style.opacity=o}
+function openS(id){if(cur)return;cur=$(id);sc.style.pointerEvents='auto';
+ if(RM){cur.style.transition='none';cur.style.transform='none';cur.style.opacity=0;cur.offsetWidth;cur.style.transition='opacity 150ms linear';cur.style.opacity=1;fade(1,150);return}
+ cur.style.opacity=1;tr(cur,'translateY(105%)',0);cur.offsetWidth;tr(cur,'translateY(0)',450,EN);fade(1,320,EN)}
+function closeS(){if(!cur)return;const c=cur;cur=null;sc.style.pointerEvents='none';
+ if(RM){c.style.transition='opacity 150ms linear';c.style.opacity=0;fade(0,150);setTimeout(()=>{c.style.transition='none';c.style.transform='translateY(105%)'},160);return}
+ tr(c,'translateY(105%)',315,EX);fade(0,315,EX)}
+sc.onclick=closeS;
+// drag: follows finger 1:1 down; no upward travel; release: close if > 30% height or fast fling
+let d=null;
+document.querySelectorAll('.hdl,.hd').forEach(h=>h.addEventListener('pointerdown',e=>{if(!cur||e.target.closest('.ib'))return;d={y:e.clientY,t:performance.now(),dy:0,v:0};h.setPointerCapture(e.pointerId)}));
+addEventListener('pointermove',e=>{if(!d)return;const dy=Math.max(0,e.clientY-d.y),now=performance.now();d.v=(dy-d.dy)/Math.max(1,now-d.t);d.dy=dy;d.t=now;drag(dy)});
+addEventListener('pointerup',()=>{if(!d)return;rel(d.dy,d.v);d=null});
+function drag(dy){tr(cur,`translateY(${dy}px)`,0);fade(1-dy/cur.offsetHeight,0)}
+function rel(dy,v){if(dy>cur.offsetHeight*.3||v>1){closeS()}else{tr(cur,'translateY(0)',320,EN);fade(1,320,EN)}}
+const fg=$('fg');
+async function fakeDrag(dist,ms,my){const h=cur.offsetHeight,top=720-h+14;fg.style.transition='opacity 150ms';fg.style.top=top+'px';fg.style.opacity=1;await wait(250);
+ const st=performance.now();await new Promise(r=>{(function f(){const k=Math.min(1,(performance.now()-st)/ms);const dy=dist*k;drag(dy);fg.style.top=(top+dy)+'px';k<1?requestAnimationFrame(f):r()})()});
+ fg.style.opacity=0;rel(dist,0.2)}
+async function demo(){const me=++run;if(cur){closeS();await wait(400)}const L=t=>{if(me===run)$('lab').textContent=t},ok=()=>me===run;
+ L('1. Court : ouverture (450 ms, fin douce)');await wait(600);if(!ok())return;openS('s1');await wait(1800);if(!ok())return;
+ L('2. Glisser vers le bas > 30 % → fermeture');await fakeDrag(170,450);await wait(1200);if(!ok())return;
+ L('3. Grand : ouverture');openS('s2');await wait(1800);if(!ok())return;
+ L('4. Glisser peu (< 30 %) → revient en place (320 ms)');await fakeDrag(110,400);await wait(1300);if(!ok())return;
+ L('5. Fermer avec la croix (315 ms)');await wait(400);closeS();await wait(1000);L('Touchez une carte pour essayer');}
+demo();
+</script></body></html>

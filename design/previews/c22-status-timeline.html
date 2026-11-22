@@ -1,0 +1,52 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C22 Status timeline</title><style>
+@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}
+@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}
+@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+
+body{margin:0;background:#2a2a2a;font:15px/22px P}.w{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:16px}
+.col{display:flex;flex-direction:column;gap:8px;align-items:center}.cap{font:500 13px P;color:#ddd;min-height:18px}
+.ph{width:360px;height:560px;position:relative;overflow:hidden;background:var(--bg);color:var(--tp)}
+.dark{--bg:#060606;--s1:#111111;--tp:#F5F5F5;--ts:#A3A3A3;--ctl:#737373;--ln:#2E2E2E;--ok:#3DD68C;--ko:#FF6B7A;--or:#FF7A2F}
+.light{--bg:#F4F4F4;--s1:#FFFFFF;--tp:#0A0A0A;--ts:#5C5C5C;--ctl:#858585;--ln:#DDDDDD;--ok:#0E7A43;--ko:#C8283C;--or:#E8661F}
+.bar{height:56px}.big{font:600 22px/30px P;padding:0 20px 4px}.sub{color:var(--ts);font-size:14px;line-height:20px;padding:0 20px 16px}
+.card{margin:0 20px;background:var(--s1);border-radius:12px;padding:18px 16px 6px}
+.st{display:flex;gap:14px;position:relative;padding-bottom:18px}
+.st:not(:last-child)::before{content:"";position:absolute;left:11px;top:28px;bottom:2px;width:2px;border-radius:1px;background:var(--ln)}
+.dot{width:24px;height:24px;flex:none;position:relative;display:grid;place-items:center}
+.dot.done{border-radius:50%;background:var(--ok);color:#060606}.dot.ko{border-radius:50%;background:var(--ko);color:#060606}
+.light .dot.done,.light .dot.ko{color:#FFFFFF}
+.dot.cur i{width:12px;height:12px;border-radius:50%;background:var(--or);position:relative;z-index:1}
+.dot.cur::after{content:"";position:absolute;left:6px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--or);animation:halo 2800ms cubic-bezier(.22,1,.36,1) infinite}
+@keyframes halo{0%{transform:scale(1);opacity:.5}60%,100%{transform:scale(2.4);opacity:0}}
+.rm .dot.cur::after{animation:none;opacity:0}
+.dot.todo i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ctl);box-sizing:border-box}
+.tx{flex:1;padding-top:1px}.tx b{display:block;font-weight:500}.tx small{display:block;font:400 13px/18px P;color:var(--ts)}
+.tx.todo b{color:var(--ts)}.tx.ok b{color:var(--ok);font-weight:600}.tx.ko b{color:var(--ko);font-weight:600}
+.tm{font:400 13px/22px P;color:var(--ts);font-variant-numeric:tabular-nums}
+.new{animation:rise 320ms cubic-bezier(.22,1,.36,1)}@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.rm .new{animation:fade 150ms linear}@keyframes fade{from{opacity:0}}
+.dot.done,.dot.ko{animation:fade 320ms cubic-bezier(.22,1,.36,1)}
+.foot{margin:16px 20px 0;font:400 13px/18px P;color:var(--ts)}
+button{font:500 13px P;padding:6px 10px;border-radius:999px;border:0;background:#444;color:#eee;margin:0 3px}
+</style><body><div class="w">
+<div class="col"><div class="ph dark"><div class="bar"></div><div class="big">Votre banque a été prévenue</div><div class="sub">Paiement de 185 000 F CFA chez Électro Plus, aujourd'hui 14:04</div>
+<div class="card" id="live"></div><div class="foot">L'application ne bloque jamais un paiement. Seule votre banque décide.</div></div>
+<div class="cap" id="cap">En direct</div><div id="ctl"><button onclick="play()">Rejouer</button><button onclick="document.body.classList.toggle('rm');this.textContent='Mouvements réduits : '+(document.body.classList.contains('rm')?'oui':'non')">Mouvements réduits : non</button></div></div>
+<div class="col" id="c2"><div class="ph dark"><div class="bar"></div><div class="big">Votre banque a été prévenue</div><div class="sub">Paiement de 185 000 F CFA chez Électro Plus, aujourd'hui 14:04</div><div class="card"></div></div><div class="cap">Décision : bloquée (sombre)</div></div>
+<div class="col" id="c3"><div class="ph light"><div class="bar"></div><div class="big">Votre banque a été prévenue</div><div class="sub">Paiement de 185 000 F CFA chez Électro Plus, aujourd'hui 14:04</div><div class="card"></div></div><div class="cap">Décision : confirmée (clair)</div></div>
+</div><script>
+const CK=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,XX=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
+const S={
+ sent:'<div class="st"><span class="dot done">'+CK+'</span><span class="tx"><b>Alerte envoyée à Banque Baobab</b><small>Score de risque 82 / 100</small></span><span class="tm">14:05</span></div>',
+ checkCur:'<div class="st new"><span class="dot cur"><i></i></span><span class="tx"><b>La banque vérifie l\'opération</b><small>En général moins de 10 min</small></span><span class="tm">14:05</span></div>',
+ checkDone:'<div class="st"><span class="dot done">'+CK+'</span><span class="tx"><b>La banque a vérifié l\'opération</b></span><span class="tm">14:09</span></div>',
+ todo:'<div class="st"><span class="dot todo"><i></i></span><span class="tx todo"><b>Décision de la banque</b></span><span class="tm"></span></div>',
+ ok:'<div class="st new"><span class="dot done">'+CK+'</span><span class="tx ok"><b>Opération confirmée</b><small>La banque a confirmé que c\'était bien vous.</small></span><span class="tm">14:09</span></div>',
+ ko:'<div class="st new"><span class="dot ko">'+XX+'</span><span class="tx ko"><b>Opération bloquée par la banque</b><small>Votre banque va vous contacter.</small></span><span class="tm">14:09</span></div>'};
+const live=document.getElementById('live'),cap=document.getElementById('cap');let tm=[];
+function play(){tm.forEach(clearTimeout);tm=[];live.innerHTML=S.sent+S.checkCur+S.todo;cap.textContent='Étape en cours : halo qui pulse (2,8 s)';
+ tm.push(setTimeout(()=>{live.innerHTML=S.sent+S.checkDone+S.ok;cap.textContent='Mise à jour en direct : décision ajoutée en fondu'},7000));
+ tm.push(setTimeout(play,11000))}
+document.querySelector('#c2 .card').innerHTML=S.sent+S.checkDone+S.ko;document.querySelector('#c3 .card').innerHTML=S.sent+S.checkDone+S.ok;
+if(location.hash==='#s'){live.innerHTML=S.sent+S.checkCur+S.todo;document.querySelectorAll('.new').forEach(e=>e.classList.remove('new'))}else play();
+</script></body></html>
