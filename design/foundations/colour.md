@@ -55,7 +55,7 @@ text on this orange is **forbidden** (2.6:1).
 | Token | Definition | Where |
 |---|---|---|
 | `glow.homeHeader` | radial gradient, centre (70 %, 30 %), gold `#FFB45C` → orange `#FF7A2F` → ember `#E8452A` → transparent; alphas in tokens; height 330 dp | top of **Home only**, behind header and net-worth card |
-| `glow.edge` | linear 90°, ember → orange → gold, 2 dp high | top edge of the net-worth card (B1) and highlighted cards |
+| `glow.edge` | linear 90°, ember → orange → gold, 2 dp high | top edge of **highlighted cards** only (bank-card visual, highlighted alert/offer card); not on the net-worth block, which sits on the page (F3 §7, 2026-11-22) |
 | `glow.goldSheen` | linear 110° band (45 % of card width), transparent → gold `#FFB45C` 18 % → light gold `#FFE3A3` 55 % → transparent, blend "screen" | bank cards (M13, see §6) |
 
 Rules: glows are **decorative**: never under text that needs them for
@@ -148,7 +148,7 @@ Contrast is re-checked by a script on `tokens.json` before each build
 
 ## 8. Performance notes (Tecno Spark 50)
 
-- The reference phone has an **LCD** screen: blacks are not true black and
+- The reference phone is assumed to have an **LCD** screen [assumed: Tecno Spark 50 specs still to be read on the phone, SETUP.md]: blacks are not true black and
   `#060606` / `#111111` / `#181818` differ by ~1.07:1. Blocks are
   therefore separated by the **1 dp hairline** and by spacing, not by
   shade alone. No shadows.
@@ -156,7 +156,7 @@ Contrast is re-checked by a script on `tokens.json` before each build
   `expo-linear-gradient`) limited to the top 330 dp of one screen; other
   screens are flat. No blur, no full-screen gradient (brief §2.3).
 - The gold sheen animates `transform` only (one layer, clipped).
-- Dark-first does not save battery on LCD; it is a style choice.
+- Dark-first does not save battery on LCD (it would on OLED); it is a style choice either way.
 
 ## 9. Where it is used
 

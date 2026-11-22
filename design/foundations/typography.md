@@ -61,7 +61,7 @@ Rules:
 - **Body is 15, not 16:** Poppins is wide (measured: a sentence is 5 %
   wider than in Inter at the same size).
 - Captions stay Regular at 13; anything at 12 is Medium (thin strokes at
-  12 sp blur on the reference LCD).
+  12 sp blur on low-density screens such as the reference phone [assumed]).
 - No all-caps sentences (harder to read for low-literacy users).
   Exception: month abbreviations on chart axes ("JANV.").
 - Alignment: text left-aligned; amounts right-aligned in rows and tables;
