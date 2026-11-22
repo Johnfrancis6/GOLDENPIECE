@@ -1,7 +1,9 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (end of the second Session 3 sitting: F6, F4, F5, C1,
-C5, C14-C15, C6-C7, C12, C8-C10-C11 validated; continuation 2: C9, C18-C19, C13-C16-C17, C20, C21, C22 — base components complete; G0-G1-G2). First written
+Updated 2026-11-22 (end of Session 3 continuation 2: C9, C18-C19,
+C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
+B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
+C12, C14-C15). First written
 2026-11-22 by the first Session 3 (design) at Franco's request,
 for the session that continues the design system. Read this file, then
 [../docs/BRIEF_03_DESIGN.md](../docs/BRIEF_03_DESIGN.md) (the method and
@@ -39,10 +41,13 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C21 Badges (categories in colour, operators as monograms; F4 §4 updated) | validated 2026-11-22 | [components/badges.md](components/badges.md) |
 | C22 Status timeline | validated 2026-11-22 | [components/status-timeline.md](components/status-timeline.md) |
 | G0 + G1 + G2 Charts (line + light gradient, scrub drives hero, sparklines by direction) | validated 2026-11-22 | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) |
-| Tokens | v0.19.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) | [tokens.json](tokens.json) |
+| B1 Net-worth header (first Home block) | validated 2026-11-22 | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) |
+| Tokens | v0.20.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **Home blocks**
-(B1, B4, B5, B6, B9, B8) → S2 Home layout → … → M14 App opening (last).
+**Next items, in order** (README "Build order"): **B4 Alert card**, then
+B5 Learning card, B6 Budget (rings, C17), B9 Quote row (G2), B8 Chart
+frame → **S2 Home layout** (first full screen: check glow C light alphas
+there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -92,6 +97,17 @@ yet merged into `main`; Franco merges through a pull request).
 - Progress is shown as **rings**, not bars (Franco, from a reference with
   ring gauges): he wants colours **crisp and saturated** but harmonious,
   never blurred or washed out.
+- Typical rhythm (continuation 2): ask ≤ 3 questions with labelled
+  options and a recommended default → he answers "A, oui" → build the
+  preview (static PNG at scale 2, plus an animated HTML with embedded
+  fonts when something moves) → he answers "je valide" (sometimes with
+  a change) → write files, commit, push, then ask the next item's
+  questions in the same reply.
+- Previews must be checked by eye before sending: wrapped rows, clipped
+  phones, a wrong Lucide glyph (e.g. `receipt` has a "$": use
+  `receipt-text`) were caught this way.
+- He asked for **"oui pour C12 aussi"**-type extensions: when a change
+  should apply to a validated item, propose it and update that file.
 - An ambiguous answer: state the interpretation in one line in the reply
   (e.g. theme "oui" was read as "follow the phone setting", D4).
 
@@ -138,6 +154,15 @@ yet merged into `main`; Franco merges through a pull request).
 - Done in F6 (formats.md): abbreviation rule used by F2 §3 ("1,2 M F CFA") and
   U+2212 minus / U+202F separators (Poppins GP has both).
 - Arrows and status shapes (▲ ▼ ● ◆) are icons (F4), not text glyphs.
+
+## Preview sources (reuse them)
+
+Generator scripts and HTML of continuation 2 were in the session
+scratchpad (lost with the container); the repo copies in `previews/*.html`
+are the reusable sources: G1 chart functions (`chartSVG`, `smooth`,
+`spark`) are in `previews/g0-g1-g2-charts.html`; glow C CSS is built from
+`tokens.json → colour.glow.homeHeader.layers` (see B1 preview); skeleton
+wifi animation in `previews/c18-c19-loading-empty.html`.
 
 ## Tooling that worked (free, in the container)
 
