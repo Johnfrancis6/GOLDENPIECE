@@ -1,7 +1,7 @@
 # Session 3 handoff — design system, continuation
 
 Updated 2026-11-22 (end of the second Session 3 sitting: F6, F4, F5, C1,
-C5, C14-C15, C6-C7, C12, C8-C10-C11 validated; continuation 2: C9, C18-C19, C13-C16-C17, C20, C21). First written
+C5, C14-C15, C6-C7, C12, C8-C10-C11 validated; continuation 2: C9, C18-C19, C13-C16-C17, C20, C21, C22 — base components complete). First written
 2026-11-22 by the first Session 3 (design) at Franco's request,
 for the session that continues the design system. Read this file, then
 [../docs/BRIEF_03_DESIGN.md](../docs/BRIEF_03_DESIGN.md) (the method and
@@ -37,11 +37,12 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C13 + C16 + C17 Chips (orange tint), controls (orange on), progress **rings** | validated 2026-11-22 | [components/chips-choice-progress.md](components/chips-choice-progress.md) |
 | C20 Help triggers ("?" icon, eye: show needs fingerprint/code; C5 §5 updated) | validated 2026-11-22 | [components/help-triggers.md](components/help-triggers.md) |
 | C21 Badges (categories in colour, operators as monograms; F4 §4 updated) | validated 2026-11-22 | [components/badges.md](components/badges.md) |
-| Tokens | v0.17.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge) | [tokens.json](tokens.json) |
+| C22 Status timeline | validated 2026-11-22 | [components/status-timeline.md](components/status-timeline.md) |
+| Tokens | v0.18.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) | [tokens.json](tokens.json) |
 
 **Next items, in order** (README "Build order"): base components
-**C22** → G0 + G1 +
-G2 → Home blocks → S2 Home layout → … → M14 App opening (last).
+**G0 + G1 +
+G2** → Home blocks → S2 Home layout → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).

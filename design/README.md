@@ -25,9 +25,10 @@ Files are in English; UI copy is French first, then English.
 | C13 Chips + C16 Choice controls + C17 Progress (rings) | [components/chips-choice-progress.md](components/chips-choice-progress.md) · [chips/controls](previews/c13-c16-chips-choice.png) · [rings](previews/c17-progress-rings.png) | 2026-11-22 |
 | C20 Help triggers ("?", En savoir plus, eye with fingerprint to show) | [components/help-triggers.md](components/help-triggers.md) · [preview](previews/c20-help-triggers.png) | 2026-11-22 |
 | C21 Institution + category badges (colour categories, operator monograms) | [components/badges.md](components/badges.md) · [preview](previews/c21-badges.png) | 2026-11-22 |
+| C22 Status timeline (pulsing current step) | [components/status-timeline.md](components/status-timeline.md) · [preview](previews/c22-status-timeline.png) · [animated](previews/c22-status-timeline.html) | 2026-11-22 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **C22 Status timeline**. Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **G0 Chart base + G1 Line/area + G2 Sparkline**. Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -199,7 +200,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 ## Build order
 
 1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
-2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22.
+2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓.
 3. **Chart base G0**, then G1 + G2.
 4. **Home blocks:** B1, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
 5. **Alerts:** C2-C4 (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
