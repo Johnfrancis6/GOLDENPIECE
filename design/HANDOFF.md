@@ -1,7 +1,7 @@
 # Session 3 handoff — design system, continuation
 
 Updated 2026-11-22 (end of the second Session 3 sitting: F6, F4, F5, C1,
-C5, C14-C15, C6-C7, C12, C8-C10-C11 validated; continuation 2: C9). First written
+C5, C14-C15, C6-C7, C12, C8-C10-C11 validated; continuation 2: C9, C18-C19). First written
 2026-11-22 by the first Session 3 (design) at Franco's request,
 for the session that continues the design system. Read this file, then
 [../docs/BRIEF_03_DESIGN.md](../docs/BRIEF_03_DESIGN.md) (the method and
@@ -33,10 +33,11 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C12 Navigation (4 tabs, header, section pills, period bar) | validated 2026-11-22 | [components/navigation.md](components/navigation.md) |
 | C8 Banner + C10 Dialog + C11 Toast | validated 2026-11-22 | [components/feedback.md](components/feedback.md) |
 | C9 Bottom sheet (selected options orange, also C12 period menu) | validated 2026-11-22 | [components/bottom-sheet.md](components/bottom-sheet.md) |
-| Tokens | v0.13.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet) | [tokens.json](tokens.json) |
+| C18 + C19 Skeletons (bank + orange wifi), empty state (piggy bank), "Connexion instable" stop | validated 2026-11-22 | [components/loading-empty.md](components/loading-empty.md) |
+| Tokens | v0.14.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState) | [tokens.json](tokens.json) |
 
 **Next items, in order** (README "Build order"): base components
-**C18 + C19**, C13 + C16 + C17, C20, C21, C22 → G0 + G1 +
+**C13 + C16 + C17**, C20, C21, C22 → G0 + G1 +
 G2 → Home blocks → S2 Home layout → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
@@ -81,6 +82,9 @@ yet merged into `main`; Franco merges through a pull request).
 - Selected options in choice lists are **orange text** (`#FF9A5C` dark,
   `#B4410F` light) + SemiBold + check (C9, extended to C12); reuse it for
   every single/multi choice list (C13, C16).
+- Franco designs some illustrations himself in words (C18 bank + wifi
+  arcs lighting one by one; C19 piggy bank with coins on the ground; wifi
+  + "!" for a failed load): build them from Lucide shapes, strokes 2.5 dp.
 - An ambiguous answer: state the interpretation in one line in the reply
   (e.g. theme "oui" was read as "follow the phone setting", D4).
 
