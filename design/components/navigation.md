@@ -49,8 +49,9 @@ Franco replaced the period pills by **one expandable bar** (2026-11-22).
 - **Open:** a menu card appears under it, over the content (does not
   push the layout): width 240, radius 12, `surface2` + 1 dp border
   (`rgba(255,255,255,0.10)`) in dark, white + `rgba(0,0,0,0.14)` border
-  in light; options as 48 dp rows (15/22; selected SemiBold +
-  `check` 20 dp in `brand.text`). The chevron turns up.
+  in light; options as 48 dp rows (15/22; selected SemiBold in
+  `selectedText` — `#FF9A5C` dark, `#B4410F` light, changed with C9 on
+  2026-11-22 — + `check` 20 dp in `brand.text`). The chevron turns up.
 - Options: Mois (`1M`), Année (`YTD`), Depuis le début (`ITD`),
   Personnalisée → opens the custom-range bottom sheet (C9) (D1).
 - Closes on choice, on tap outside, or with back. The chart then morphs
