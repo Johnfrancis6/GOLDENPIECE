@@ -13,8 +13,9 @@
   (Franco, C5, 2026-11-22; replaces the ▲ ▼ triangles), 16 dp in change
   lines, 14 dp in change tags (the only size under 16).
 - Score levels use Lucide `circle-check-big` / `rotate-cw-fading-clock` /
-  `shield-check` (Franco, C15, 2026-11-22). No hand-drawn glyphs remain. "≈" (Poppins lacks it, formats.md §2) is an
-  own glyph too.
+  `shield-check` (Franco, C15, 2026-11-22). "≈" (Poppins lacks it,
+  formats.md §2) is Lucide `equal-approximately`. No hand-drawn glyphs
+  remain.
 - No real bank or operator logos (public repo, brief).
 
 ## 2. Sizes and strokes (dp)

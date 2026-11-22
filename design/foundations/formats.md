@@ -49,7 +49,7 @@ Rules:
   sign and currency stay: "••• F CFA". TalkBack reads "montant masqué".
 - Reference currency conversions are labelled "≈" in `text.secondary`
   before the converted value: "≈ 381,12 €". Poppins lacks "≈" (HANDOFF
-  "Measured"), so it is drawn as an F4 icon or added to Poppins GP.
+  "Measured"), so it is the Lucide icon `equal-approximately` (F4).
 
 ## 3. Abbreviations
 
