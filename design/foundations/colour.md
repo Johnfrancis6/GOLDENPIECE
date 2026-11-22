@@ -67,8 +67,8 @@ animation except M13), drawn once.
 
 | Token | Dark | Light | Meaning | Always paired with |
 |---|---|---|---|---|
-| `gain` | `#3DD68C` | `#0E7A43` | gain, income, success, score < 40 ("Normal") | "+" sign and ▲, or ● + word |
-| `loss` | `#FF6B7A` | `#C8283C` | loss, spending sign, error, score > 70 ("Banque prévenue") | "−" sign and ▼, or ◆ + word |
+| `gain` | `#3DD68C` | `#0E7A43` | gain, income, success, score < 40 ("Normal") | "+" sign and `trending-up` icon (C5), or ● + word |
+| `loss` | `#FF6B7A` | `#C8283C` | loss, spending sign, error, score > 70 ("Banque prévenue") | "−" sign and `trending-down` icon (C5), or ◆ + word |
 | `warning` | `#F2C94C` | `#8A6200` | warning, stale data, score 40-70 ("À confirmer") | ▲ + word |
 | `info` | `#6AA8FF` | `#1F5FBF` | neutral information | ⓘ |
 | `tint.*` | 13 % of the colour over the surface | `#DDF3E7`, `#FCE3E6`, `#FBF0CC`, `#E3EDFB` | chip and banner backgrounds | text in the full colour |

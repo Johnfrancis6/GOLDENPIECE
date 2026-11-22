@@ -9,9 +9,11 @@
   in the app, `lucide-static` for previews). Checked version: 1.77.0.
 - Outline only, round caps and joins. Lucide has **no filled variants**:
   the active state is shown by colour and label weight, never by fill.
-- Our own filled glyphs, drawn as tiny SVGs, for what Lucide lacks:
-  change arrows ▲ ▼ (10 × 8 dp) and status shapes ● ▲ ◆ (10 dp) used
-  with a word (colour.md §4). "≈" (Poppins lacks it, formats.md §2) is an
+- Change direction uses Lucide **`trending-up` / `trending-down`**
+  (Franco, C5, 2026-11-22; replaces the ▲ ▼ triangles), 16 dp in change
+  lines, 14 dp in change tags (the only size under 16).
+- Our own filled glyphs, drawn as tiny SVGs, only for the status shapes
+  ● ▲ ◆ (10 dp), always with a word (colour.md §4). "≈" (Poppins lacks it, formats.md §2) is an
   own glyph too.
 - No real bank or operator logos (public repo, brief).
 
@@ -35,7 +37,7 @@ Touch target is always ≥ 48 dp around an icon button (24 icon + 12 padding).
 | active tab | `brand.text` (+ label SemiBold) |
 | inactive tab | `text.secondary` |
 | open-alert icon | `loss` + 8 dp dot |
-| change arrows, status shapes | `gain` / `warning` / `loss` |
+| change icons, status shapes | `gain` / `warning` / `loss` (C5 §4: colour = good/bad for the user) |
 
 ## 4. Avatars and category tiles (40 dp circles)
 

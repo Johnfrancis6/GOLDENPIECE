@@ -20,7 +20,7 @@ string themselves. Font rules (tabular digits, U+202F glyph) are in
 | en dash | U+2013 | ranges ("1–18 nov.") |
 | bullet | U+2022 | hidden digits ("••• F CFA") and masked card numbers |
 
-Arrows ▲ ▼ and status shapes are **icons** (F4), never text glyphs.
+Change icons (Lucide `trending-up`/`trending-down`, C5) and status shapes are **icons** (F4), never text glyphs.
 
 ## 2. Amounts
 
@@ -73,8 +73,8 @@ fit at large font (typography.md §3), chart axes, home-screen widgets.
 
 | Case | Display | Colour (F1) |
 |---|---|---|
-| Gain / income / positive change | `+12 500 F CFA` + ▲ icon | `gain` |
-| Loss / spending / negative change | `−8 000 F CFA` + ▼ icon | `loss` |
+| Gain / income / positive change | `+12 500 F CFA` + `trending-up` icon | `gain` |
+| Loss / spending / negative change | `−8 000 F CFA` + `trending-down` icon | `loss` |
 | Zero change | `0 F CFA`, `0 %`, no arrow | `text.secondary` |
 | Balance (stock, not a change) | no "+"; "−" only if negative (overdraft) | `text.primary`; `loss` if negative |
 | Transaction row | always signed: `−35 500 F`, `+150 000 F` | per colour.md §4 (spending in `text.primary` on category lists) |
@@ -88,7 +88,7 @@ Percentages:
   decimal: "42 %"; shares of one chart are rounded by largest remainder
   so they add up to 100.
 - Change line (hero, tiles): arrow once, amount, then percentage:
-  "▲ +12 500 F CFA · +2,4 %".
+  "[trending-up] +12 500 F CFA · +2,4 % aujourd'hui" (C5).
 - Scores (0-100) are integers without unit.
 - Market prices keep their freshness label (brief §2.4): "Cours différés
   (~15 min)", "Prix mensuel de référence", "Proxy : SPY ≈ S&P 500".
