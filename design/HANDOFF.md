@@ -21,10 +21,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | F1 Colour | validated 2026-11-22 | [foundations/colour.md](foundations/colour.md) |
 | F2 Typography (Poppins GP) | validated 2026-11-22 | [foundations/typography.md](foundations/typography.md), [fonts/](fonts/) |
 | F3 Spacing, grid, radii, elevation | validated 2026-11-22 | [foundations/spacing-layout.md](foundations/spacing-layout.md) |
-| Tokens | v0.3.0: colour, typography, spacing, layout, radius, elevation; **motion pending** | [tokens.json](tokens.json) |
+| F6 Display formats | validated 2026-11-22 | [foundations/formats.md](foundations/formats.md) |
+| Tokens | v0.4.0: colour, typography, spacing, layout, radius, elevation, format; **motion pending** | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **F6 Display formats →
-F4 Iconography → F5 Motion** (includes M13 gold sheen) → base components
+**Next items, in order** (README "Build order"): **F4 Iconography → F5 Motion** (includes M13 gold sheen) → base components
 C1, C5, C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
 C17, C20, C21, C22 → G0 + G1 + G2 → Home blocks → S2 Home layout → …
 
@@ -44,6 +44,11 @@ yet merged into `main`; Franco merges through a pull request).
 - When a reference breaks a rule (contrast, performance), say so with the
   measured number and propose 2-3 variants (he picked from such lists:
   F1 button B, Poppins GP).
+- **Do not present micro-details** (edge values, exact gaps, alignment
+  inside a component): decide them, write the rule, and leave a build
+  instruction to check and adjust (formats.md §7). Ask him only about
+  choices visible across many screens. For F6 he validated the defaults
+  without a preview.
 - An ambiguous answer: state the interpretation in one line in the reply
   (e.g. theme "oui" was read as "follow the phone setting", D4).
 
@@ -85,7 +90,7 @@ yet merged into `main`; Franco merges through a pull request).
 - M13 gold sheen: colour fixed (`glow.goldSheen`); duration, trigger and
   reduced-motion variant to fix in F5; where exactly bank-card visuals
   appear is decided with S3 (accounts).
-- F6 must define the abbreviation rule used by F2 §3 ("1,2 M F CFA") and
+- Done in F6 (formats.md): abbreviation rule used by F2 §3 ("1,2 M F CFA") and
   U+2212 minus / U+202F separators (Poppins GP has both).
 - Arrows and status shapes (▲ ▼ ● ◆) are icons (F4), not text glyphs.
 
