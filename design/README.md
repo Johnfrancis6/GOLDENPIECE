@@ -18,9 +18,10 @@ Files are in English; UI copy is French first, then English.
 | C5 Amount and change | [components/amount.md](components/amount.md) · [preview](previews/c5-amount.png) | 2026-11-22 |
 | C14 Tags and badges + C15 Score badge | [components/tags-score.md](components/tags-score.md) · [preview](previews/c14-c15-tags-score.png) | 2026-11-22 |
 | C6 List row + C7 Card | [components/list-row-card.md](components/list-row-card.md) · [preview](previews/c6-c7-list-row-card.png) | 2026-11-22 |
+| C12 Navigation (4 tabs, header, section pills, period bar) | [components/navigation.md](components/navigation.md) · [preview](previews/c12-navigation.png) | 2026-11-22 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **C12 Navigation**. Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **C8 Banner + C10 Dialog + C11 Toast**. Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -34,6 +35,7 @@ Next item: **C12 Navigation**. Foundations are complete; M14 App opening is left
 | D6 | Bank cards get a **gold sheen** animation (M13): colour in [colour.md](foundations/colour.md) §6, motion in F5. |
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
 | D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
+| D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
 
 ---
 
@@ -191,7 +193,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 ## Build order
 
 1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
-2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 + C17, C20, C21, C22.
+2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11, C9, C18 + C19, C13 + C16 + C17, C20, C21, C22.
 3. **Chart base G0**, then G1 + G2.
 4. **Home blocks:** B1, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
 5. **Alerts:** C2-C4 (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.

@@ -92,8 +92,8 @@ list additions in their report (formats.md §7 rule).
 
 | Event | Animation | Reduced motion |
 |---|---|---|
-| Press on an icon button / tab | scale 1 → 0.9 on press, back to 1 on release, ≈ 150 ms | colour change only |
-| Tab becomes active | icon scale 0.9 → 1.08 → 1 (small pop), ≈ 250 ms; colour to `brand.text` | colour change only |
+| Press on an icon button (header, cards) | scale 1 → 0.92 on press, back on release, 220 ms (F5) | colour change only |
+| Bottom-bar tab | **no animation** (Franco, C12, 2026-11-22): colour changes to `brand.text` at once | same |
 | Open-alert icon appears | fade + scale 0.8 → 1, once | appears without motion |
 
 Transform and opacity only (no blur, no colour animation on the GPU

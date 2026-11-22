@@ -8,8 +8,8 @@ a browser; it uses `../fonts/`).
 
 ## 1. Character (Franco's choices)
 
-- **Sober**, Finary-like: no springs or big bounces; the only overshoot is
-  the small tab pop (scale 1.05).
+- **Sober**, Finary-like: no springs, no bounces (the tab pop was removed
+  in C12).
 - **Not too fast:** a first version at 150-600 ms was judged too fast;
   durations were raised about 1.5×.
 - **Soft endings:** everything that lands decelerates over a long tail
@@ -21,7 +21,7 @@ a browser; it uses `../fonts/`).
 | Token | Curve | Use |
 |---|---|---|
 | `standard` | 0.33, 0, 0.15, 1 | element moving from A to B on screen, press scale |
-| `enter` | 0.22, 1, 0.36, 1 | anything appearing or landing (fade-in, rows, bars, line draw, tab pop end) |
+| `enter` | 0.22, 1, 0.36, 1 | anything appearing or landing (fade-in, rows, bars, line draw, menus) |
 | `exit` | 0.4, 0, 1, 1 | anything leaving; exits last 0.7 × the enter duration |
 | `morph` | 0.65, 0, 0.35, 1 | chart period change, gold sheen travel |
 | `countUp` | easeOutQuint, 1 − (1 − x)^5 | amount count-up |
@@ -32,7 +32,7 @@ a browser; it uses `../fonts/`).
 |---|---|---|
 | `press` | 220 | icon/button press scale 1 → 0.92 → 1 |
 | `quick` | 320 | fades, toast in, skeleton → content, small state changes |
-| `tabActivate` | 450 | tab icon pop 0.92 → 1.05 → 1 |
+| ~~`tabActivate`~~ | — | removed in C12 (Franco): bottom-bar tabs do not animate |
 | `screen` | 450 | screen enter (fade + 24 dp slide) — M1 |
 | `sheet` | 450 | bottom-sheet open — M3 |
 | `countUp` | 1100 | Home net worth: first open of the day and when the value changes — M7 |
@@ -49,7 +49,7 @@ Nothing lasts more than 5 s (brief).
 
 | Item | Behaviour |
 |---|---|
-| M2 Press feedback | icons and tabs: scale 0.92 on press, back on release (`press`, `standard`); active tab pops (`tabActivate`) and turns `brand.text` (icons.md §8). Haptics are set with C1 Button. |
+| M2 Press feedback | icon buttons: scale 0.92 on press, back on release (`press`, `standard`); buttons 0.97 (C1); rows and cards change fill only (C6). **Bottom-bar tabs: no animation** (C12). No haptics (C1). |
 | M7 Changing amount | count-up to the new value (`countUp`), tabular digits so the width never jumps; change line and rows fade + 8 dp rise, 80 ms stagger. Otherwise (not first open, unchanged) a `quick` fade. |
 | M8 Charts (base) | line draw `chartLine`; bars grow with stagger; period change morphs the line (`chartPeriodMorph`) and keeps the axes still. Details (scrub cursor, tooltips) with G0. Target ≥ 45 fps on the reference phone. |
 | M13 Gold sheen | one soft gold band (`colour.glow.goldSheen`) crosses the bank card **once** when the card first becomes ≥ 50 % visible, and again on each tap; band fades in over the first 18 % and out after 70 %; travel −30 % → 130 % of the card width; no loop. |
