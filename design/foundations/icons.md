@@ -42,16 +42,16 @@ Touch target is always ≥ 48 dp around an icon button (24 icon + 12 padding).
 
 ## 4. Avatars and category tiles (40 dp circles)
 
-- **Categories:** Lucide icon 20 dp `text.primary` on a `surface2` circle
-  (sober, Finary-like; no category colour).
+- **Categories:** Lucide icon 20 dp in the category hue on a light tint
+  of it (C21, Franco 2026-11-22; replaces the grey tiles).
 - **A bank:** its initials (2 letters, SemiBold 13) in `#060606` on a fixed
   colour per bank, taken from the dark chart series (`colour.chart.dark.series`)
   in both themes; measured contrast of the initials ≥ 5.1:1. The colour is
   assigned once per bank (by bank id) and never changes.
 - **Banks in general** (section title "Banques", bank picker, generic
   bank): Lucide `landmark`.
-- **Mobile money account:** `wallet` in a `surface2` circle; the operator
-  name is written next to it.
+- **Mobile money account:** operator **monogram** like a bank (C21,
+  Franco 2026-11-22); "Mobile money" in the subtitle.
 
 ## 5. Icon map (starting list)
 
@@ -64,7 +64,7 @@ Touch target is always ≥ 48 dp around an icon button (24 icon + 12 padding).
 | Back, close, add, more, next | `arrow-left`, `x`, `plus`, `ellipsis`, `chevron-right` |
 | Banks | `landmark` |
 | Mobile money | `wallet`, `smartphone` |
-| Courses, transport, restaurant, logement, factures, santé, éducation | `shopping-cart`, `bus`, `utensils`, `house`, `receipt`, `heart-pulse`, `graduation-cap` |
+| Courses, transport, restaurant, logement, factures, santé, éducation | `shopping-cart`, `bus`, `utensils`, `house`, `receipt-text`, `heart-pulse`, `graduation-cap` |
 | Revenus, épargne, transferts | `banknote`, `piggy-bank`, `arrow-left-right` |
 
 Build sessions extend the map with Lucide icons in the same style and
