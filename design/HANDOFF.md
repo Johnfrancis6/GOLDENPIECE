@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -44,9 +44,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B1 Net-worth header (first Home block) | validated 2026-11-22 | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) |
 | B4 Alert card (Home strip: one card + "Voir les N alertes"; > 70 gold edge; whole card tappable, Oui/Non only in L2; compact C6 variant) | validated 2026-11-22 | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) |
 | B5 Learning card (two C17 orange rings, fraud-reassurance line, L5 finished state with grey OK) | validated 2026-11-22 | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) |
-| Tokens | v0.22.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard) | [tokens.json](tokens.json) |
+| B6 Budget ring (Home: two tiles "Ce mois" + worst category; D3: badge left, ring right) | validated 2026-11-22 | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) |
+| Tokens | v0.23.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **B6 Budget (rings, C17)**, B9 Quote row (G2), B8 Chart
+**Next items, in order** (README "Build order"): **B9 Quote row (G2)**, B8 Chart
 frame → **S2 Home layout** (first full screen: check glow C light alphas
 there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
 

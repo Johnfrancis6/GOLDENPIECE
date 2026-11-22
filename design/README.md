@@ -30,9 +30,10 @@ Files are in English; UI copy is French first, then English.
 | B1 Net-worth header | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) · [preview](previews/b1-networth-header.png) | 2026-11-22 |
 | B4 Alert card (Home strip = one card + link; > 70 highlighted; whole card tappable; compact variant) | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) · [preview](previews/b4-alert-card.png) | 2026-11-22 |
 | B5 Learning card (two orange rings days/operations, not dismissible, once "alertes actives" + OK) | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) · [preview](previews/b5-learning-card.png) | 2026-11-22 |
+| B6 Budget ring (Home two tiles total + worst category; "Reste"/"Dépassé de"; D3 row badge left, ring right) | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) · [preview](previews/b6-budget-ring.png) | 2026-11-22 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **B6 Budget ring** (Home blocks: B1 ✓, B4 ✓, B5 ✓, then B6, B9, B8, then S2 Home layout). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **B9 Quote row** (Home blocks: B1 ✓, B4 ✓, B5 ✓, B6 ✓, then B9, B8, then S2 Home layout). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -206,7 +207,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
 2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓.
 3. **Chart base G0**, then G1 + G2 ✓.
-4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
+4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
 5. **Alerts:** C2-C4 (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** B2, B3, B17, B20, B22, then S3.
 7. **Spending:** B7, G3, G5, B6 (already done), then S5.
