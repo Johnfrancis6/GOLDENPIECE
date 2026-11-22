@@ -1,0 +1,110 @@
+# F4 — Iconography
+
+**Validated by Franco on 2026-11-22.** Tokens: [../tokens.json](../tokens.json)
+(`icon`). Preview: [../previews/f4-icons.png](../previews/f4-icons.png).
+
+## 1. Set
+
+- **Lucide** (lucide.dev, ISC licence, free; package `lucide-react-native`
+  in the app, `lucide-static` for previews). Checked version: 1.77.0.
+- Outline only, round caps and joins. Lucide has **no filled variants**:
+  the active state is shown by colour and label weight, never by fill.
+- Our own filled glyphs, drawn as tiny SVGs, for what Lucide lacks:
+  change arrows ▲ ▼ (10 × 8 dp) and status shapes ● ▲ ◆ (10 dp) used
+  with a word (colour.md §4). "≈" (Poppins lacks it, formats.md §2) is an
+  own glyph too.
+- No real bank or operator logos (public repo, brief).
+
+## 2. Sizes and strokes (dp)
+
+| Size | Stroke (absolute) | Use |
+|---|---|---|
+| 24 | 2 | bottom bar, screen header actions, empty states |
+| 20 | 1.75 | inside 40 dp avatars/tiles, inside buttons, section title icon |
+| 16 | 1.75 | chips, inline with 13 sp text |
+
+The stroke stays the same in dp whatever the size (`absoluteStrokeWidth`).
+Touch target is always ≥ 48 dp around an icon button (24 icon + 12 padding).
+
+## 3. Colour
+
+| Context | Colour (F1) |
+|---|---|
+| default, header actions | `text.primary` |
+| section title icon, secondary | `text.secondary` |
+| active tab | `brand.text` (+ label SemiBold) |
+| inactive tab | `text.secondary` |
+| open-alert icon | `loss` + 8 dp dot |
+| change arrows, status shapes | `gain` / `warning` / `loss` |
+
+## 4. Avatars and category tiles (40 dp circles)
+
+- **Categories:** Lucide icon 20 dp `text.primary` on a `surface2` circle
+  (sober, Finary-like; no category colour).
+- **A bank:** its initials (2 letters, SemiBold 13) in `#060606` on a fixed
+  colour per bank, taken from the dark chart series (`colour.chart.dark.series`)
+  in both themes; measured contrast of the initials ≥ 5.1:1. The colour is
+  assigned once per bank (by bank id) and never changes.
+- **Banks in general** (section title "Banques", bank picker, generic
+  bank): Lucide `landmark`.
+- **Mobile money account:** `wallet` in a `surface2` circle; the operator
+  name is written next to it.
+
+## 5. Icon map (starting list)
+
+| Meaning | Lucide name |
+|---|---|
+| Accueil / Comptes / Dépenses / Placements (bottom bar) | `house` / `wallet` / `chart-pie` / `chart-line` |
+| Open alert (header, only when ≥ 1 alert is open) | `shield-alert` |
+| Hide / show amounts | `eye` / `eye-off` |
+| Search, settings, help "?" | `search`, `settings`, `circle-help` |
+| Back, close, add, more, next | `arrow-left`, `x`, `plus`, `ellipsis`, `chevron-right` |
+| Banks | `landmark` |
+| Mobile money | `wallet`, `smartphone` |
+| Courses, transport, restaurant, logement, factures, santé, éducation | `shopping-cart`, `bus`, `utensils`, `house`, `receipt`, `heart-pulse`, `graduation-cap` |
+| Revenus, épargne, transferts | `banknote`, `piggy-bank`, `arrow-left-right` |
+
+Build sessions extend the map with Lucide icons in the same style and
+list additions in their report (formats.md §7 rule).
+
+## 6. Navigation decision (D8)
+
+- Bottom bar has **4 tabs**: Accueil · Comptes · Dépenses · Placements.
+  There is **no Alertes tab**.
+- When at least one alert is open, the `shield-alert` icon with a dot
+  appears in the screen header (all four tabs), next to the hide-amounts
+  action; it opens the alert list (L1). It also shows as the Home alert
+  strip (B4) and as a push notification. No open alert → no icon.
+- Past alerts: Settings → "Historique des alertes".
+
+## 7. Clean screens (Finary)
+
+- Header: title + **one** action (hide amounts); the open-alert icon is
+  the only possible second one. Search lives in the list it filters.
+- Section titles are plain text; only "Banques" carries its icon.
+- No decorative icons in sentences, buttons carry an icon only when the
+  label alone is ambiguous.
+
+## 8. Behaviour on tap
+
+| Event | Animation | Reduced motion |
+|---|---|---|
+| Press on an icon button / tab | scale 1 → 0.9 on press, back to 1 on release, ≈ 150 ms | colour change only |
+| Tab becomes active | icon scale 0.9 → 1.08 → 1 (small pop), ≈ 250 ms; colour to `brand.text` | colour change only |
+| Open-alert icon appears | fade + scale 0.8 → 1, once | appears without motion |
+
+Transform and opacity only (no blur, no colour animation on the GPU
+path). Exact curves and durations are set in F5 Motion.
+
+## 9. Accessibility
+
+- Every icon button has a label ("Masquer les montants", "Alerte
+  ouverte, 1"). Icons next to a text label are decorative.
+- Meaning is never carried by an icon alone in content (arrows come with
+  the sign, shapes with a word).
+- Icons stay 24/20/16 dp at 200 % font; labels grow.
+
+## 10. Performance
+
+Icons are vector components tree-shaken from Lucide (only imported icons
+ship). No icon font, no PNG.

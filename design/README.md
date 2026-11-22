@@ -12,9 +12,10 @@ Files are in English; UI copy is French first, then English.
 | F1 Colour | [foundations/colour.md](foundations/colour.md) · [tokens.json](tokens.json) · [preview](previews/f1-colour.png) | 2026-11-22 |
 | F2 Typography (Poppins GP) | [foundations/typography.md](foundations/typography.md) · [fonts/](fonts/) · [preview](previews/f2-typography.png) | 2026-11-22 |
 | F3 Spacing, grid, radii, elevation (Finary principles) | [foundations/spacing-layout.md](foundations/spacing-layout.md) · [preview](previews/f3-spacing-layout.png) | 2026-11-22 |
+| F4 Iconography (Lucide) | [foundations/icons.md](foundations/icons.md) · [preview](previews/f4-icons.png) | 2026-11-22 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **F4 Iconography**. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **F5 Motion**. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -27,6 +28,7 @@ Next item: **F4 Iconography**. Micro-details not covered by a validated file are
 | D5 | Placements internal navigation (P1-P9) is decided at step S4 (proposal: top tabs Portefeuille · Marchés · Risque · Performance). |
 | D6 | Bank cards get a **gold sheen** animation (M13): colour in [colour.md](foundations/colour.md) §6, motion in F5. |
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
+| D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
 
 ---
 
@@ -62,7 +64,7 @@ are those of the brief §3.
 | C9 | Bottom sheet | short / tall; handle; swipe to close + button | A4, L4, "?" texts, filters, custom period |
 | C10 | Dialog | confirm; delete with typed "SUPPRIMER"; blocking (O17) | Settings, O17 |
 | C11 | Toast | success, queued, conflict ("modifié sur un autre appareil") | A4, P3, Settings |
-| C12 | Navigation | bottom bar 5 tabs + badge; screen header (back, title, actions); top tabs / segmented control | global, Placements, P2, P3 |
+| C12 | Navigation | bottom bar 4 tabs (D8); open-alert header icon; screen header (back, title, actions); top tabs / segmented control | global, Placements, P2, P3 |
 | C13 | Chips | filter, single choice (period), category source ("règle", "IA", "vous") | A2, A3, P6, P9, L1 |
 | C14 | Tags and badges | "Démo", "simulation", "en attente", "refusé", freshness ("Cours différés (~15 min)", "Prix mensuel de référence", "Proxy : SPY ≈ S&P 500"), count badge | global |
 | C15 | Score badge | 0-100, 3 bands, colour + shape + word | L1-L4, A2, A3, dashboard |
@@ -182,7 +184,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 
 ## Build order
 
-1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons → F5 Motion (+ `tokens.json`).
+1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion (+ `tokens.json`).
 2. **Base components:** C1, C5, C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 + C17, C20, C21, C22.
 3. **Chart base G0**, then G1 + G2.
 4. **Home blocks:** B1, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
