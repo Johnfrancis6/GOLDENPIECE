@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -43,9 +43,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | G0 + G1 + G2 Charts (line + light gradient, scrub drives hero, sparklines by direction) | validated 2026-11-22 | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) |
 | B1 Net-worth header (first Home block) | validated 2026-11-22 | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) |
 | B4 Alert card (Home strip: one card + "Voir les N alertes"; > 70 gold edge; whole card tappable, Oui/Non only in L2; compact C6 variant) | validated 2026-11-22 | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) |
-| Tokens | v0.21.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard) | [tokens.json](tokens.json) |
+| B5 Learning card (two C17 orange rings, fraud-reassurance line, L5 finished state with grey OK) | validated 2026-11-22 | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) |
+| Tokens | v0.22.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **B5 Learning card**, B6 Budget (rings, C17), B9 Quote row (G2), B8 Chart
+**Next items, in order** (README "Build order"): **B6 Budget (rings, C17)**, B9 Quote row (G2), B8 Chart
 frame → **S2 Home layout** (first full screen: check glow C light alphas
 there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
 
@@ -137,6 +138,8 @@ yet merged into `main`; Franco merges through a pull request).
 
 ## Assumed (not verified — do not state as fact)
 
+- Fraud rules (R1-R6) stay active during the learning phase (B5
+  reassurance line; brief only says anomaly alerts are off).
 - Tecno Spark 50 has an **LCD** screen and low pixel density (its specs
   are still to be read on the phone, SETUP.md; Franco's pending answer).
 - Widget sizes 2×1 and 2×2 cells (brief §3.11).
