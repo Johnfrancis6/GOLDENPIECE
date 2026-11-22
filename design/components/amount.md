@@ -48,8 +48,9 @@ measured on the composited fill over `surface1`.
 ## 5. Hidden amounts ("•••")
 
 - Only the **eye** in the screen header hides/shows all amounts (Franco);
-  tapping an amount does nothing. The choice is remembered across app
-  starts.
+  tapping an amount does nothing. Hiding is remembered across app
+  starts; **showing again asks for fingerprint or phone code**, and a
+  reveal lasts until the app is closed (C20, Franco 2026-11-22).
 - Digits become "•••", currency and suffix stay ("••• F CFA", "••• F").
   The amount part of a change line is hidden; **percentages stay
   visible** (they do not reveal amounts).
