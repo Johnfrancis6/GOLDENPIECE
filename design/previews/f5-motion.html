@@ -1,0 +1,156 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>F5 Motion demo</title>
+<style>
+@font-face{font-family:P;src:url(../fonts/PoppinsGP-Regular.ttf)}
+@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}
+@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+:root{--bg:#060606;--s1:#111111;--s2:#181818;--tp:#F5F5F5;--ts:#A3A3A3;--hl:rgba(255,255,255,.07);--g:#3DD68C;--br:#FF7A2F;
+--fast:220ms;--base:320ms;--mod:450ms;--slow:700ms;--std:cubic-bezier(.33,0,.15,1);--dec:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box}body{margin:0;background:#2a2a2a;font:15px/22px P;color:var(--tp)}
+.wrap{display:flex;flex-wrap:wrap;gap:20px;padding:20px;justify-content:center}
+.card{width:360px;background:var(--bg);border-radius:20px;overflow:hidden;position:relative}
+.ttl{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font:600 13px/18px P;color:var(--ts);border-bottom:1px solid var(--hl)}
+button.re{font:600 13px P;background:var(--br);color:#060606;border:0;border-radius:999px;padding:8px 16px;min-height:36px;cursor:pointer}
+.scr{height:420px;position:relative;overflow:hidden}
+/* A opening */
+.splash{position:absolute;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:3;font:600 22px P;letter-spacing:.5px;color:var(--br)}
+.splash.out{opacity:0;transition:opacity var(--mod) var(--std)}
+.glow{position:absolute;left:0;right:0;top:0;height:330px;background:radial-gradient(55% 45% at 76% 0%,rgba(255,200,128,0.600) 0.0%,rgba(255,188,115,0.525) 7.1%,rgba(255,175,102,0.455) 14.3%,rgba(255,163,89,0.389) 21.4%,rgba(255,150,77,0.327) 28.6%,rgba(255,138,64,0.271) 35.7%,rgba(255,126,51,0.219) 42.9%,rgba(253,117,47,0.172) 50.0%,rgba(250,110,46,0.131) 57.1%,rgba(247,103,45,0.094) 64.3%,rgba(244,97,45,0.063) 71.4%,rgba(241,90,44,0.037) 78.6%,rgba(238,83,43,0.018) 85.7%,rgba(235,76,43,0.005) 92.9%,rgba(232,69,42,0.000) 100.0%),linear-gradient(180deg,rgba(232,69,42,0.200) 0%,rgba(232,69,42,0.171) 8%,rgba(232,69,42,0.144) 17%,rgba(232,69,42,0.119) 25%,rgba(232,69,42,0.096) 33%,rgba(232,69,42,0.076) 42%,rgba(232,69,42,0.057) 50%,rgba(232,69,42,0.041) 58%,rgba(232,69,42,0.028) 67%,rgba(232,69,42,0.016) 75%,rgba(232,69,42,0.008) 83%,rgba(232,69,42,0.002) 92%,rgba(232,69,42,0.000) 100%);opacity:0}
+.glow.in{opacity:1;transition:opacity var(--slow) var(--dec)}
+.hero{position:relative;padding:72px 20px 0}
+.lbl{color:var(--ts);font-size:13px}
+.amt{font:600 34px/44px P;font-variant-numeric:tabular-nums}
+.chg{color:var(--g);font:500 13px P}
+.rows{margin:24px 20px 0;background:var(--s1);border-radius:12px}
+.r{display:flex;justify-content:space-between;padding:0 16px;height:56px;align-items:center}
+.r+.r{border-top:1px solid var(--hl)}
+.st{opacity:0;transform:translateY(8px)}
+.st.in{opacity:1;transform:none;transition:opacity var(--mod) var(--dec),transform var(--mod) var(--dec)}
+/* B taps */
+.tb{display:flex;position:absolute;left:0;right:0;bottom:0;height:64px;border-top:1px solid var(--hl)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--ts);font:500 12px/16px P;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.tab svg{transition:transform var(--fast) var(--std)}
+.tab:active svg{transform:scale(.92)}
+.tab.on{color:var(--br);font-weight:600}
+.tab.pop svg{animation:pop var(--mod) var(--std)}
+@keyframes pop{0%{transform:scale(.92);animation-timing-function:cubic-bezier(.33,0,.15,1)}45%{transform:scale(1.05);animation-timing-function:cubic-bezier(.22,1,.36,1)}100%{transform:scale(1)}}
+.hint{padding:20px;color:var(--ts);font-size:13px}
+/* C sheen */
+.bank{margin:40px auto 0;width:300px;height:188px;border-radius:14px;background:linear-gradient(160deg,#1C1915 0%,#141312 45%,#111111 100%);position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--hl)}
+.bank .n{position:absolute;left:20px;bottom:44px;font:500 17px P;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.bank .b{position:absolute;left:20px;top:18px;font:600 15px P}
+.bank .o{position:absolute;left:20px;bottom:18px;color:var(--ts);font-size:13px}
+.sh{position:absolute;top:-20%;bottom:-20%;left:-180%;width:180%;background:linear-gradient(110deg,rgba(255,196,120,0.000) 0%,rgba(255,196,120,0.000) 4%,rgba(255,196,120,0.000) 8%,rgba(255,196,120,0.000) 12%,rgba(255,196,120,0.000) 17%,rgba(255,196,120,0.000) 21%,rgba(255,196,120,0.000) 25%,rgba(255,196,120,0.000) 29%,rgba(255,196,120,0.003) 33%,rgba(255,196,120,0.026) 38%,rgba(255,196,120,0.122) 42%,rgba(255,203,130,0.308) 46%,rgba(255,227,163,0.420) 50%,rgba(255,203,130,0.308) 54%,rgba(255,196,120,0.122) 58%,rgba(255,196,120,0.026) 62%,rgba(255,196,120,0.003) 67%,rgba(255,196,120,0.000) 71%,rgba(255,196,120,0.000) 75%,rgba(255,196,120,0.000) 79%,rgba(255,196,120,0.000) 83%,rgba(255,196,120,0.000) 88%,rgba(255,196,120,0.000) 92%,rgba(255,196,120,0.000) 96%,rgba(255,196,120,0.000) 100%);transform:translateX(33%);opacity:0;pointer-events:none}
+.sh.go{transform:translateX(122%);animation:shf 1400ms linear;transition:transform 1400ms cubic-bezier(.65,0,.35,1)}
+@keyframes shf{0%{opacity:0}18%{opacity:1}70%{opacity:1}100%{opacity:0}}
+/* D chart */
+svg.ch{display:block;margin:28px 20px 0}
+.ln{fill:none;stroke:var(--br);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chips{display:flex;gap:8px;margin:16px 20px}
+.chip{font:500 13px P;padding:8px 14px;border-radius:999px;background:var(--s2);color:var(--tp);cursor:pointer;min-height:36px}
+.chip.on{background:var(--tp);color:#060606}
+.bars{display:flex;align-items:flex-end;gap:10px;height:90px;margin:20px 20px 0}
+.bar{flex:1;background:#9085E9;border-radius:4px 4px 0 0;transform-origin:bottom;transform:scaleY(0)}
+.bar.in{transform:scaleY(1);transition:transform var(--slow) var(--dec)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<div class="wrap">
+
+<div class="card"><div class="ttl">A · Montant de l'accueil (M7)<button class="re" onclick="openA()">Rejouer</button></div>
+<div class="scr" id="A"><div class="glow in" id="gl"></div>
+<div class="hero"><div class="lbl st">Patrimoine net</div><div class="amt st" id="am">0 F CFA</div><div class="chg st">▲ +12 500 F CFA · +2,4 %</div></div>
+<div class="rows st"><div class="r"><span>Banque du Sahel</span><b>845 200 F</b></div><div class="r"><span>Crédit Lagune</span><b>1 120 000 F</b></div><div class="r"><span>Portefeuille mobile</span><b>62 500 F</b></div></div></div></div>
+
+<div class="card"><div class="ttl">B · Toucher une icône</div>
+<div class="scr"><div class="hint">Touche les onglets : l'icône rétrécit à l'appui (220&nbsp;ms), puis fait un petit rebond quand l'onglet devient actif (450&nbsp;ms).</div>
+<div class="tb" id="tb"><div class="tab on">
+<svg
+  class="lucide lucide-house"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+</svg>
+<span>Accueil</span></div><div class="tab">
+<svg
+  class="lucide lucide-wallet"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+  <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg>
+<span>Comptes</span></div><div class="tab">
+<svg
+  class="lucide lucide-chart-pie"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z" />
+  <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+</svg>
+<span>Dépenses</span></div><div class="tab">
+<svg
+  class="lucide lucide-chart-line"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+  <path d="m19 9-5 5-4-4-3 3" />
+</svg>
+<span>Placements</span></div></div></div></div>
+
+<div class="card"><div class="ttl">C · Reflet doré (une fois)<button class="re" onclick="sheen()">Rejouer</button></div>
+<div class="scr"><div class="bank" onclick="sheen()"><div class="b">Banque du Sahel</div><div class="n">4111 11•• •••• 1111</div><div class="o">Carte fictive</div><div class="sh" id="sh"></div></div>
+<div class="hint">Passe une fois quand la carte apparaît (1,4&nbsp;s), puis à chaque toucher, avec une entrée et une sortie en fondu. Pas de boucle.</div></div></div>
+
+<div class="card"><div class="ttl">D · Petites animations des graphes<button class="re" onclick="chart()">Rejouer</button></div>
+<div class="scr"><svg class="ch" width="320" height="120" viewBox="0 0 320 120"><path id="ln" class="ln"/></svg>
+<div class="chips"><span class="chip on" onclick="per(this,0)">Mois</span><span class="chip" onclick="per(this,1)">Année</span><span class="chip" onclick="per(this,2)">Depuis le début</span></div>
+<div class="bars" id="bars"></div></div></div>
+</div>
+<script>
+const nb=n=>n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+function count(el,to,ms){const t0=performance.now();const e=x=>1-Math.pow(1-x,5);(function f(t){const p=Math.min(1,(t-t0)/ms);el.textContent=nb(Math.round(to*e(p)))+' F CFA';if(p<1)requestAnimationFrame(f)})(t0)}
+function openA(){const st=[...document.querySelectorAll('#A .st')];st.forEach(s=>s.classList.remove('in'));document.getElementById('am').textContent='0\u00a0F CFA';
+setTimeout(()=>{st.forEach((s,i)=>setTimeout(()=>s.classList.add('in'),i*80));count(document.getElementById('am'),2027700,1100)},300)}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on','pop'));void t.offsetWidth;t.classList.add('on','pop')});
+function sheen(){const s=document.getElementById('sh');s.classList.remove('go');void s.offsetWidth;s.classList.add('go')}
+const P=[[60,58,62,55,64,70,66,74,72,80],[40,48,45,60,58,52,66,72,70,84],[20,30,28,42,50,48,62,70,78,90]];
+const path=v=>v.map((y,i)=>(i?'L':'M')+(i*35+2)+' '+(118-y)).join(' ');
+const ln=document.getElementById('ln');let cur=P[0];
+function draw(){ln.setAttribute('d',path(cur));const L=ln.getTotalLength();ln.style.transition='none';ln.style.strokeDasharray=L;ln.style.strokeDashoffset=L;ln.getBoundingClientRect();ln.style.transition='stroke-dashoffset 1100ms cubic-bezier(.22,1,.36,1)';ln.style.strokeDashoffset=0}
+function bars(){const b=document.getElementById('bars');b.innerHTML='';[50,80,35,65,90,45].forEach((h,i)=>{const d=document.createElement('div');d.className='bar';d.style.height=h+'%';b.appendChild(d);setTimeout(()=>d.classList.add('in'),60+i*70)})}
+function chart(){cur=P[0];document.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('on',i==0));draw();bars()}
+function per(el,k){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');const from=cur,to=P[k],t0=performance.now();ln.style.strokeDasharray='none';
+(function f(t){const p=Math.min(1,(t-t0)/550),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;cur=from.map((y,i)=>y+(to[i]-y)*e);ln.setAttribute('d',path(cur));if(p<1)requestAnimationFrame(f)})(t0)}
+openA();setTimeout(sheen,600);chart();
+</script></html>

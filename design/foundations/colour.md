@@ -54,9 +54,9 @@ text on this orange is **forbidden** (2.6:1).
 
 | Token | Definition | Where |
 |---|---|---|
-| `glow.homeHeader` | radial gradient, centre (70 %, 30 %), gold `#FFB45C` → orange `#FF7A2F` → ember `#E8452A` → transparent; alphas in tokens; height 330 dp | top of **Home only**, behind header and net-worth card |
+| `glow.homeHeader` | **updated in F5 (variant C "Halo haut")**: gold → orange → ember radial bloom at the top right over a vertical ember wash, many eased stops; values in tokens, see [motion.md](motion.md) §6; height 330 dp | top of **Home only**, behind header and net-worth card |
 | `glow.edge` | linear 90°, ember → orange → gold, 2 dp high | top edge of **highlighted cards** only (bank-card visual, highlighted alert/offer card); not on the net-worth block, which sits on the page (F3 §7, 2026-11-22) |
-| `glow.goldSheen` | linear 110° band (45 % of card width), transparent → gold `#FFB45C` 18 % → light gold `#FFE3A3` 55 % → transparent, blend "screen" | bank cards (M13, see §6) |
+| `glow.goldSheen` | **updated in F5**: linear 110° gaussian band of gold `#FFC478` with a light-gold core, 25 stops, normal blend; layer 1.8 × card width | bank cards (M13, see §6) |
 
 Rules: glows are **decorative**: never under text that needs them for
 contrast; text on top of a glow must pass against the darkest and the
@@ -118,7 +118,7 @@ A band of gold light (`glow.goldSheen`) sweeps **once** across a bank-card
 visual, like light on metal. Colour is fixed here; timing, trigger and
 reduced-motion variant are fixed in F5 Motion. Constraints already known:
 transform (translateX) of one static gradient layer clipped to the card,
-no blur, no loop, ≤ 1 s; with reduced motion → no sweep (static edge
+no blur, no loop, 1.4 s (raised from ≤ 1 s by Franco in F5); with reduced motion → no sweep (static edge
 glow only). Where: O13d (card confirmed), bank cards wherever shown (S3),
 guided tour.
 

@@ -13,9 +13,10 @@ Files are in English; UI copy is French first, then English.
 | F2 Typography (Poppins GP) | [foundations/typography.md](foundations/typography.md) · [fonts/](fonts/) · [preview](previews/f2-typography.png) | 2026-11-22 |
 | F3 Spacing, grid, radii, elevation (Finary principles) | [foundations/spacing-layout.md](foundations/spacing-layout.md) · [preview](previews/f3-spacing-layout.png) | 2026-11-22 |
 | F4 Iconography (Lucide) | [foundations/icons.md](foundations/icons.md) · [preview](previews/f4-icons.png) | 2026-11-22 |
+| F5 Motion (+ refined gradients, glow C) | [foundations/motion.md](foundations/motion.md) · [preview](previews/f5-motion.png) · [animated demo](previews/f5-motion.html) | 2026-11-22 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **F5 Motion**. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **C1 Button** (base components). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -136,6 +137,7 @@ are those of the brief §3.
 | M11 | Guided tour: spotlight + bubble | |
 | M12 | Status timeline advancing (L3) | |
 | M13 | **Gold sheen on bank cards** (D6): a gold light band sweeps once across the card | O13d (card confirmed), bank cards wherever shown (S3), tour |
+| M14 | **App opening** (Franco 2026-11-22): animation from splash to Home | to design **at the end** of the design system |
 
 Every animation has a reduced-motion variant and lasts ≤ 5 s.
 
@@ -184,7 +186,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 
 ## Build order
 
-1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion (+ `tokens.json`).
+1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
 2. **Base components:** C1, C5, C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 + C17, C20, C21, C22.
 3. **Chart base G0**, then G1 + G2.
 4. **Home blocks:** B1, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
@@ -195,3 +197,4 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
+12. M14 App opening (last, Franco 2026-11-22).

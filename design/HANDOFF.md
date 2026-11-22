@@ -23,9 +23,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | F3 Spacing, grid, radii, elevation | validated 2026-11-22 | [foundations/spacing-layout.md](foundations/spacing-layout.md) |
 | F6 Display formats | validated 2026-11-22 | [foundations/formats.md](foundations/formats.md) |
 | F4 Iconography (Lucide) | validated 2026-11-22 | [foundations/icons.md](foundations/icons.md) |
-| Tokens | v0.5.0: colour, typography, spacing, layout, radius, elevation, format, icon; **motion pending** | [tokens.json](tokens.json) |
+| F5 Motion (+ glow C, sheen, bank card) | validated 2026-11-22 | [foundations/motion.md](foundations/motion.md) |
+| Tokens | v0.6.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **F5 Motion** (includes M13 gold sheen) → base components
+**Next items, in order** (README "Build order"): base components
 C1, C5, C14 + C15, C6 + C7, C12, C8 + C10 + C11, C9, C18 + C19, C13 + C16 +
 C17, C20, C21, C22 → G0 + G1 + G2 → Home blocks → S2 Home layout → …
 
@@ -50,6 +51,9 @@ yet merged into `main`; Franco merges through a pull request).
   instruction to check and adjust (formats.md §7). Ask him only about
   choices visible across many screens. For F6 he validated the defaults
   without a preview.
+- Motion: he found 150-600 ms **too fast** and wants **soft, refined
+  endings** and **smooth gradients harmonised like Finary** (motion.md).
+  Previews of motion are an animated HTML sent with SendUserFile (render).
 - He wants **clean screens like Finary** (few icons, one header action)
   and **light tap animations** on icons (icons.md §7-8, D8).
 - An ambiguous answer: state the interpretation in one line in the reply
@@ -90,9 +94,11 @@ yet merged into `main`; Franco merges through a pull request).
 ## Open points
 
 - D5: Placements internal navigation decided at step S4.
-- M13 gold sheen: colour fixed (`glow.goldSheen`); duration, trigger and
-  reduced-motion variant to fix in F5; where exactly bank-card visuals
-  appear is decided with S3 (accounts).
+- M13 gold sheen: done in F5 (1.4 s, once on first view + on tap); where
+  exactly bank-card visuals appear is decided with S3 (accounts).
+- M14 App opening: Franco found the first proposal mediocre; design it
+  **last**.
+- Glow C light-theme alphas and banding on the Tecno: to check (S2).
 - Done in F6 (formats.md): abbreviation rule used by F2 §3 ("1,2 M F CFA") and
   U+2212 minus / U+202F separators (Poppins GP has both).
 - Arrows and status shapes (▲ ▼ ● ◆) are icons (F4), not text glyphs.
