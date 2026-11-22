@@ -1,0 +1,14 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+google-services.json
+GoogleService-Info.plist
+# Tooling
+node_modules/
+.expo/
+__pycache__/
+*.pyc
+.DS_Store
