@@ -161,7 +161,7 @@ Generator scripts and HTML of continuation 2 were in the session
 scratchpad (lost with the container); the repo copies in `previews/*.html`
 are the reusable sources: G1 chart functions (`chartSVG`, `smooth`,
 `spark`) are in `previews/g0-g1-g2-charts.html`; glow C CSS is built from
-`tokens.json → colour.glow.homeHeader.layers` (see B1 preview); skeleton
+`tokens.json → colour.glow.homeHeader.layers` (see `previews/b1-networth-header.html`); skeleton
 wifi animation in `previews/c18-c19-loading-empty.html`.
 
 ## Tooling that worked (free, in the container)
