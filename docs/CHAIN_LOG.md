@@ -126,3 +126,87 @@ Use `ref.operators` / `ref.banks` ids for institutions; IBANs with the
 fictitious bank codes above. Anonymous sign-ins are on for `account-demo-start`.
 Add JSON Schemas for each new RPC/function and a pgTAP or Deno test per
 contract. Remember the PUBLIC-execute revoke rule.
+
+---
+
+## B2 — Fake bank and provider · 2026-11-23 · branch `build/b2-fake-bank`
+
+### Fixed values (from the parent session, 2026-11-23)
+
+- **Android application id / package: `com.goldenpiece.app`** (registered in
+  Firebase by Franco). B6 sets `android.package` in `app.json` to it; FCM
+  must match. Also in AUTORUN_BACKEND.md (B8 row).
+- Franco finished the visual-build setup (Expo, Sentry, Brevo SMTP, Firebase
+  + FCM, UptimeRobot) — see AUTORUN_BACKEND.md status note. Open for B6: the
+  Supabase SMTP sender is the Brevo SMTP login, not a verified sender (send
+  one test sign-up mail); Tecno Spark 50 specs still missing (ask Franco once).
+
+### Done
+
+| Item (BUILD_PLAN B2) | Where | State |
+|---|---|---|
+| Python generator: 3 personas (Dakar salaried, Abidjan trader, diaspora investor), 6 account profiles (bank UEMOA/CEMAC/EUR, wallet UEMOA/CEMAC) + 2 "new wallet", 12 + 12 months as offsets, deterministic | `batch/goldenpiece/generator/sim_templates.py`; digest `shared/fixtures/sim_templates.sha256` | done, loaded on dev (`b2.1+224f709486f6`) |
+| Scenarios with ground truth (`scenario_tag`, `expected_band`): anomaly_amount, anomaly_hour (past only), R1 SIM swap → cash-out, R3 fake deposit, R4 mule, R5 fake investment, drain_new_payee (bank profiles), budget_overspend; personas every 2-4 days in the future 08-21 h ≈ 60/25/15 %, past every 10-20 days | generator `inject()` | done (pytest checks frequency, hours, mix) |
+| UEMOA (28) / CEMAC (27) / FR (27) IBANs, RIB key + ISO 13616 check digits, Python ↔ SQL parity | `generator/iban.py`, `sim.iban()`, `shared/fixtures/iban.json`, `supabase/tests/iban_fixtures.test.sql` | done (30/30) |
+| ISO 20022 fields (BkTxCd, E2E id, AcctSvcrRef, purpose codes, charges), mobile-money ops (11 types, agent ids, balance after), SIM-swap events | template entries + `sim.provider_entry()` | done |
+| `ProviderAdapter` + `SimAdapter` + registry + typed errors + bigint wire | `supabase/functions/_shared/provider/*` | done |
+| Contract tests (G8) | `shared/contract-tests/provider.contract.json` (9 checks), runner `_shared/provider/contract.ts`; unit test on a fake, live test on dev, **CI db job runs it on the local stack** | done on dev (4 links, 9/9 each) |
+| `provider-link-start`, `provider-link-complete` (full first sync), `provider-sync` | Edge functions | done, live-tested |
+| `provider-tick` + pg_cron | `sim.cron_tick()` every minute → pg_net → Edge (`x-gp-cron` Vault secret); SQL fallback when the Edge is not configured or 3 min late | done: Edge tick 200 `{links:1, inserted:1}` on dev |
+| `ingest` (insert + rule categorisation only) | `core.ingest_entries` (set-based), Edge `ingest` + `_shared/ingest.ts` | done; idempotent, PDNG→BOOK |
+| `account-demo-start/reset/cleanup` | `api.demo_start/reset/cleanup` + Edge; cleanup cron 03:07 UTC | done |
+| 49 global keyword rules (`core.cat_rules`, source `keyword`) | migration 0100 | done |
+| JSON Schemas | `shared/schemas/{account_demo_start,provider_link_start,provider_link_complete,provider_sync}(.request).json`, `ingest.json`, `provider_security_event.json` | done, validated live |
+
+### Measured (2026-11-23, dev eu-west-1, from this session)
+
+- **Demo clone**: 140-640 ms in the database (346-1 502 entries copied, 3 accounts, categorised);
+  end to end from this session **1.0-1.36 s warm** → criterion "< 2 s" met. **Cold Edge boot adds ≈ 2.2 s**
+  (first call 3.5 s): the app must send `{"warmup": true}` to `account-demo-start` during the guided tour (B6).
+- First version took 1.1 s in the DB: helpers with `SET search_path` are never inlined; rule matching per
+  row cost 0.6 ms. Fixed by migrations 0400 (set-based match) and 0500 (pure helpers without SET).
+- Ticks: an entry due 17:03:15 was in `core.transactions` at 17:04:00 (SQL path); the first-session
+  ask event due 17:05:09 was delivered by the Edge tick at 17:06:00 and categorised (`housing.equipment`).
+- Categorisation on a Dakar clone: 915/990 by keyword rules (92 %), 75 left for the LLM.
+- Template load via Management API: 24 s for all 10 (skipped when the version is unchanged).
+- Tests: pgTAP on dev **389/389** (provider_sim 41, iban 30, money 210, RLS 75, guards 11, api 22);
+  pytest 280 passed (+7 live skipped; live run 47 passed); Deno 17 unit + live contract ok.
+- DB 32 MB after cleanup.
+
+### Decisions / assumptions
+
+- Anchor = most recent **local Monday 00:00** (weekdays and hours of the templates stay realistic;
+  day-of-month events like salary drift with the clone date) [mine].
+- One `core.provider_links` row per institution of a persona (3 links for Dakar), each with its `sim.links`.
+- Demo profile takes the persona's country, zone and reference currency (diaspora → FR, Europe/Paris,
+  EUR); `lang` from the request; `country` from the request is ignored [mine].
+- First-session guarantee (ARCHITECTURE §7.8): a card payment 7× the usual on a new merchant at +3 min
+  (ask), a SIM swap 09:35 + 75 % cash-out at 10:00 next day local (bank), **reversed at 12:00** so the
+  template's later balances stay ≥ 0 [mine].
+- Demo trades reference instruments **`SPY`, `QQQ`, `BTC`, `ETH`, `GLD`** (USD cents); a trade whose
+  instrument is not in `mkt.instruments` is skipped (`trades_skipped`). **B3: include these ids** (or
+  change `sim.template_wealth` via the generator) — clones made before B3 get trades only after a reset.
+- Fictitious MSISDNs: `+<dial> 99 xxxxxxx` (prefix 99 assumed outside mobile ranges). IBAN layouts and
+  the RIB key for letter bank codes remain **[assumed]** (no BCEAO/BEAC specimen checked).
+- `provider-link-*`, `provider-sync`, `account-demo-*`: `verify_jwt=false`, token checked in the
+  function (`/auth/v1/user`); `account-demo-start` refuses non-anonymous callers (403).
+- `history_days` 0 for "new wallet" (`options.new_wallet`), else 365. Max 8 pending/active links per user.
+- Tick SQL fallback also runs without the B5 scoring hook — B5 must score in the SQL path too, or make
+  the fallback only a delivery of last resort (it logs `ops.job_runs` job `provider-tick-fallback`).
+
+### Not done / blocked
+
+- No list/read RPCs for accounts and transactions (`list_accounts`, `get_transactions`,
+  `sync_transactions`, `get_transaction`): they belong to B6/B7 (screens) — the data is there.
+- `simulated-analyst`, scoring, alerts, push: B5. `ingest` returns `scored: 0, alerts: 0` and
+  `transaction_ids` for B5 to score.
+
+### Defects open
+
+- none known. (B1's `rls_core` test counted global rules; updated for the 49 seeded keyword rules.)
+
+### Next: B3 — Market data
+
+Start from branch `build/b2-fake-bank`. Include `SPY, QQQ, BTC, ETH, GLD` in the 30-instrument
+universe (demo trades). After seeding instruments, a demo reset gives clones their trades. Remember
+`scripts/sb_api.py load-sim` if the generator changes (update `shared/fixtures/sim_templates.sha256`).

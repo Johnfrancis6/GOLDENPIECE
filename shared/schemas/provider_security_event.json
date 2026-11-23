@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_security_event.json",
+  "title": "Provider security event (simulated operator signal, C8)",
+  "type": "object",
+  "required": [
+    "providerEventId",
+    "type",
+    "at",
+    "details"
+  ],
+  "properties": {
+    "providerEventId": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "sim_swap",
+        "new_device",
+        "device_security_changed",
+        "password_changed",
+        "email_changed"
+      ]
+    },
+    "at": {
+      "$ref": "common.json#/$defs/timestamp"
+    },
+    "details": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "providerEventId": "1b4ccba7-X1000001",
+      "type": "sim_swap",
+      "at": "2026-11-24T09:35:00Z",
+      "details": {
+        "accountKey": "momo1",
+        "signal": "operator_sim_swap"
+      }
+    }
+  ]
+}

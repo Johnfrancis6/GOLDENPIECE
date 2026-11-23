@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_link_start.request.json",
+  "title": "Edge provider-link-start request",
+  "type": "object",
+  "required": [
+    "institution"
+  ],
+  "properties": {
+    "institution": {
+      "type": "string",
+      "pattern": "^[a-z_]{2,40}$",
+      "description": "ref.banks or ref.operators id"
+    },
+    "scopes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "balances",
+          "transactions"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "new_wallet": {
+          "type": "boolean",
+          "description": "simulated wallet with no history (template new_wallet_*)"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "institution": "kola_money",
+      "scopes": [
+        "balances",
+        "transactions"
+      ]
+    },
+    {
+      "institution": "savane_pay",
+      "options": {
+        "new_wallet": true
+      }
+    }
+  ]
+}

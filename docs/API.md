@@ -389,3 +389,18 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | `api.record_consents(p_items)` | B1 | `record_consents.request.json` |
 | `api.fx_rate(p_from, p_to)` (display rate; XOF/XAF peg exact, USD from `mkt.fx_latest`) | B1 | — |
 | `api.health_internal()` (service role) + Edge `health` (GET, no JWT) | B1 | `health.json` |
+| Edge `account-demo-start` `{persona, lang?, country?}` (anonymous caller only; `{warmup:true}` → `{warm:true}` without auth, sent by the app during the guided tour) → `{user_id, persona, accounts_count, transactions_count, trades_skipped, ms}`; 5 starts/IP/hour | B2 | `account_demo_start(.request).json` |
+| Edge `account-demo-reset` `{}` → same as start (deletes the caller's demo data, keeps devices/consents/questionnaire/card, re-clones the persona; 5/hour) | B2 | `account_demo_start.json` |
+| Edge `account-demo-cleanup` (cron secret) `{days?}` → `{deleted, days}`; pg_cron runs `api.demo_cleanup()` daily 03:07 UTC | B2 | — |
+| Edge `provider-link-start` `{institution, scopes?, options?{new_wallet}}` → `{link_id, consent{institution, institution_name, scopes, history_days, simulated}}` | B2 | `provider_link_start(.request).json` |
+| Edge `provider-link-complete` `{link_id, approve}` → `{status: active|revoked, new_count, accounts[{id, kind, display_name, institution, currency, balance}]}` (first full sync done before answering) | B2 | `provider_link_complete(.request).json` |
+| Edge `provider-sync` `{account_ids?}` → `{new_count, balances[{account_id, balance}]}` | B2 | `provider_sync(.request).json` |
+| Edge `provider-tick` (cron secret, from `sim.cron_tick` via pg_net every minute) `{link_ids?}` → `{links, failed, inserted}` | B2 | — |
+| Edge `ingest` (cron secret; module `_shared/ingest.ts` in-process) `{user_id, account_id, entries: ProviderEntry[]}` → `{inserted, updated, categorised, uncategorised, scored, alerts, transaction_ids}` (scored/alerts = 0 until B5) | B2 | `ingest.json`, `provider_entry.json`, `provider_security_event.json` |
+| Service-role RPCs behind the adapter: `provider_link_get`, `provider_user_links`, `provider_accounts_upsert`, `provider_ingest`, `provider_ingest_security`, `provider_set_balances`, `provider_link_revoke`; simulated bank `sim_link_start`, `sim_link_complete`, `sim_list_entries` (newest first, cursor `<offset>:<seq>`), `sim_balances`, `sim_security_events`, `sim_revoke`, `sim_tick_collect`, `sim_tick_ack`; `demo_start`, `demo_reset`, `demo_cleanup`, `cron_secret_ok` | B2 | — |
+
+Notes (B2):
+- **Auth in user-facing functions**: `verify_jwt = false`; each function checks the bearer token itself with `GET /auth/v1/user` (works with legacy and new JWT keys). Errors use the §1 body, plus `UNAUTHORIZED` 401.
+- **Server-to-server**: header `x-gp-cron` = Vault secret `gp_cron_secret` (generated in the database by migration 20261125000300, never in the repo). `ops.app_config` key `functions` `{url}` is set by `deploy-dev.yml`.
+- **Categorisation at ingest**: user rules (`core.cat_rules.user_id` = the user) always win, then global keyword rules (49 seeded, `source='keyword'`), then priority. `match_field='remittance'` matches `core.norm_text(remittance_info || ' ' || cp_name)` (lower case, accents folded). Unmatched rows stay `category_source='none'` for `categorise-llm`.
+- **`cp_key`** (features, user rules): `m:<msisdn>` | `i:<IBAN>` | `n:<normalised name>` | `op:<momo op>` | `x:<label>`.

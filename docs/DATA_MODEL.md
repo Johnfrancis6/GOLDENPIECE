@@ -506,6 +506,19 @@ create table sim.links (                                      -- one per linked 
 create index on sim.links (delivered_until);
 ```
 
+**Built in B2 (additions to the sketch above):** `sim.templates.timezone`,
+`sim.templates.country`; `sim.template_entries.cum_minor` (signed running sum
+per account, gives `balanceAfterMinor` without summing at read time) + index
+`(template_id, account_key, offset_s)`; `sim.template_wealth(template_id, seq,
+item jsonb)` (debts, real estate, demo trades of a persona); per-link extras
+`sim.link_entries` / `sim.link_security_events` (seq ≥ 1000000: the
+first-session guarantee). Template security events carry
+`details.accountKey`. `core.provider_links` gains status `pending`,
+`template_id` (sim only) and `options`; simulated security events are unique
+per `(user_id, details->>'provider_event_id')`. Template volume (generator
+b2.1): 10 templates, 10 327 entries (≈ 3.4 MB of JSON), far below the 56 k
+row estimate of §4. A demo clone copies 350-1 500 past entries.
+
 ### 2.9 Reference and operations (`ref`, `ops`)
 
 ```sql

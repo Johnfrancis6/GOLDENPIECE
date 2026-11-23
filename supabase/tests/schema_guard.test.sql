@@ -15,7 +15,8 @@ select tables_are('analytics', array['behaviour_profiles','learning_status','por
   'risk_metrics','drawdown_series','exposures','performance','attribution'], 'analytics tables');
 select tables_are('ops', array['app_config','job_runs','audit_log','rate_limits','idempotency','recompute_queue',
   'push_log','scoring_params','param_changes','model_artifacts','model_eval'], 'ops tables');
-select tables_are('sim', array['templates','template_accounts','template_entries','template_security_events','links'], 'sim tables');
+select tables_are('sim', array['templates','template_accounts','template_entries','template_security_events','links',
+  'template_wealth','link_entries','link_security_events'], 'sim tables');
 select tables_are('api', array[]::name[], 'api exposes no tables');
 
 select is((select array_agg(n.nspname || '.' || c.relname) from pg_class c join pg_namespace n on n.oid = c.relnamespace

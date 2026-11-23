@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/account_demo_start.json",
+  "title": "Edge account-demo-start / account-demo-reset response",
+  "type": "object",
+  "required": [
+    "user_id",
+    "persona",
+    "accounts_count",
+    "transactions_count"
+  ],
+  "properties": {
+    "user_id": {
+      "$ref": "common.json#/$defs/uuid"
+    },
+    "persona": {
+      "type": "string"
+    },
+    "accounts_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "transactions_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "trades_skipped": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "demo trades whose instrument is not in mkt.instruments yet"
+    },
+    "ms": {
+      "type": "number",
+      "description": "time spent in the database"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "user_id": "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10",
+      "persona": "dakar_salaried",
+      "accounts_count": 3,
+      "transactions_count": 990,
+      "trades_skipped": 0,
+      "ms": 566
+    }
+  ]
+}

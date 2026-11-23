@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_sync.request.json",
+  "title": "Edge provider-sync request (pull-to-refresh)",
+  "type": "object",
+  "properties": {
+    "account_ids": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "$ref": "common.json#/$defs/uuid"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {},
+    {
+      "account_ids": [
+        "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10"
+      ]
+    }
+  ]
+}

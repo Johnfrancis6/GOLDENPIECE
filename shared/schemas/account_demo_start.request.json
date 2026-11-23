@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/account_demo_start.request.json",
+  "title": "Edge account-demo-start request (API.md §2.1)",
+  "type": "object",
+  "properties": {
+    "persona": {
+      "enum": [
+        "dakar_salaried",
+        "abidjan_trader",
+        "diaspora_investor"
+      ]
+    },
+    "lang": {
+      "$ref": "common.json#/$defs/lang"
+    },
+    "country": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "warmup": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "persona": "dakar_salaried",
+      "lang": "fr",
+      "country": "SN"
+    },
+    {
+      "warmup": true
+    }
+  ],
+  "description": "Either a clone request, or {warmup:true} (no auth, returns {warm:true}) sent during the guided tour.",
+  "oneOf": [
+    {
+      "required": [
+        "persona"
+      ]
+    },
+    {
+      "required": [
+        "warmup"
+      ],
+      "properties": {
+        "warmup": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/ingest.json",
+  "title": "ingest result (API.md §3); scored/alerts stay 0 until B5",
+  "type": "object",
+  "required": [
+    "inserted",
+    "updated",
+    "categorised",
+    "uncategorised",
+    "scored",
+    "alerts",
+    "transaction_ids"
+  ],
+  "properties": {
+    "inserted": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "updated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "categorised": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "uncategorised": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scored": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "alerts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "transaction_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.json#/$defs/uuid"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "inserted": 1,
+      "updated": 0,
+      "categorised": 1,
+      "uncategorised": 0,
+      "scored": 0,
+      "alerts": 0,
+      "transaction_ids": [
+        "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10"
+      ]
+    }
+  ]
+}

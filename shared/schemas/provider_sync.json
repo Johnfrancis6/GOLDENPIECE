@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_sync.json",
+  "title": "Edge provider-sync response; new rows then come through sync_transactions",
+  "type": "object",
+  "required": [
+    "new_count",
+    "balances"
+  ],
+  "properties": {
+    "new_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "balances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "account_id",
+          "balance"
+        ],
+        "properties": {
+          "account_id": {
+            "$ref": "common.json#/$defs/uuid"
+          },
+          "balance": {
+            "$ref": "common.json#/$defs/money"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "new_count": 2,
+      "balances": [
+        {
+          "account_id": "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10",
+          "balance": {
+            "m": 102700,
+            "c": "XOF"
+          }
+        }
+      ]
+    }
+  ]
+}

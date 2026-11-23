@@ -1,0 +1,14 @@
+{
+  "description": "Provider adapter contract (ARCHITECTURE §3.2). Every adapter must pass every check; the TS runner is supabase/functions/_shared/provider/contract.ts (run in CI against the simulated adapter on the local stack, and with GP_LIVE=1 against dev).",
+  "checks": [
+    { "id": "capabilities", "rule": "capabilities(institution) returns the 5 fields with the right types" },
+    { "id": "entries_schema", "rule": "every entry has the ProviderEntry required fields (shared/schemas/provider_entry.json), bigint money >= 0, status/creditDebit enums, ISO dates" },
+    { "id": "newest_first", "rule": "listEntries returns entries newest first across pages" },
+    { "id": "pages_disjoint", "rule": "pages never repeat an entry; the cursor ends (no nextCursor on the last page)" },
+    { "id": "ids_stable", "rule": "two full listings give the same providerEntryId set and the same content" },
+    { "id": "booked_not_future", "rule": "no entry is booked after now" },
+    { "id": "booked_from", "rule": "bookedFrom drops older entries" },
+    { "id": "balances", "rule": "getBalances returns one bigint balance per account; for wallets it equals the newest entry's balanceAfterMinor" },
+    { "id": "page_size", "rule": "a page never holds more than pageSize entries" }
+  ]
+}

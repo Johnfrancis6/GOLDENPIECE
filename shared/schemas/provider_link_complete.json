@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_link_complete.json",
+  "title": "Edge provider-link-complete response (accounts after the first full sync)",
+  "type": "object",
+  "required": [
+    "status",
+    "accounts"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "active",
+        "revoked"
+      ]
+    },
+    "new_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "accounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "display_name",
+          "institution",
+          "currency",
+          "balance"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.json#/$defs/uuid"
+          },
+          "kind": {
+            "enum": [
+              "bank",
+              "momo"
+            ]
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "institution": {
+            "type": "string"
+          },
+          "currency": {
+            "$ref": "common.json#/$defs/currency"
+          },
+          "balance": {
+            "oneOf": [
+              {
+                "$ref": "common.json#/$defs/money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "status": "active",
+      "new_count": 412,
+      "accounts": [
+        {
+          "id": "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10",
+          "kind": "momo",
+          "display_name": "Kola Money",
+          "institution": "kola_money",
+          "currency": "XOF",
+          "balance": {
+            "m": 18450,
+            "c": "XOF"
+          }
+        }
+      ]
+    },
+    {
+      "status": "revoked",
+      "accounts": []
+    }
+  ]
+}
