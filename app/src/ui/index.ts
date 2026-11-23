@@ -11,3 +11,5 @@ export * from './Sheet';
 export * from './Toast';
 export * from './Loading';
 export * from './Data';
+export * from './BrandMark';
+export * from './Sheen';

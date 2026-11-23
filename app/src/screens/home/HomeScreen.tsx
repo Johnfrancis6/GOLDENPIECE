@@ -5,13 +5,14 @@
  * amounts, 200 % font). Pure view: data comes in props, so the guided tour
  * (T) renders the same screen with bundled demo data, offline.
  */
-import { useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { useRef, useState, type ReactNode } from 'react';
+import { Animated, Pressable, ScrollView, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { T, useTheme } from '../../theme';
 import {
-  Banner, Card, CategoryBadge, EmptyState, FailedState, Icon, Ring, SkeletonBar, SkeletonRow, Sparkline, Txt,
+  Banner, Card, CategoryBadge, EmptyState, FailedState, Icon, Ring, Sheen, SkeletonBar, SkeletonRow, Sparkline, Txt,
+  type SheenHandle,
   institutionColour, initials, tk, useLargeFont, type IconName,
 } from '../../ui';
 import { TAB_BAR_CLEARANCE, type ScrollRef } from '../../ui/TabBar';
@@ -23,6 +24,8 @@ import {
   LEARNING_DAYS, LEARNING_OPS, badgeKey, cards, categoryName, hasAccounts, strip, tiles, type CardVM, type Freshness, type Strip,
 } from '../../lib/home';
 import { TourTarget } from '../tour/targets';
+import { BUILD, Enter, OP, seg, useOpening, useOpeningCountUp } from '../../state/opening';
+import { EASE } from '../../ui/base';
 
 const H = T.screen.home;
 const M = T.layout.screenMargin;
@@ -66,9 +69,11 @@ export function HomeScreen({ scrollRef, onScroll, ...p }: HomeScreenProps) {
     <ScrollView ref={scrollRef} scrollEnabled={!p.frozen} pointerEvents={p.frozen ? 'none' : 'auto'} onScroll={onScroll} scrollEventThrottle={16}
       style={{ flex: 1, backgroundColor: c.bg }} showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingTop: insets.top, paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}>
-      <Header name={p.firstName} alert={open > 0} hidden={p.hidden} onEye={p.onEye}
-        onProfile={() => p.onOpen('settings', t('dest.settings'))}
-        onAlert={() => (open === 1 && h?.alerts.top ? p.onOpen('alert', t('banner.confirm'), h.alerts.top.id) : p.onOpen('alerts', t('dest.alerts')))} />
+      <Enter at={BUILD.header} dy={-8}>
+        <Header name={p.firstName} alert={open > 0} hidden={p.hidden} onEye={p.onEye}
+          onProfile={() => p.onOpen('settings', t('dest.settings'))}
+          onAlert={() => (open === 1 && h?.alerts.top ? p.onOpen('alert', t('banner.confirm'), h.alerts.top.id) : p.onOpen('alerts', t('dest.alerts')))} />
+      </Enter>
       <StateBanner state={p.state} fetchedAt={p.fetchedAt} now={p.now} tz={p.tz} lang={t.lang} onRetry={p.onRetry} />
       {p.loading && !h ? <HomeSkeleton />
         : !h ? <View style={{ paddingTop: 24 }}><FailedState what={t('dest.home')} onRetry={p.onRetry} /></View>
@@ -129,15 +134,15 @@ function Body(p: HomeScreenProps & { home: Home }) {
   return (
     <>
       <Carousel home={h} hidden={p.hidden} demo={p.demo} onOpen={p.onOpen} />
-      {s ? <TourTarget k="alert"><View style={{ paddingHorizontal: M, marginTop: 14 }}><StripBlock s={s} onOpen={p.onOpen} /></View></TourTarget> : null}
+      {s ? <TourTarget k="alert"><Enter at={BUILD.banner} dy={16} style={{ paddingHorizontal: M, marginTop: 14 }}><StripBlock s={s} onOpen={p.onOpen} /></Enter></TourTarget> : null}
       <TourTarget k="actions">
         <Actions count={h.uncategorised_count} onOpen={p.onOpen} />
       </TourTarget>
       <TourTarget k="tiles">
-        <TilesRow home={h} hidden={p.hidden} onOpen={p.onOpen} />
+        <Enter at={BUILD.tiles} dy={8}><TilesRow home={h} hidden={p.hidden} onOpen={p.onOpen} /></Enter>
       </TourTarget>
       <TourTarget k="list">
-        <View style={{ marginTop: 22, paddingHorizontal: M }}>
+        <Enter at={BUILD.listHead} dy={24} style={{ marginTop: 22, paddingHorizontal: M }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <Txt spec={{ size: 17, lineHeight: 24, weight: 600 }} accessibilityRole="header">{t('list')}</Txt>
             <Pressable onPress={() => p.onOpen('operations', t('dest.operations'))} accessibilityRole="button" hitSlop={12}>
@@ -145,7 +150,7 @@ function Body(p: HomeScreenProps & { home: Home }) {
             </Pressable>
           </View>
           <Recent rows={p.recent} hidden={p.hidden} tz={p.tz} lang={t.lang} now={p.now} syncing={!p.txSynced} />
-        </View>
+        </Enter>
       </TourTarget>
     </>
   );
@@ -165,8 +170,17 @@ function Carousel({ home, hidden, demo, onOpen }: { home: Home; hidden: boolean;
     const i = Math.round(e.nativeEvent.contentOffset.x / (cw + GAP));
     if (i !== page) setPage(Math.max(0, Math.min(list.length - 1, i)));
   };
+  const op = useOpening();
+  const move = op?.build ? {
+    opacity: seg(op.clock, [OP.card.appear, OP.card.appear + 150], [0, 1], EASE.standard),
+    transform: [
+      { translateX: seg(op.clock, OP.card.moveUp as [number, number], [OP.card.offset[0], 0], EASE.morph) },
+      { translateY: seg(op.clock, OP.card.moveUp as [number, number], [OP.card.offset[1], 0], EASE.morph) },
+    ],
+  } : undefined;
   return (
     <View style={{ marginTop: 8 }}>
+      <Animated.View style={move}>
       <TourTarget k="card">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} snapToInterval={cw + GAP} decelerationRate="fast"
           disableIntervalMomentum onScroll={onScroll} scrollEventThrottle={32}
@@ -176,18 +190,19 @@ function Carousel({ home, hidden, demo, onOpen }: { home: Home; hidden: boolean;
               accessibilityHint={t('a11y.carousel', { i: i + 1, n: list.length })}>
               {x.kind === 'networth'
                 ? <NetworthCard v={x} cur={home.ref_currency} hidden={hidden} demo={demo} onPress={() => onOpen('networth', t('dest.networth'))} />
-                : <AccountCard v={x} hidden={hidden} onPress={() => onOpen('account', x.name, x.id)} />}
+                : <AccountCard v={x} hidden={hidden} visible={page === i && !op} onPress={() => onOpen('account', x.name, x.id)} />}
             </View>
           ))}
         </ScrollView>
       </TourTarget>
+      </Animated.View>
       <TourTarget k="dots">
-        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 10 }} importantForAccessibility="no-hide-descendants">
+        <Enter at={BUILD.dots} style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 10 }}>
           {list.map((x, i) => (
             <View key={i} style={{ height: H.dots.size, width: i === page ? H.dots.active[0] : H.dots.size, borderRadius: H.dots.size / 2,
               backgroundColor: i === page ? c.brand.text : c.surface3 }} />
           ))}
-        </View>
+        </Enter>
       </TourTarget>
     </View>
   );
@@ -207,8 +222,9 @@ function NetworthCard({ v, cur, hidden, demo, onPress }: { v: Extract<CardVM, { 
   const G = H.card.gradient.stops;
   // card amount in the short "F" form (preview: "13 439 800 F"); abbreviated by F6 when it would not fit 256 dp
   const full = formatAmount(v.net, cur, t.lang, { row: true });
+  const shown = useOpeningCountUp(v.net); // M7 count-up during M14, else the value
   const amount = hidden ? formatAmount(v.net, cur, t.lang, { hidden: true, row: true })
-    : (full.length > (large ? 9 : 14) ? formatAmountShort(v.net, cur, t.lang).replace(/F[\s\u00a0]CFA$/, 'F') : full);
+    : (full.length > (large ? 9 : 14) ? formatAmountShort(shown, cur, t.lang).replace(/F[\s\u00a0]CFA$/, 'F') : formatAmount(shown, cur, t.lang, { row: true }));
   const up = (v.dayAbs ?? 0) >= 0;
   const day = v.dayAbs === null ? null
     : hidden ? formatChangePct(v.dayPct ?? 0, t.lang)
@@ -255,14 +271,17 @@ export function footKey(n: number, m: number, lang: Lang): StringKey {
 
 const KIND_LABEL: Record<string, StringKey> = { bank: 'kind.bank', momo: 'kind.momo', broker: 'kind.broker', card: 'kind.card' };
 
-function AccountCard({ v, hidden, onPress }: { v: Extract<CardVM, { kind: 'account' }>; hidden: boolean; onPress: () => void }) {
+function AccountCard({ v, hidden, visible, onPress }: { v: Extract<CardVM, { kind: 'account' }>; hidden: boolean; visible: boolean; onPress: () => void }) {
   const { c, scheme } = useTheme();
   const t = useT();
+  const sheen = useRef<SheenHandle>(null);
+  const bank = v.accKind === 'bank';
   const amount = formatAmount(v.balanceMinor, v.currency, t.lang, { hidden, row: true });
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${v.name}, ${hidden ? '•••' : amount}`}
-      style={({ pressed }) => ({ minHeight: H.card.size[1], borderRadius: H.card.radius, backgroundColor: scheme === 'dark' ? '#1B1B1B' : '#FFFFFF',
+    <Pressable onPress={() => { if (bank) sheen.current?.play(); onPress(); }} accessibilityRole="button" accessibilityLabel={`${v.name}, ${hidden ? '•••' : amount}`}
+      style={({ pressed }) => ({ minHeight: H.card.size[1], borderRadius: H.card.radius, backgroundColor: scheme === 'dark' ? '#1B1B1B' : '#FFFFFF', overflow: 'hidden',
         borderWidth: 1, borderColor: c.border.hairline, padding: 20, justifyContent: 'space-between', gap: 8, transform: [{ scale: pressed ? 0.98 : 1 }] })}>
+      {bank ? <Sheen ref={sheen} visible={visible} /> : null}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: institutionColour(v.institution ?? v.id), alignItems: 'center', justifyContent: 'center' }}>
           <Txt fixed spec={{ size: 13, lineHeight: 18, weight: 600 }} color={BADGE_TEXT}>{initials(v.name)}</Txt>
@@ -348,8 +367,9 @@ function Actions({ count, only, onOpen }: { count: number; only?: boolean; onOpe
         const primary = i === 0;
         const a11y = a.dest === 'sort' && count > 0 ? t('a11y.sort', { n: count }) : t(a.title);
         return (
-          <Pressable key={a.dest} onPress={() => onOpen(a.dest, t(a.title))} accessibilityRole="button" accessibilityLabel={a11y}
-            style={{ width: large ? '50%' : 72, alignItems: 'center', gap: 6 }}>
+          <Enter key={a.dest} at={BUILD.actions + i * OP.homeBuild.actionStagger} scaleFrom={OP.homeBuild.actionScaleFrom} style={{ width: large ? '50%' : 72 }}>
+          <Pressable onPress={() => onOpen(a.dest, t(a.title))} accessibilityRole="button" accessibilityLabel={a11y}
+            style={{ alignItems: 'center', gap: 6 }}>
             {({ pressed }) => (
               <>
                 <View style={{ width: A.circle, height: A.circle, borderRadius: A.circle / 2, alignItems: 'center', justifyContent: 'center',
@@ -366,6 +386,7 @@ function Actions({ count, only, onOpen }: { count: number; only?: boolean; onOpe
               </>
             )}
           </Pressable>
+          </Enter>
         );
       })}
     </View>

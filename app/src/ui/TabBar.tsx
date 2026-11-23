@@ -5,12 +5,13 @@
  * view with `useTabScrollRef`). A 150 dp `bg` fade sits behind the pill.
  */
 import { createContext, forwardRef, useCallback, useContext, useEffect, useMemo, useRef, useState, type ComponentRef, type ReactNode, type RefObject } from 'react';
-import { Pressable, View, type ScrollView, type PressableProps } from 'react-native';
+import { Animated, Pressable, View, type ScrollView, type PressableProps } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { T, useTheme } from '../theme';
 import { Icon, Txt, tk, type IconName } from './base';
+import { BUILD, useOpeningEntry } from '../state/opening';
 
 export type ScrollRef = RefObject<ComponentRef<typeof ScrollView> | null>;
 type ViewRef = ComponentRef<typeof View>;
@@ -45,8 +46,9 @@ export const useTabScroll = () => useContext(TabScrollContext);
 export const TabBarPill = forwardRef<ViewRef, { children?: ReactNode }>(function TabBarPill({ children, ...rest }, ref) {
   const { c, scheme } = useTheme();
   const insets = useSafeAreaInsets();
+  const enter = useOpeningEntry(BUILD.tabBar, { dy: 24 }); // M14 Home build
   return (
-    <View pointerEvents="box-none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+    <Animated.View pointerEvents="box-none" style={[{ position: 'absolute', left: 0, right: 0, bottom: 0 }, enter]}>
       <LinearGradient pointerEvents="none" colors={[`${c.bg}00`, c.bg]} locations={[0, 0.55]}
         style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: BB.fadeBehind + insets.bottom }} />
       <View ref={ref} accessibilityRole="tablist" {...rest}
@@ -54,7 +56,7 @@ export const TabBarPill = forwardRef<ViewRef, { children?: ReactNode }>(function
           backgroundColor: tk(BB.fill, scheme), flexDirection: 'row', alignItems: 'stretch', paddingHorizontal: 6 }}>
         {children}
       </View>
-    </View>
+    </Animated.View>
   );
 });
 

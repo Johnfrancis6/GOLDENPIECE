@@ -4,8 +4,8 @@
  * gate that sends each phase to its route (S1 §1).
  * Web preview only: ?scheme=dark|light&scale=2&lang=en override for screenshots.
  */
-import { useEffect, useMemo } from 'react';
-import { Platform, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Animated, Platform, View } from 'react-native';
 import { Stack, router, useRootNavigationState, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,10 +13,12 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeContext, makeTheme, useSchemeFor, type Scheme } from '../theme';
 import { LangContext } from '../i18n';
-import { FontScaleContext, ReducedMotionProvider, ToastProvider } from '../ui';
+import { FontScaleContext, ReducedMotionProvider, ToastProvider, useReducedMotion } from '../ui';
 import { AppProvider, useAppMaybe } from '../state/app';
 import { ROUTE } from '../lib/flow';
 import { Splash } from '../screens/Splash';
+import { AppOpening } from '../screens/opening/AppOpening';
+import { OpeningContext, type Opening } from '../state/opening';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -58,20 +60,49 @@ function PhaseGate() {
   return null;
 }
 
+/** M14 plays once per process (cold start); a warm start keeps the process, so it never replays. */
+let coldStart = true;
+
+/**
+ * Decides the M14 opening once the first phase is known: it plays on a cold
+ * start that lands on Home (Home builds around the card) or on the lock screen
+ * (mark only, then the lock screen); onboarding keeps O1 and no M14.
+ * The native splash stays up until that decision (3 s at most).
+ */
+function useColdOpening(kind: string | undefined) {
+  const [st, setSt] = useState<{ decided: boolean; opening: Opening | null }>({ decided: false, opening: null });
+  // decided during render the first time the phase is known (React "adjust state on change" pattern)
+  if (!st.decided && kind && kind !== 'loading') {
+    const play = coldStart && (kind === 'ready' || kind === 'locked') && webQuery.opening !== '0';
+    setSt({ decided: true, opening: play ? { clock: new Animated.Value(0), build: kind === 'ready' } : null });
+  }
+  useEffect(() => {
+    if (st.decided) coldStart = false;
+  }, [st.decided]);
+  useEffect(() => {
+    const t = setTimeout(() => setSt((x) => (x.decided ? x : { ...x, decided: true })), 3000);
+    return () => clearTimeout(t);
+  }, []);
+  const end = useCallback(() => setSt((x) => ({ ...x, opening: null })), []);
+  return { opening: st.opening, decided: st.decided, end };
+}
+
 function Shell({ scheme }: { scheme: Scheme }) {
   const app = useAppMaybe();
+  const reduced = useReducedMotion();
   const theme = useMemo(() => makeTheme(scheme), [scheme]);
   const lang = webQuery.lang === 'en' || webQuery.lang === 'fr' ? webQuery.lang : app?.lang ?? 'fr';
+  const { opening, decided, end } = useColdOpening(app?.phase.kind);
   useEffect(() => {
-    if (app) SplashScreen.hideAsync().catch(() => {});
-  }, [app]);
+    if (app && decided) SplashScreen.hideAsync().catch(() => {});
+  }, [app, decided]);
   return (
     <ThemeContext.Provider value={theme}>
       <LangContext.Provider value={lang}>
         <ToastProvider>
         <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
         {app ? (
-          <>
+          <OpeningContext.Provider value={opening}>
             <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.c.bg }, animation: 'slide_from_right' }}>
               <Stack.Screen name="index" options={{ animation: 'fade' }} />
               <Stack.Screen name="lock" options={{ animation: 'fade', gestureEnabled: false }} />
@@ -80,7 +111,8 @@ function Shell({ scheme }: { scheme: Scheme }) {
               <Stack.Screen name="tour" options={{ animation: 'fade' }} />
             </Stack>
             <PhaseGate />
-          </>
+            {opening ? <AppOpening opening={opening} reduced={reduced} onDone={end} /> : null}
+          </OpeningContext.Provider>
         ) : <Splash />}
         </ToastProvider>
       </LangContext.Provider>

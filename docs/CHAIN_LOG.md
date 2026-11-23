@@ -560,7 +560,8 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 | **B6.2 UI kit** | 1. Docs: API.md rows for B6.1 RPCs; CI job `app` in `ci.yml` (npm ci, jest, tsc, lint). 2. Root `app/app/_layout.tsx` (fonts, ThemeContext, LangContext, SafeArea) + web preview working (`npx expo start --web` or `expo export -p web` + Playwright screenshot). 3. Txt, Icon (lucide map), Button C1, TopBar + StepDots C12/C17, StepScreen B19. 4. Card/ListRow C6/C7, Radio/Checkbox/Switch C16, Input C2, Banner C8. 5. PinDots C3 + Keypad C4, Sheet C9, Toast C11, Skeleton C18, EmptyState C19, Ring C17, Monogram C21, Sparkline G2. 6. Dev gallery route `/gallery` + screenshots dark/light, 100 %/200 % font. |
 | **B6.3 Onboarding** | 1. App store (phase machine: loading → update → onboarding step (persisted, resumes) → locked → ready) + DB/engine/api singletons. 2. O1 splash, O2 language, O3 country (search accent-insensitive, suggestions SIM/F CFA zone), O5. 3. O6 personas → anonymous sign-in + `account-demo-start` (+ `{warmup:true}` during the tour), `update_settings{first_name}`. 4. O7 sign-up / O8 e-mail code / O9 login (Supabase Auth; **test one real sign-up e-mail through Brevo SMTP**, tell Franco if it fails). 5. O10 (4 variants) + O11 PIN + O18 lock (AppState, `lock_delay_s`, biometric first, 5/10 rule, `device_security_changed` → wipe + re-login) + `register_device`. 6. O12 consents (`record_consents`, Sentry only if crash consent) + O17 min version (`health_public`/`bootstrap.min_version`). |
 | **B6.4 Home + sync** | 1. Tabs layout with C12 v2 floating pill bar (Accueil, Comptes, Dépenses, Placements; 3 placeholders "Bientôt"). 2. Home S2 v2: header, card carousel (gradient, peeking account cards), dots, alert banner / B5 learning card, 4 actions, 2 tiles, 3 recent rows from SQLite. 3. States: skeleton, empty, offline/stale banners, demo tag, hidden amounts (eye), 200 % font. 4. Sync wiring: open → cache paint → `bootstrap` + `get_home` refresh → `sync_transactions`; foreground outbox replay every 30 s; reconnect via expo-network; Realtime on alerts while foreground. 5. O14 questionnaire (4 sections, saved per answer via outbox) and T guided tour (bundled demo `get_home` JSON, 6 steps, works offline, replayable). |
-| **B6.5 Device + close** | 1. Brand mark export (icon, adaptive, monochrome, splash, `ic_stat_gp`) + M14 opening (motion.md §4b, reduced motion). 2. Android dev build (EAS with `EXPO_TOKEN` or `expo prebuild` + Gradle in CI) installable APK. 3. Measurements: cold start p50 (needs Franco's Tecno — ask once in French if no device), airplane-mode test on Home, tour offline. 4. CHAIN_LOG B6 summary, PR ready, create **B9.1** (new branch `build/b9-bank-dashboard` from this one, plan B9 by block and step first). |
+| **B6.5 Brand + motion** (cut by B6.5) | 0. Trader balance defect (generator). 1. Brand mark export (icon, adaptive, monochrome, splash, `ic_stat_gp`) + M14 opening (motion.md §4b, reduced motion, skip) + Home build + count-up + M13 sheen. |
+| **B6.6 Device + close** | 1. Android dev build (EAS with `EXPO_TOKEN` or `expo prebuild` + Gradle in CI) → installable APK. 2. Measurements: cold start p50, M14 fps (fallback: drop the guides), airplane-mode test on Home, tour offline (needs Franco's Tecno; specs asked by B6.5). 3. CHAIN_LOG B6 summary, PR #11 ready, create **B9.1** (new branch `build/b9-bank-dashboard` from this one, plan B9 by block and step first). |
 
 ### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
 
@@ -722,3 +723,46 @@ Screenshots: `docs/screens/b6/b6.4-*.png` (scale 1, quantised).
 ### Next: B6.5 — Device + close (same branch, plan above unchanged)
 
 Plus: M13 sheen + Home entry motion with M14; look at the trader balance defect first.
+
+---
+
+## B6.5 — Brand + motion · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by B6.4's hand-over prompt. Part cut in two (session sizing): the Android build, phone measurements and the B6
+close move to **B6.6** (plan above updated).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 0. **Trader balance defect fixed** (B6.4): the generator priced each `anomaly_amount` from the median of earlier entries **including earlier anomalies** → 6-10× per round, card payments up to 1.49 billion XOF and an opening balance of 12.27 billion XOF to cover them. `typical()` now ignores scenario-tagged entries; `GENERATOR_VERSION` b2.2, digest updated, new pytest `test_scenario_amounts_do_not_compound`. Dev templates reloaded (`scripts/sb_api.py load-sim`) | `batch/goldenpiece/generator/sim_templates.py`, `batch/tests/test_sim_templates.py`, `shared/fixtures/sim_templates.sha256` | **live: new Koffi demo → bank 6 965 571 XOF**, net worth 36.1 M F; pytest 330 passed |
+| 1. Brand mark export: one geometry → `app/assets/brand/*.svg` (mark dark/light, mono, background, full icon) → PNGs by Chromium: `icon.png`, adaptive foreground/background/monochrome, `splash-icon.png` (dark) + `splash-icon-light.png`, `notification-icon.png` (ic_stat_gp, 96 px white silhouette), favicon. `app.json`: adaptive background `#0B0B0B`, expo-splash-screen plugin (image width 200, `#F4F4F4` / dark `#060606`) | `app/scripts/export-brand.mjs`, `app/assets/` | done; `BrandMark` component + `markGeometry` shared with M14 |
+| 2. **M14 "Le plan"** (motion.md §4b, all times from tokens `motion.appOpening`): dot draws the ring, second dot the sparkle, 5 dashed guides, coins drop clockwise (back easing), sparkle turns gold, GOLDENPIECE letters bounce, hold, mark/wordmark leave, blank card grows at the centre, real Home card appears under it and moves up while Home builds (header, banner, actions scale 0.6 → 1 with 70 ms stagger, tiles, list, dots, pill bar). Cold start only (module flag; warm start = process alive = no replay); native splash kept until the opening is decided (≤ 3 s); tap after 600 ms skips to the Home end state (320 ms fade); reduced motion = 150 ms fade from the mark | `src/screens/opening/AppOpening.tsx`, `src/state/opening.tsx`, `src/app/_layout.tsx`, Home + TabBar entries | web: screenshots `docs/screens/b6/b6.5-m14-{dark,light}.png` (800 / 1300 / 1900 / 2600 / 3100 / 4600 ms); skip + reduced checked |
+| 3. M7 count-up of the Home card amount during M14 (2950-4050 ms, easeOutQuint), **M13 sheen** component (`ui/Sheen.tsx`: gaussian gold band from `glow.goldSheen`, 110°, layer 1.8 × width, −30 % → 130 %, fade 18 % / 70 %, 1400 ms morph, once when first visible + on each tap, none with reduced motion) on the bank account cards of the Home carousel | `HomeScreen.tsx`, `ui/Sheen.tsx` | done |
+
+Checks: `npx jest` → **75 passed** (3 new: mark geometry, sparkle path, M14 timeline); `npx tsc --noEmit` clean; `npx expo lint` clean;
+`expo export -p web` + Playwright 360 × 800: no page error.
+
+### Measured
+
+- Web (Chromium, this container): opening overlay visible 0.4 s after navigation (phase resolution); full opening 4.3 s; Home data painted under it.
+- Not measured: fps on the Tecno (B6.6).
+
+### Decisions [B6.5] (one line each)
+
+- M14 plays on a cold start that lands on **Home** (build) or on the **lock screen** (mark + wordmark, then a 300 ms fade to O18 — no Home build behind a lock); onboarding cold starts keep O1 (no M14).
+- Built with RN Animated + react-native-svg (no Skia, B6.2 rule): one native clock (ms) for every transform/opacity; the two path trims and the dots' positions on a JS clock that stops at 1350 ms. Coins are 8 translucent Views (overlaps brighten by stacking, as the icon).
+- The Home card "appears under the blank one" then moves (+12, +212 dp → 0) as one carousel block: the peek card travels with it instead of sliding in separately (+40 dp X).
+- Status bar is not animated (system bar); header −8 dp, banner +16 dp, list +24 dp, pill bar +24 dp, each ~500 ms as in §4b.
+- Sheen on Home **bank** account cards (they are the "bank cards" of the carousel); O13d / S3 reuse the component in B7.
+- Splash image width 200 dp (mark ≈ 122 dp inside the Android 12 icon circle); light splash uses the light mark (`#0A0A0A` 42 %, ember sparkle).
+- Web preview: `?opening=0` disables M14 for screenshots of other screens.
+
+### Defects open
+
+- Brevo SMTP sign-up e-mail still failing (B6.3) — Franco asked.
+- **Tecno Spark 50 specs** still missing (SETUP §2) — asked to Franco (French) at the end of B6.5; B6.6 measures on it.
+- `sentryDsn` still absent from `env.dev.json`.
+- Demo users cloned **before** the generator fix keep the old trader balances (anonymous, expire with the demo purge); new demos are correct.
+
+### Next: B6.6 — Device + close (same branch, plan above)
