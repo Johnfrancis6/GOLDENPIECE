@@ -568,3 +568,8 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 Fix after B6.1 (CI): `scoring.test.sql` set `demo_persona = 'persona_dakar_salaried'`, a template that exists on dev
 (generator) but not on CI's empty local stack (templates load after pgTAP) → FK error, "planned 49 ran 46" on PRs #10
 and #11. The test now inserts the template row itself (`on conflict do nothing`); 49/49 on dev.
+Fix after B6.1 (deploy-dev): every `build/**` branch and `main` deploy to the one dev project. After B6.1 applied
+`20261129000100`, the push of the older B5 branch failed ("Remote migration versions not found in local migrations
+directory", run #19) — and merging PR #10 into `main` would fail the same way until #11 is merged. `deploy-dev.yml` now
+has a gate step: when dev holds migrations the commit lacks, the deploy is **skipped** (notice, job green) instead of
+failing or redeploying older Edge Functions over newer ones. Checked locally: B6 tree → deploy, B5 tree → skip.
