@@ -112,3 +112,19 @@ path). Exact curves and durations are set in F5 Motion.
 
 Icons are vector components tree-shaken from Lucide (only imported icons
 ship). No icon font, no PNG.
+
+## 11. App icon and brand mark (Franco, 2026-11-23: direction A "Cœur doré")
+
+Original mark (inspired by a Dribbble reference Franco sent; **not** a copy of it — the repo is public and holds no third-party logos): **8 translucent coins on a ring** (their overlaps brighten) around a **gold four-point sparkle**, the "golden piece". Preview: [../previews/app-icon.png](../previews/app-icon.png) (source [app-icon.html](../previews/app-icon.html); directions B and C were not chosen).
+
+Geometry (108 dp adaptive-icon canvas, centre 54): coin centres on a circle R 23 at 0°, 45° … 315° (first at 12 o'clock), coin radius 10, sparkle = square of half-side 11 minus four corner circles of radius 11 (tips on the axes). Overall 66 dp = the adaptive-icon safe zone.
+
+| Use | Spec |
+|---|---|
+| Launcher (adaptive icon) | background layer: vertical `#262626` → `#0B0B0B`; foreground: coins `#FFFFFF` at 62 % opacity (overlaps brighten by stacking — export as flattened shapes: single 62 %, overlap 86 %), sparkle gold gradient `#FFE3A3` → `#FFC97A` → `#FF9A45` (top-left → bottom-right). **Always on its dark background**, also when the phone is in light theme (white coins vanish on light). Monochrome layer (Android 13 themed icons): the silhouette below. |
+| Android 12+ splash | the foreground on `bg` (`#060606` dark / `#F4F4F4` light; on light, coins `#0A0A0A` at 42 %, sparkle `#FFB45C` → `#F2602B` → `#E8452A`), no wordmark; hands over to M14 (motion.md §4b) |
+| Notification small icon `ic_stat_gp` | 24 dp, white on transparent: the union of the 8 coins + the sparkle as one silhouette (no translucency — the system tints it) |
+| Bank dashboard (D) top bar | the mark at 28 dp on its dark tile (radius 8) |
+| In-app (M14 opening) | 144 dp: R 42, coin r 18, sparkle half-side 20 |
+
+Build: one SVG source (`brand/mark.svg`) → Android vector drawables (adaptive foreground, monochrome, small icon) with the asset tooling; never redraw by hand. Placeholders "G in a coin" in N and D are replaced by this mark.

@@ -84,9 +84,9 @@ on a low/mid-range Android phone (Tecno Spark 50).
 2. Build the foundations and components (F1-F6, C1-C22, G0-G8) as a gallery screen and check it on the Tecno Spark 50: screen type/density, glow C banding, gradients' GPU cost, G6 candles at 3M, ≥ 45 fps charts, ≥ 55 fps M14.
 3. Compose the delegated items from validated pieces and report choices in one line each: S3 Accounts (D10), B24 + T guided tour (D13), D login/TOTP, Ops, /legal, dark.
 4. Wire M14 last on cold start (native splash handoff, warm start fade, reduced motion, skip), per motion.md §4b.
-5. Replace the placeholder app / notification small icons with the coin-G mark once Franco agrees (asked 2026-11-23).
+5. Export the brand mark (icons.md §11, direction A) from one SVG source to the adaptive icon, monochrome layer, splash and `ic_stat_gp`; check it at 24 dp in the status bar and on the Tecno launcher.
 
-Starting prompt for a next session: [NEXT_SESSION.md](NEXT_SESSION.md) (design system complete; only Franco's answer on the app icon is pending).
+Starting prompt for a next session: [NEXT_SESSION.md](NEXT_SESSION.md) (design system complete, app icon chosen).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -215,6 +215,7 @@ yet merged into `main`; Franco merges through a pull request).
 - M13 gold sheen: done in F5 (1.4 s, once on first view + on tap); where
   exactly bank-card visuals appear is decided with S3 (accounts).
 - M14 App opening: **validated 2026-11-23** ("Le plan", 4.3 s, motion.md §4b). Self-critique: the dot riding the stroke tip uses CSS `offset-path` in the preview; on Skia it needs `PathMeasure` per frame — cheap, but untested on the Tecno. 4.3 s is long for a daily app: it plays on **cold start only**, can be skipped after 600 ms, and warm starts fade straight to Home; if testers find it long, cut the guides first (−400 ms), then the hold. The handoff from the Android 12 native splash (filled coin) to the dot is a deliberate jump (coin → dot → coin): watch it in tests; fallback = start M14 from the filled coin at 1150 ms (≈ 3.1 s total).
+- App icon (2026-11-23): Franco sent a third-party Dribbble logo and asked to use it with a gold touch; it was **not copied** (public repo, no third-party logos) — an original mark in the same spirit was drawn, A chosen, and M14 adapted to draw it. Self-critique: the ring of 8 coins gets busy below 24 dp (status bar): the small icon is a flat silhouette, still to check on the device; translucency must be flattened at export (stacked alpha differs between renderers).
 - Final self-critique (design system, 2026-11-23): everything was previewed in Chromium at 360 × 800, **never on the Tecno**; colour contrast is measured, performance is not. Fragile points: glow C banding on an LCD; G5 Sankey and P8 Risque at 200 % font; Home tiles at 200 % (148 dp fixed height — the ring tile now wraps its text under the ring, the build must let the tile grow); delegated screens (S3, T, B24) nobody has drawn; widget sizes assumed; small icon still a placeholder. A preview bug survived validation (the "Plus gros poste" ring clipped by flex shrink, found by Franco): build sessions must check every fixed-size graphic with `flex: none` / fixed constraints.
 - Glow C: light theme changed to gold bloom only (S2); banding and tint on
   the Tecno still to check in the first build.
