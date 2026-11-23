@@ -1,0 +1,80 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>O15b Lier un compte — consentement</title>
+<!-- O15b (B24 piece, D13): aggregator-style consent, composed from B19 (top bar, pinned bottom), B21 (simulation tag + line),
+     C21 large monogram, C7 list card + C6 rows, B20 key-value lines (B13), C1 buttons. Data: institution_name, scopes[], history_days. -->
+<link rel="stylesheet" href="../tools/kit/tokens.css">
+<style>
+/* tokens.css loads ../fonts/ relative to tools/kit/ (= design/tools/fonts, missing): load Poppins GP from design/fonts here. */
+@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}
+@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}
+@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+.top{height:56px;display:flex;align-items:center;padding-left:8px}
+.bk{width:48px;height:48px;display:grid;place-items:center;background:none;border:0;padding:0;color:var(--c-text-primary)}
+.scroll{position:absolute;top:56px;left:0;right:0;bottom:120px;overflow:hidden;padding:0 20px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:24px}
+.mo{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font:600 18px/24px P;color:#060606}
+h1{margin:16px 0 0} p{margin:4px 0 0}
+.sec{color:var(--c-text-secondary)}
+.tag{margin-top:8px;padding:2px 8px;border-radius:4px;background:var(--c-surface3);color:var(--c-text-secondary)}
+.gh{font:600 15px/22px P;margin:24px 0 8px}
+.card{background:var(--c-surface1);border-radius:12px;overflow:hidden}
+.sr{min-height:56px;display:flex;align-items:center;gap:12px;padding:8px 16px;position:relative;color:var(--c-text-secondary)}
+.sr span{color:var(--c-text-primary)}
+.sr+.sr:before{content:"";position:absolute;top:0;left:48px;right:0;height:1px;background:var(--c-border-hairline)}
+.kv{margin-top:16px}
+.kvl{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid var(--c-border-hairline)}
+.kvl .t-label{text-align:right}
+.bot{position:absolute;left:20px;right:20px;bottom:16px;display:flex;flex-direction:column;gap:4px}
+.bot button{border:0;padding:0;font-family:P;border-radius:999px}
+.tb{height:48px;background:none;color:var(--c-brand-text)}
+.pr{height:52px;background:var(--c-brand-fill);color:var(--c-brand-on-fill)}
+</style>
+<div class="row">
+  <div class="col"><div class="ph dark">
+  <div class="top"><button class="bk" aria-label="Retour"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.000" stroke-linecap="round" stroke-linejoin="round"> <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg></button></div>
+  <div class="scroll">
+    <section data-block="hero" class="hero">
+      <span class="mo ic" style="background:#199E70" aria-hidden="true">KM</span>
+      <h1 class="t-title-screen">Relier Kola Money</h1>
+      <span class="tag t-micro">simulation</span>
+      <p class="t-caption sec">Aucune vraie connexion n’est faite : les données sont fictives.</p>
+    </section>
+    <section data-block="scopes">
+      <h2 class="gh">GOLDENPIECE pourra lire</h2>
+      <div class="card"><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /> <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /> </svg><span class="t-body">Soldes des comptes</span></div><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span class="t-body">Opérations et libellés</span></div><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M13 19a4 4 0 00-8 0" /> <path d="M16 10h2" /> <path d="M16 14h2" /> <circle cx="9" cy="12" r="3" /> <rect x="2" y="5" width="20" height="14" rx="2" /> </svg><span class="t-body">Nom et numéro du compte</span></div></div>
+    </section>
+    <section data-block="terms" class="kv">
+      <div class="kvl"><span class="t-caption sec">Historique</span><span class="t-label">90 derniers jours</span></div>
+      <div class="kvl"><span class="t-caption sec">Accès</span><span class="t-label">Lecture seule, aucun paiement</span></div>
+      <div class="kvl"><span class="t-caption sec">Retrait</span><span class="t-label">À tout moment, dans Paramètres</span></div>
+    </section>
+  </div>
+  <div class="bot">
+    <button class="tb t-button">Annuler</button>
+    <button class="pr t-button">Autoriser l’accès</button>
+  </div>
+</div><div class="cap">O15b Relier un compte · sombre · lecture seule, 3 accès, historique 90 j</div></div>
+  <div class="col"><div class="ph light">
+  <div class="top"><button class="bk" aria-label="Retour"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.000" stroke-linecap="round" stroke-linejoin="round"> <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg></button></div>
+  <div class="scroll">
+    <section data-block="hero" class="hero">
+      <span class="mo ic" style="background:#199E70" aria-hidden="true">KM</span>
+      <h1 class="t-title-screen">Relier Kola Money</h1>
+      <span class="tag t-micro">simulation</span>
+      <p class="t-caption sec">Aucune vraie connexion n’est faite : les données sont fictives.</p>
+    </section>
+    <section data-block="scopes">
+      <h2 class="gh">GOLDENPIECE pourra lire</h2>
+      <div class="card"><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /> <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /> </svg><span class="t-body">Soldes des comptes</span></div><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span class="t-body">Opérations et libellés</span></div><div class="sr"><svg class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.100" stroke-linecap="round" stroke-linejoin="round"> <path d="M13 19a4 4 0 00-8 0" /> <path d="M16 10h2" /> <path d="M16 14h2" /> <circle cx="9" cy="12" r="3" /> <rect x="2" y="5" width="20" height="14" rx="2" /> </svg><span class="t-body">Nom et numéro du compte</span></div></div>
+    </section>
+    <section data-block="terms" class="kv">
+      <div class="kvl"><span class="t-caption sec">Historique</span><span class="t-label">90 derniers jours</span></div>
+      <div class="kvl"><span class="t-caption sec">Accès</span><span class="t-label">Lecture seule, aucun paiement</span></div>
+      <div class="kvl"><span class="t-caption sec">Retrait</span><span class="t-label">À tout moment, dans Paramètres</span></div>
+    </section>
+  </div>
+  <div class="bot">
+    <button class="tb t-button">Annuler</button>
+    <button class="pr t-button">Autoriser l’accès</button>
+  </div>
+</div><div class="cap">O15b · clair · « Annuler » ramène à O15a, « Autoriser l’accès » → O15c</div></div>
+</div>
