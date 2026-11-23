@@ -18,7 +18,7 @@ Finish the design system so build sessions copy validated files instead of inven
 4. The validated files each item reuses (listed per item below). Do not contradict validated files without Franco's agreement (challenges → docs/CHALLENGES.md "Session 3").
 
 ## Validated so far (2026-11-22/23)
-Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements**, **S5 Spending** (Sankey hub label removed), **S6 Alerts** with B14, B15 + G8 (2026-11-23); **S1 Onboarding** with **B19 step screen** and **B21 institution picker** (2026-11-23, Onboarding D13 option A: design B19, B21, S1; B24 and T to build sessions); entry motion of rings and Sankey (motion.md) (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.45.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
+Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements**, **S5 Spending** (Sankey hub label removed), **S6 Alerts** with B14, B15 + G8 (2026-11-23); **B16 settings list**; **S1 Onboarding** with **B19 step screen** and **B21 institution picker** (2026-11-23, Onboarding D13 option A: design B19, B21, S1; B24 and T to build sessions); entry motion of rings and Sankey (motion.md) (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.46.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
 
 ## Measured (do not re-measure unless a value changes)
 - Contrast of every F1 pair (colour.md §7); C21 category colours as bars ≥ 4.0:1 light / ≥ 8.0:1 dark (g3-bars.md); C15 yellow pair reused for the B10 warning tag (8.5:1 dark / 6.3:1 light) — node WCAG script, 2026-11-22/23.
@@ -28,12 +28,12 @@ Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22;
 Tecno Spark 50 screen type/density (assumed LCD); GPU cost of gradients/glow; widget sizes 2×1 / 2×2; G6 candles at 3M (≈ 3 dp bodies) on the phone; G5 Sankey at large font; risk-scale thresholds of B12 (defaults, not validated figure by figure). API gaps to raise: lender name in `get_portfolio.debts`, monthly 5Y candles, `spark_30d`/`change_30d` for Home quotes.
 
 ## Do first
-Onboarding is complete (D13 option A, Franco 2026-11-23: B19, B21, S1 designed; B24 and T go to build sessions). Greet Franco in French in 3 lines (Onboarding done; next Settings B16 → B23 → S7; D11 and D12 apply), then continue with the current item's question round (check README.md for what is validated). Franco often answers "A, A, A" and validates without preview for blocks ("je valide sans preview"); screens still get a preview unless he says otherwise. Animated previews always have "Rejouer" and "Ralenti ×3" buttons.
+Onboarding is complete (D13 option A, Franco 2026-11-23: B19, B21, S1 designed; B24 and T go to build sessions). Greet Franco in French in 3 lines (Onboarding done; next Settings B23 → S7; D11 and D12 apply), then continue with the current item's question round (check README.md for what is validated). Franco often answers "A, A, A" and validates without preview for blocks ("je valide sans preview"); screens still get a preview unless he says otherwise. Animated previews always have "Rejouer" and "Ralenti ×3" buttons.
 
 ## Order (item by item)
 1. ~~Alerts~~ done (B14, B15 + G8, S6). Was: **B14** "Votre banque a été prévenue" (reuse C22 timeline, B4, B13) → **B15 "Pourquoi ?" sheet + G8 score gauge** (40/70 marks; reuse C15, C9, B12 style) → **S6 Alerts** (D8: no Alertes tab; open-alert header icon, Home strip, past alerts in Settings).
 2. Onboarding (D13 option A): ~~B19 step screen~~ done → ~~B21 institution picker~~ done → ~~S1~~ done (5 dotted steps). B24 single-screen pieces and T guided tour (M11) are delegated to build sessions (D13).
-3. Settings: B16 grouped list (chevrons allowed only here) → B23 device row → S7.
+3. Settings: ~~B16 grouped list~~ done → **B23** device row → S7.
 4. N notifications (FR/EN, amounts hidden by default), W widgets, X copy FR/EN, D bank dashboard (web, 1280 px).
 5. M14 App opening — last (Franco found the first proposal mediocre).
 
