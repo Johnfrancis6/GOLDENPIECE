@@ -27,6 +27,7 @@ Files are in English; UI copy is French first, then English.
 | C21 Institution + category badges (colour categories, operator monograms) | [components/badges.md](components/badges.md) · [preview](previews/c21-badges.png) | 2026-11-22 |
 | C22 Status timeline (pulsing current step) | [components/status-timeline.md](components/status-timeline.md) · [preview](previews/c22-status-timeline.png) · [animated](previews/c22-status-timeline.html) | 2026-11-22 |
 | C2 Input + C3 Code/PIN + C4 Keypad (filled fields, own keypad, shake on wrong code, 1 min lock) | [components/input-pin-keypad.md](components/input-pin-keypad.md) · [preview](previews/c2-c4-input-pin-keypad.png) · [animated](previews/c3-pin-error.html) | 2026-11-23 |
+| B13 "C'est bien vous ?" (full screen, unlock on answer, Non → B14) | [blocks/b13-is-it-you.md](blocks/b13-is-it-you.md) · [preview](previews/b13-is-it-you.png) | 2026-11-23 |
 | G0 Chart base + G1 Line/area + G2 Sparkline | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) · [preview](previews/g0-g1-g2-charts.png) · [animated](previews/g0-g1-g2-charts.html) | 2026-11-22 |
 | B1 Net-worth header | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) · [preview](previews/b1-networth-header.png) | 2026-11-22 |
 | B4 Alert card (Home strip = one card + link; > 70 highlighted; whole card tappable; compact variant) | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) · [preview](previews/b4-alert-card.png) | 2026-11-22 |
@@ -37,7 +38,7 @@ Files are in English; UI copy is French first, then English.
 | **S2 Home** (Alertes → Budget → Marchés; light glow gold only; centred small title on scroll; profile circle → Settings) | [screens/s2-home.md](screens/s2-home.md) · [preview](previews/s2-home.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **B13 "C'est bien vous ?"**, then B14, B15 + G8, S6 (Alerts step; C2-C4 done). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Spending (S5): B7 Stat tiles, G3 Bars, G5 Sankey, then S5** (new session, Franco 2026-11-23). Still open in Alerts: B14, B15 + G8, S6 (after Spending unless Franco says otherwise). Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -52,6 +53,7 @@ Next item: **B13 "C'est bien vous ?"**, then B14, B15 + G8, S6 (Alerts step; C2-
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
 | D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
 | D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
+| D10 | **Accounts section (S3: B2, B3, B17, B20; B22 moves to Spending) is left to the build sessions** (Franco, 2026-11-23): they compose it from validated items (C6 rows, C21 badges, C14 tags, C15 badges, C2 search pill, C13 chips, C9 sheets, B20-style key-value lines from B13, C5 amounts) and report choices in one line (formats.md §7). Design goes on with **Spending (S5)**. |
 
 ---
 
@@ -212,9 +214,9 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓ (C2-C4 ✓ with the Alerts step).
 3. **Chart base G0**, then G1 + G2 ✓.
 4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
-5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
-6. **Accounts:** B2, B3, B17, B20, B22, then S3.
-7. **Spending:** B7, G3, G5, B6 (already done), then S5.
+5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
+6. **Accounts:** left to the build sessions (D10, 2026-11-23).
+7. **Spending (next, new session):** B7, G3, G5, B6 ✓, D4 categories (B22, moved here from Accounts), then S5.
 8. **Placements:** B10, B11, B12, G4, G6, G7, B18, then S4.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.

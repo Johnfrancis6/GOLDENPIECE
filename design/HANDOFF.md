@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame, S2 Home, C2-C4; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame, S2 Home, C2-C4, B13; Franco then asked to delegate Accounts and open a new session for Spending; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -41,6 +41,7 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | C21 Badges (categories in colour, operators as monograms; F4 §4 updated) | validated 2026-11-22 | [components/badges.md](components/badges.md) |
 | C22 Status timeline | validated 2026-11-22 | [components/status-timeline.md](components/status-timeline.md) |
 | C2 + C3 + C4 Input, code/PIN, keypad (light focus border `#B4410F`; field-boundary contrast in CHALLENGES S3-1) | validated 2026-11-23 | [components/input-pin-keypad.md](components/input-pin-keypad.md) |
+| B13 "C'est bien vous ?" (full screen; unlock when answering; Non → B14 without confirm) | validated 2026-11-23 | [blocks/b13-is-it-you.md](blocks/b13-is-it-you.md) |
 | G0 + G1 + G2 Charts (line + light gradient, scrub drives hero, sparklines by direction) | validated 2026-11-22 | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) |
 | B1 Net-worth header (first Home block) | validated 2026-11-22 | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) |
 | B4 Alert card (Home strip: one card + "Voir les N alertes"; > 70 gold edge; whole card tappable, Oui/Non only in L2; compact C6 variant) | validated 2026-11-22 | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) |
@@ -49,9 +50,9 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B9 Quote row (one card, freshness line under it, 1-month period; **G2 sparklines get a light fading area**, Franco 2026-11-23) | validated 2026-11-23 | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) |
 | B8 Chart frame (no card; title, summary sentence, 22 sp value driven by scrub, period bar or month pill, chart, controls, freshness) | validated 2026-11-23 | [blocks/b8-chart-frame.md](blocks/b8-chart-frame.md) |
 | **S2 Home** (first full screen; light glow = gold bloom only; small title centred on scroll, C12 updated; profile circle → Settings) | validated 2026-11-23 | [screens/s2-home.md](screens/s2-home.md) |
-| Tokens | v0.27.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, input, pinEntry, keypad, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame) + `screen` (home) | [tokens.json](tokens.json) |
+| Tokens | v0.28.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, input, pinEntry, keypad, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame, isItYou) + `screen` (home) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **B13 "C'est bien vous ?"**, then B14, B15 + G8, S6 → … → … → M14 App opening (last).
+**Next items** (Franco, 2026-11-23): **Spending section in a new session** — B7 Stat tiles, G3 Bars, G5 Sankey, B22 Categories & rules (D4), then S5. Accounts (S3) is left to the build sessions (D10). Still open in Alerts: B14, B15 + G8, S6 (after Spending unless Franco says otherwise); then Placements, Onboarding, Settings, N/W/X/D, → … → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -103,6 +104,9 @@ yet merged into `main`; Franco merges through a pull request).
   never blurred or washed out.
 - He asked how many steps remain (2026-11-23): after B8, 41 items ≈ 30
   validation rounds; give such counts by section when asked.
+- 2026-11-23: "tu commences à suivre mes principes" = validation of B13;
+  he delegates whole sections to build sessions when the validated
+  components cover them (D10 Accounts).
 - Typical rhythm (continuation 2): ask ≤ 3 questions with labelled
   options and a recommended default → he answers "A, oui" → build the
   preview (static PNG at scale 2, plus an animated HTML with embedded
