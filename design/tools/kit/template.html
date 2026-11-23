@@ -1,0 +1,27 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>ITEM-ID Name</title>
+<!-- Preview template. Copy to design/previews/<item-id>.html, keep the link to tokens.css (relative to previews/).
+     Marks read by lint-preview.js (D11): data-block="hero|<name>" on each block, data-action on each header action,
+     data-row="2" on a list row (max lines per side) and data-side on each side; data-lint-ignore="clip|overlap|type" only
+     for something deliberate (carousel peek, decorative overlap) — say why in a comment.
+     Icons: node design/tools/icon.js <lucide-name> [size] prints an inline SVG (class "ic", never shrinks). -->
+<link rel="stylesheet" href="../tools/kit/tokens.css">
+<style>
+/* Item-specific layout only. Colours come from var(--c-…), type from .t-… classes, spacing from var(--s…). */
+.hd{height:56px;display:flex;align-items:center;gap:var(--s2);padding:0 var(--margin)}
+</style>
+<div class="row">
+  <div class="col">
+    <div class="ph dark">
+      <div class="hd"><span class="t-title-screen">Titre</span></div>
+      <section data-block="hero" style="padding:0 var(--margin)"></section>
+    </div>
+    <div class="cap">Sombre · 360 × 800</div>
+  </div>
+  <div class="col">
+    <div class="ph light">
+      <div class="hd"><span class="t-title-screen">Titre</span></div>
+      <section data-block="hero" style="padding:0 var(--margin)"></section>
+    </div>
+    <div class="cap">Clair · 360 × 800</div>
+  </div>
+</div>

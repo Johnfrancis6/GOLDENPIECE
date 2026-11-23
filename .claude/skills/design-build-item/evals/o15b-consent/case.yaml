@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: o15b-consent
+expected_outcome: |
+  A preview HTML of the O15b consent screen in design/previews, dark and light phone frames at 360 x 800,
+  composed from validated pieces (B19 step screen, B21 institution, C16 controls, C1 buttons), French copy,
+  with 0 lint errors, colours and type sizes from tokens.json, and a PNG ready for Franco.
