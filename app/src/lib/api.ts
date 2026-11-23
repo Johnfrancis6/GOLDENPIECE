@@ -1,5 +1,6 @@
 /** Supabase client + typed calls (API.md). The app reads only schema `api`
  * (ARCHITECTURE §1.2). Session tokens live in the encrypted local DB. */
+import { Platform } from 'react-native';
 import { createClient } from '@supabase/supabase-js';
 import env from '../data/env.dev.json';
 import { ApiError, NetworkError } from './sync';
@@ -7,8 +8,17 @@ import type { Db } from './db/types';
 
 export const TIMEOUT_MS = 15_000;
 
-/** Supabase auth storage backed by the SQLCipher kv table. */
+/** Supabase auth storage backed by the SQLCipher kv table (web preview:
+ * localStorage, never used on the phone). */
 function dbStorage(getDb: () => Promise<Db>) {
+  if (Platform.OS === 'web') {
+    const ls = globalThis.localStorage;
+    return {
+      getItem: async (k: string) => ls?.getItem(`gp.auth:${k}`) ?? null,
+      setItem: async (k: string, v: string) => { ls?.setItem(`gp.auth:${k}`, v); },
+      removeItem: async (k: string) => { ls?.removeItem(`gp.auth:${k}`); },
+    };
+  }
   return {
     async getItem(key: string) {
       const db = await getDb();
@@ -65,8 +75,10 @@ export function makeApi(getDb: () => Promise<Db>) {
     }
   }
 
-  async function fn<R>(name: string, body: Record<string, unknown>): Promise<R> {
+  async function fn<R>(name: string, body: Record<string, unknown>, timeoutMs = TIMEOUT_MS): Promise<R> {
     const { data: s } = await sb.auth.getSession();
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), timeoutMs);
     const res = await fetchWithTimeout(`${env.supabaseUrl}/functions/v1/${name}`, {
       method: 'POST',
       headers: {
@@ -74,7 +86,8 @@ export function makeApi(getDb: () => Promise<Db>) {
         ...(s.session ? { Authorization: `Bearer ${s.session.access_token}` } : {}),
       },
       body: JSON.stringify(body),
-    });
+      signal: ctl.signal,
+    }).finally(() => clearTimeout(t));
     const j = await res.json().catch(() => ({}));
     if (!res.ok) throw new ApiError(j.code || 'INVALID', j.message || 'generic', res.status);
     return j as R;

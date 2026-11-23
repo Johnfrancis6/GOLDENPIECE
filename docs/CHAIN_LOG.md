@@ -620,3 +620,51 @@ Checks: `cd app && npx jest` → **50 passed** (5 new: badges, ring states, toke
 - Brevo sign-up e-mail not yet tested (B6.3 step 4).
 
 ### Next: B6.3 — Onboarding (same branch, plan above unchanged)
+
+---
+
+## B6.3 — Onboarding · 2026-11-23 · branch `build/b6-app-shell`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. App store: pure phase machine (loading → update O17 → onboarding step, persisted in secure store, resumes → locked O18 → ready), back targets on a rebuilt stack, re-lock after `lock_delay_s`, device-security downgrade check; `AppProvider` (DB + API singletons, actions); root phase gate (gallery left alone) | `app/src/lib/flow.ts`, `app/src/state/app.tsx`, `app/src/app/_layout.tsx` | **12 new Jest tests** |
+| 2. O1 splash (wordmark + "Prototype · données fictives", no network wait), O2 language (flips the UI at once), O3 country (accent-insensitive search on FR/EN names, ISO, dial code; 5 suggestions = phone region then F CFA zone; tap = next), O5 | `app/src/screens/Splash.tsx`, `app/src/app/onboarding/{language,country,choice}.tsx`, `app/src/lib/countries.ts` | screenshots |
+| 3. O6 personas (3 C7 cards, C21 circle, "Préparation de votre démo" in the card, C8 error/offline) → `signInAnonymously` + `account-demo-start` + `update_settings{first_name, language, country, timezone}`; `{warmup:true}` sent from O3 and O5 | `persona.tsx` | **live on dev: clone 677 ms server, 1.85 s end to end** (3 accounts, 991 tx) |
+| 4. O7 sign-up (strength word, errors on blur/submit, exists/weak/rate), O8 e-mail code (6 boxes, auto-submit, resend 0:30), O9 login (forgot → recovery e-mail, `email_not_confirmed` → O8). **Auth config on dev** (Management API): OTP **6 digits, 10 min**, password ≥ 10, FR/EN code templates `supabase/templates/{confirmation,recovery}.html` (also in `config.toml`) | `signup.tsx`, `code.tsx`, `login.tsx` | **Brevo e-mail test FAILED** (below) |
+| 5. O10 (4 variants from the matrix; strong/secret: one system prompt before relying on it; none: "Verrouiller mon téléphone" opens Security settings), O11 PIN (create + confirm, trivial refused, PBKDF2 on device), O18 lock (system prompt first, PIN fallback, fingerprint key, 5 → 1 min countdown, 10 → re-login with wipe, `pin_failed` event, `device_security_changed` → wipe + re-login, Android back disabled), `register_device` (retried at next start when offline) | `security.tsx`, `pin.tsx`, `app/src/app/lock.tsx` | screenshots; register_device checked live |
+| 6. O12 consents (checkbox + 2 switches, control on the right, "Détails" C9 sheets with text version, primary disabled until service), `record_consents` v0.1 (offline: kept, finishing allowed), Sentry only after crash consent (`src/lib/crash.ts`); O17 from `health_public` in background (blocking B19) | `consents.tsx`, `app/src/app/update.tsx` | record_consents checked live `{ok, recorded:3}` |
+| Screenshots 360 × 800, scale 1 (light, dark, 200 %) | `docs/screens/b6/b6.3-*.png` | PR #11 |
+
+Checks: `npx jest` → **62 passed**; `npx tsc --noEmit` clean; `npx expo lint` clean; `expo export -p web` + Playwright: 14 routes, no console error.
+
+### Measured
+
+- Demo start (anonymous sign-in → clone → first name): 1.85 s end to end from the session (≤ 2 s target).
+- 200 % font: one defect found and fixed (O12 "Catégorisation" split mid-word → control goes under the text at ≥ 150 %).
+
+### Decisions [B6.3] (one line each)
+
+- O4 tour step exists (`/onboarding/tour`) but passes straight to O5 until B6.4 builds T.
+- O3 "SIM country" = phone region from expo-localization (no expo-cellular native dependency in B6).
+- O3 list = ScrollView of 249 rows in two C7 cards (one card per group as designed); move to FlashList if the Tecno stutters.
+- O6 loading shown inside the tapped card (spinner + "Préparation de votre démo"), others dimmed — no separate screen.
+- O10 strong/secret: a system prompt confirms the method before it is saved; cancelled = stay on O10.
+- O18 with a phone-only plan (no app PIN): B19 screen "Déverrouiller" re-opening the system prompt; "Code oublié ?" = re-login.
+- Consents recorded offline are not queued yet (outbox has no `record_consents` mutation) → B6.4 adds it.
+- Default `lockDelayS` 300 (server default); B6.4 syncs it from `bootstrap.profile.lock_delay_s`.
+- New copy keys: `O12.service.details`, `O12.details.a11y`, `O12.version`, `O18.unlock`, `home.signout` (dev only).
+- Home is a placeholder (`/home`, greeting + Démo tag + "Bientôt", dev sign-out) until B6.4.
+- Web preview: auth session in localStorage, query `?scheme=&scale=&lang=&reduced=` on any route (dev only).
+
+### Defects open
+
+- **Brevo SMTP: sign-up e-mail fails** — `POST /auth/v1/signup` → 500 "Error sending confirmation email" (2026-11-23, after the
+  template change; the auth log endpoint was not readable from the session). Sender field = a Gmail address, port 465.
+  Most likely the sender is not a **verified sender in Brevo**, or the SMTP key/login is wrong. Franco asked (French).
+  Until fixed, O7 → O8 cannot complete on dev; the demo branch works.
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5.
+- `sentryDsn` not in `app/src/data/env.dev.json` (public DSN, Franco's Sentry project) → crash reports stay off.
+
+### Next: B6.4 — Home + sync (same branch, plan above; add: `record_consents` outbox mutation, `lock_delay_s` from bootstrap, T tour replaces `/onboarding/tour`, `/home` becomes the tabs)
