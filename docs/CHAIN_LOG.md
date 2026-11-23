@@ -462,7 +462,7 @@ Franco asked mid-session to hand the rest to another session: **B5 part 2 contin
 - `analyst_alert`: 47.8 KB raw / **5.4 KB gzip** (252 rows of `history_90d`; API.md assumed 15 KB raw).
 - G7 (model `2026-11-23.1`): recall bank 100 %, recall ≥ 40 100 % (96.9 % raw, 2 in learning), false prompts
   1.20 / user / month, precision bank 0.68. Parity |Δ| 6.7e-16.
-- Tests: pgTAP on dev 516/517 (the 1 failure = health `dispatch_failed`, PAT below); pytest 320 passed (+7 live
+- Tests: pgTAP on dev 516/517 (the 1 failure = health `dispatch_failed`, PAT below); pytest 333 passed (+7 live
   skipped); Deno 38 passed; deploy-dev run #15 green.
 
 ### BUILD_PLAN B5 "Done"
