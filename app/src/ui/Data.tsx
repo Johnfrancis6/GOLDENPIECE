@@ -19,14 +19,14 @@ export function ringState(pct: number): 'ok' | 'near' | 'over' {
  * Progress ring: arc from 12 o'clock, round cap. `value` 0..∞ (percent) or
  * learning `{done, of}`. First view sweeps 1100 ms with a light backOut overshoot.
  */
-export function Ring({ pct, size = 'row', learning, label, a11yLabel }: { pct: number; size?: RingSize; learning?: boolean; label?: string; a11yLabel?: string }) {
+export function Ring({ pct, size = 'row', learning, label, a11yLabel, colour: tint }: { pct: number; size?: RingSize; learning?: boolean; label?: string; a11yLabel?: string; colour?: string }) {
   const { scheme } = useTheme();
   const reduced = useReducedMotion();
   const S = SIZES[size];
   const r = (S.size - S.stroke) / 2;
   const C = 2 * Math.PI * r;
   const state = learning ? 'learning' : ringState(pct);
-  const colour = RG.states[state][scheme];
+  const colour = tint ?? RG.states[state][scheme];
   const target = Math.min(1, Math.max(0, pct / 100));
   const full = target >= 1;
   const t = useState(() => new Animated.Value(reduced ? 1 : 0))[0];
@@ -125,17 +125,18 @@ export function ProfileCircle({ id, name }: { id: string; name: string }) {
 // ── G2 sparkline ────────────────────────────────────────────────────────────
 const SP = T.chart.sparkline;
 
-/** 56 × 32: line in the top 24 dp, light area below; colour by direction. */
-export function Sparkline({ values, flat }: { values: number[]; flat?: boolean }) {
+/** 56 × 32: line in the top 24 dp, light area below; colour by direction.
+ * `size` for other frames (Home tile 126 × 24: the line uses the full height). */
+export function Sparkline({ values, flat, size }: { values: number[]; flat?: boolean; size?: [number, number] }) {
   const { c, scheme } = useTheme();
-  const [W, H] = SP.size;
+  const [W, H] = size ?? (SP.size as [number, number]);
   const id = 'sp' + useId().replace(/[^a-zA-Z0-9]/g, '');
   if (values.length < 2) return <View style={{ width: W, height: H }} />;
   const first = values[0], last = values[values.length - 1];
   const dir = flat ? 'flat' : last > first ? 'up' : last < first ? 'down' : 'flat';
   const colour = dir === 'up' ? c.gain : dir === 'down' ? c.loss : c.text.secondary;
   const min = Math.min(...values), max = Math.max(...values);
-  const band = SP.lineBand, pad = SP.width / 2;
+  const band = Math.min(SP.lineBand, H), pad = SP.width / 2;
   const pts = values.map((v, i) => [pad + (i / (values.length - 1)) * (W - 2 * pad), pad + (max === min ? band / 2 : (1 - (v - min) / (max - min)) * (band - 2 * pad))]);
   const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join('');
   const area = `${line}L${pts[pts.length - 1][0].toFixed(1)},${H}L${pts[0][0].toFixed(1)},${H}Z`;

@@ -4,7 +4,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = extensions, public;
 grant usage on schema extensions to anon, authenticated;
-select plan(27);
+select plan(30);
 
 insert into auth.users (id, instance_id, aud, role, email, raw_user_meta_data, is_anonymous, created_at, updated_at) values
  ('00000000-0000-4000-b600-00000000000a', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'b6a@test.invalid', '{}', false, now(), now()),
@@ -85,6 +85,16 @@ select is((select data_saver from core.profiles where user_id = '00000000-0000-4
           'applied item persisted although another item failed');
 select is((select ref_currency::text from core.profiles where user_id = '00000000-0000-4000-b600-00000000000a'), 'XOF',
           'rejected item rolled back');
+
+-- record_consents through the outbox (B6.4): idempotent per client_id
+select is((select r->>'status' from jsonb_array_elements(api.apply_mutations(
+  '[{"client_id":"00000000-0000-7000-8000-000000000020","rpc":"record_consents","args":{"items":[{"kind":"service","granted":true,"text_version":"0.1"},{"kind":"ai_categorisation","granted":false,"text_version":"0.1"}]}}]')->'results') r),
+  'applied', 'record_consents replayed from the outbox');
+select is((select r->>'status' from jsonb_array_elements(api.apply_mutations(
+  '[{"client_id":"00000000-0000-7000-8000-000000000020","rpc":"record_consents","args":{"items":[{"kind":"service","granted":true,"text_version":"0.1"},{"kind":"ai_categorisation","granted":false,"text_version":"0.1"}]}}]')->'results') r),
+  'duplicate', 'same client_id again is a duplicate');
+select is((select count(*)::int from core.consents where user_id = '00000000-0000-4000-b600-00000000000a' and text_version = '0.1'
+           and kind in ('service', 'ai_categorisation')), 2, 'replayed consents recorded once');
 
 select * from finish();
 rollback;

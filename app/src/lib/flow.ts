@@ -38,12 +38,16 @@ export type AppState = {
   /** Seconds before re-lock after the app goes to background (profile.lock_delay_s). */
   lockDelayS: number;
   consents: { ai: boolean; crash: boolean } | null;
+  /** C20 eye: amounts hidden (persisted; a reveal lasts until the app closes). */
+  hideAmounts: boolean;
+  /** T guided tour seen once (replayable later from Settings). */
+  tourSeen: boolean;
 };
 
 export const INITIAL: AppState = {
   v: 1, lang: null, country: null, step: 'language', mode: null, persona: null, email: null,
   security: null, pin: null, pinState: { failures: 0, lockedUntil: 0 }, deviceRegistered: false,
-  done: false, lockDelayS: 300, consents: null,
+  done: false, lockDelayS: 300, consents: null, hideAmounts: false, tourSeen: false,
 };
 
 /** Step dots (S1 §1): O2 1/5, O3 2/5, O7-O8 3/5, O10-O11 4/5, O12 5/5. */

@@ -668,3 +668,57 @@ Checks: `npx jest` → **62 passed**; `npx tsc --noEmit` clean; `npx expo lint` 
 - `sentryDsn` not in `app/src/data/env.dev.json` (public DSN, Franco's Sentry project) → crash reports stay off.
 
 ### Next: B6.4 — Home + sync (same branch, plan above; add: `record_consents` outbox mutation, `lock_delay_s` from bootstrap, T tour replaces `/onboarding/tour`, `/home` becomes the tabs)
+
+---
+
+## B6.4 — Home + sync · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by B6.3's hand-over prompt (autonomous chain).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Tabs: `src/app/(tabs)/` with expo-router **headless tabs** (`expo-router/ui`, no new dependency) and the **C12 v2 floating pill** (4 tabs, labels always, active capsule, no icon animation, 150 dp `bg` fade, tap on the active tab scrolls to top); Comptes / Dépenses / Placements = large title + "Bientôt" (B7/B8). Root gate fixed for route groups (`(tabs)` is not in the path); `ready` only leaves the flow screens, so sub-pages stay | `ui/TabBar.tsx`, `app/(tabs)/*`, `screens/TabPlaceholder.tsx`, `app/_layout.tsx` | screenshots |
+| 2. **S2 Home v2**: header (avatar → Settings, greeting, `shield-alert` + red dot when an alert is open, C20 eye), carousel (net-worth gradient card 296 × 184 + ring decoration + pills + "Courbe", account cards, snap paging, peek 32, dots), alert banner (ask → "C'est bien vous ? · Répondre", bank → "Banque prévenue · Suivre", ≥ 2 → "{n} alertes") or B5 learning card, 4 actions (Classer badge = `uncategorised_count`), 2 tiles (top mover + G2 126 × 24; biggest category + C17 Mini ring in the category colour), 3 recent rows **from SQLite** | `screens/home/HomeScreen.tsx`, `lib/home.ts` (pure view model) | live on dev, screenshots |
+| 3. States: C18 skeleton (first load), C19 no-account, C8 offline / stale (> 15 min) / old (> 7 d) / error banners, Démo pill, hidden amounts (persisted `hideAmounts`; show = system prompt for account users, reveal lasts until the app closes — C20), 200 % font (actions → 2 × 2 grid so labels never break inside a word, tiles one column, card grows, amount capped at the hero ×1.5), skeleton rows until the first transactions sync ends | same + `state/app.tsx` | screenshots (dark, light, 200 %, hidden, offline, first sync) |
+| 4. Sync wiring: `state/data.tsx` — open → cache paint (payload_cache) → `bootstrap` + `get_home` (etag) → `sync_transactions` → recent rows; `lock_delay_s` from bootstrap → app state (O18); outbox wake + replay at open, every 30 s in foreground, on reconnect (expo-network) and back to foreground; conflict toast; **Realtime** on `core.alerts` (filter `user_id`, RLS) while foreground → Home refresh. **`record_consents` outbox mutation**: O12 offline → queued; server `apply_mutations` accepts it through `core.record_consents_once` (idempotent per client_id) | `state/data.tsx`, `state/engine.ts`, migration `20261130000100_outbox_consents.sql`, pgTAP `app_sync` | **applied on dev; app_sync 30/30**, api_skeleton 22/22, rls_core 75/75, schema_guard 11/11 |
+| 5. **O14 questionnaire** (B24 piece): 11 questions in 4 sections (C17 dots in the bar), C16 choice list, tap = saved through the outbox (`save_questionnaire` with the section so far) + next; risk r1..r5 scored 1-5. **T guided tour**: the same Home component on a bundled demo payload (`data/tour.json`, offline), scrim + spotlight + bubble, 6 steps, Passer / Suivant / Terminer; replaces `/onboarding/tour` (O4 → O5) and replayable at `/tour` | `app/questionnaire.tsx`, `lib/questionnaire.ts`, `screens/tour/*`, `app/tour.tsx`, `app/onboarding/tour.tsx` | live: answers reached `core.questionnaire` on dev; tour screenshots |
+| `/soon` sub-page for destinations of later sessions (Patrimoine, accounts, alerts B13/B14/L1, actions); for Settings it lists Questionnaire, Revoir la visite, Quitter la démo / Se déconnecter until S7 (B8) | `app/soon.tsx` | screenshot |
+
+Checks: `npx jest` → **72 passed** (10 new: view model, strip rules, freshness, categories → C21 badge, questionnaire, i18n FR/EN parity);
+`npx tsc --noEmit` clean; `npx expo lint` clean; `expo export -p web` + Playwright 360 × 800: no page error.
+Screenshots: `docs/screens/b6/b6.4-*.png` (scale 1, quantised).
+
+### Measured (web preview in Chromium, dev project, from the session)
+
+- Demo start (tap Awa/Moussa) → Home route 2.5 s; Home card painted 1.3 s after the route.
+- Offline reopen (Supabase blocked): **cache paint 0.9 s**, then the "Hors ligne" banner; recent rows from SQLite.
+- First full transactions sync, Koffi (1 502 rows, 8 pages) on web wasm SQLite: **7.1 s** (rows show as skeletons until then). Phone timing: B6.5.
+- Realtime: alert inserted on dev → event received **0.6 s** later on the user's channel (RLS filter); `get_home` then shows it.
+
+### Decisions [B6.4] (one line each)
+
+- Tabs: `expo-router/ui` headless `Tabs` + our pill (no `@react-navigation/bottom-tabs` dependency).
+- Carousel peek: the next card shows 32 dp after a 12 dp gap, as in the validated preview (spec text says "peeks 12").
+- Card amount uses the short "F" form like the preview ("13 439 800 F"); abbreviated (F6, "12,2 Md F") above 14 characters.
+- Account cards: `#1B1B1B` / `#FFFFFF` fill (preview `--peek`), 1 dp hairline, C21 monogram, kind line, balance 26/34.
+- Recent rows: C21 category badge when categorised, else a monogram; subtitle "catégorie · HH:MM" today, "hier" / date otherwise.
+- Tab bar labels scale up to ×1.3 (`typography.largeFont.fixedRowHeightUpToScale`) then shrink to fit; the pill keeps 68 dp.
+- Learning card B5 shows while `learning.active` is false (B6.1 rule); every demo persona is past learning, so it is unseen in demos.
+- Hidden amounts persist; showing them needs the system prompt for account users on a phone (demo / web: no prompt).
+- Tour (T, D13 delegated): S2 Home + C9 scrim colour + C7 bubble + C17 dots + C1 buttons; rectangular spotlight with a 2 dp brand outline; bundled alert + day change added to the demo payload so steps 1 and 3 have content.
+- O14 (B24 delegated): one question per screen, C16 list, tap = next; texts FR/EN in `lib/questionnaire.ts` (composed, not in design).
+- M13 sheen, Home entry stagger and amount count-up are **not** built yet → B6.5 with M14.
+
+### Defects open
+
+- **Abidjan trader demo: bank balance 12 158 195 571 XOF** after the clone (Home shows 12,2 Md F). Simulated-bank template / clone balance (B2) — fix in the backend (check `sim` template balances vs transaction sums); B6.5 looks first.
+- Brevo SMTP sign-up e-mail still failing (B6.3) — Franco asked.
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5 asks once.
+- `sentryDsn` still absent from `env.dev.json`.
+- Web preview only: `adjustsFontSizeToFit` is a no-op, so at simulated 200 % long tab labels / card amounts show "…" on web; native shrinks them.
+
+### Next: B6.5 — Device + close (same branch, plan above unchanged)
+
+Plus: M13 sheen + Home entry motion with M14; look at the trader balance defect first.

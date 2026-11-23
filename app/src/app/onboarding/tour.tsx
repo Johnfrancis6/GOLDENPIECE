@@ -1,11 +1,10 @@
-/** O4 Guided tour (T): built in B6.4 on the demo Home (bundled payload,
- * offline). Until then the step passes straight to O5. */
-import { useEffect } from 'react';
-import { router } from 'expo-router';
-import { ROUTE } from '../../lib/flow';
-import { Splash } from '../../screens/Splash';
+/** O4 Guided tour (T) on the bundled demo Home, offline. Passer / Terminer → O5. */
+import { useApp } from '../../state/app';
+import { Tour } from '../../screens/tour/Tour';
+import { go, useStep } from '../../screens/frames';
 
-export default function Tour() {
-  useEffect(() => { router.replace(ROUTE.choice as never); }, []);
-  return <Splash />;
+export default function TourStep() {
+  useStep('tour');
+  const { patch } = useApp();
+  return <Tour firstName={null} onDone={() => { void patch({ tourSeen: true }); go('choice'); }} />;
 }

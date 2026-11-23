@@ -38,13 +38,18 @@ function PhaseGate() {
   const nav = useRootNavigationState();
   const phase = app?.phase;
   const step = phase?.kind === 'onboarding' ? phase.step : null;
-  const top = segments[0] ?? '';
+  // route groups such as (tabs) are not part of the path
+  const top = segments.filter((s) => !s.startsWith('('))[0] ?? '';
   useEffect(() => {
     if (!nav?.key || !phase || phase.kind === 'loading' || top === 'gallery') return;
-    const want = phase.kind === 'update' ? '/update' : phase.kind === 'locked' ? '/lock'
-      : phase.kind === 'ready' ? '/home' : null;
-    if (want) {
-      if (`/${top}` !== want) router.replace(want as never);
+    if (phase.kind === 'update' || phase.kind === 'locked') {
+      const want = phase.kind === 'update' ? 'update' : 'lock';
+      if (top !== want) router.replace(`/${want}` as never);
+      return;
+    }
+    if (phase.kind === 'ready') {
+      // Home and the screens opened from it stay; the gate only leaves the flow screens
+      if (['', 'index', 'onboarding', 'lock', 'update'].includes(top)) router.replace('/home' as never);
       return;
     }
     // onboarding: only redirect when outside the flow (resume, after lock/wipe)
@@ -71,7 +76,8 @@ function Shell({ scheme }: { scheme: Scheme }) {
               <Stack.Screen name="index" options={{ animation: 'fade' }} />
               <Stack.Screen name="lock" options={{ animation: 'fade', gestureEnabled: false }} />
               <Stack.Screen name="update" options={{ animation: 'fade', gestureEnabled: false }} />
-              <Stack.Screen name="home" options={{ animation: 'fade' }} />
+              <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+              <Stack.Screen name="tour" options={{ animation: 'fade' }} />
             </Stack>
             <PhaseGate />
           </>

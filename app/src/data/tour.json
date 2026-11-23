@@ -1,0 +1,188 @@
+{
+ "$comment": "Guided tour (T): demo Home bundled with the app (dakar_salaried clone on dev, 2026-11-23; alert, day change and rows added for the tour). Fictitious data.",
+ "home": {
+  "fx": {
+   "EUR": 655.957,
+   "USD": 601.3044,
+   "XAF": 1,
+   "XOF": 1
+  },
+  "alerts": {
+   "open_count": 1,
+   "to_confirm_count": 1,
+   "top": {
+    "id": "00000000-0000-4000-8000-0000000000a1",
+    "kind": "transaction",
+    "band": "ask",
+    "score": 58,
+    "status": "awaiting_user",
+    "reason": {
+     "code": "new_payee",
+     "params": {}
+    },
+    "created_at": "2026-11-23T07:40:00Z"
+   }
+  },
+  "budget": null,
+  "counts": {
+   "accounts": 3,
+   "positions": 2
+  },
+  "accounts": [
+   {
+    "id": "9db631b5-e2f3-458b-b838-eec737d22cba",
+    "kind": "momo",
+    "balance": {
+     "c": "XOF",
+     "m": 102200
+    },
+    "currency": "XOF",
+    "balance_ref": 102200,
+    "institution": "teranga_mobile",
+    "display_name": "Teranga Mobile"
+   },
+   {
+    "id": "a4b04209-53b3-409b-95df-e832e96b36b2",
+    "kind": "bank",
+    "balance": {
+     "c": "XOF",
+     "m": 2503300
+    },
+    "currency": "XOF",
+    "balance_ref": 2503300,
+    "institution": "banque_baobab",
+    "display_name": "Compte courant"
+   },
+   {
+    "id": "b28225e7-fa4c-40ca-836a-cb783d3e28c4",
+    "kind": "momo",
+    "balance": {
+     "c": "XOF",
+     "m": 45787
+    },
+    "currency": "XOF",
+    "balance_ref": 45787,
+    "institution": "kola_money",
+    "display_name": "Kola Money"
+   }
+  ],
+  "learning": {
+   "ops": 991,
+   "days": 364,
+   "active": true
+  },
+  "networth": {
+   "net": 1987581,
+   "assets": 3887581,
+   "change_day": {
+    "abs": 12300,
+    "pct": 0.62
+   },
+   "liabilities": 1900000,
+   "change_month": null,
+   "series_as_of": null
+  },
+  "spark_30d": [],
+  "top_mover": {
+   "name": "Bitcoin",
+   "spark_30d": [
+    80888,
+    80154,
+    80151,
+    80910,
+    81344,
+    77992,
+    77369,
+    77582,
+    78354,
+    76816,
+    77454,
+    80504,
+    76088,
+    75844,
+    75868,
+    74851,
+    75368,
+    73796,
+    74015,
+    71460,
+    68314,
+    64150,
+    65351,
+    64883,
+    64947,
+    63068,
+    61987,
+    58952,
+    60216,
+    61271
+   ],
+   "instrument_id": "BTC",
+   "change_30d_pct": -24.25
+  },
+  "market_strip": [],
+  "ref_currency": "XOF",
+  "top_category": {
+   "share": 0.5742,
+   "spent_ref": 265000,
+   "category_id": "housing"
+  },
+  "uncategorised_count": 4
+ },
+ "recent": [
+  {
+   "id": "00000000-0000-4000-8000-0000000000r1",
+   "account_id": "9db631b5-e2f3-458b-b838-eec737d22cba",
+   "booking_ts": "2026-11-23T07:40:00Z",
+   "status": "BOOK",
+   "cdt_dbt_ind": "DBIT",
+   "amount_minor": 18000,
+   "currency": "XOF",
+   "amount_ref": 18000,
+   "label": "Taxi Rapide",
+   "cp_name": "Taxi Rapide",
+   "category_id": "transport.taxi",
+   "category_source": "keyword",
+   "op_type": "merchant",
+   "alert_id": null,
+   "row_version": 1,
+   "updated_at": "2026-11-23T07:40:00Z"
+  },
+  {
+   "id": "00000000-0000-4000-8000-0000000000r2",
+   "account_id": "a4b04209-53b3-409b-95df-e832e96b36b2",
+   "booking_ts": "2026-11-22T09:00:00Z",
+   "status": "BOOK",
+   "cdt_dbt_ind": "CRDT",
+   "amount_minor": 650000,
+   "currency": "XOF",
+   "amount_ref": 650000,
+   "label": "Salaire",
+   "cp_name": "Employeur SA",
+   "category_id": "income",
+   "category_source": "keyword",
+   "op_type": null,
+   "alert_id": null,
+   "row_version": 1,
+   "updated_at": "2026-11-22T09:00:00Z"
+  },
+  {
+   "id": "00000000-0000-4000-8000-0000000000r3",
+   "account_id": "b28225e7-fa4c-40ca-836a-cb783d3e28c4",
+   "booking_ts": "2026-11-22T18:10:00Z",
+   "status": "BOOK",
+   "cdt_dbt_ind": "DBIT",
+   "amount_minor": 23500,
+   "currency": "XOF",
+   "amount_ref": 23500,
+   "label": "Épicerie Sow",
+   "cp_name": "Épicerie Sow",
+   "category_id": "groceries",
+   "category_source": "keyword",
+   "op_type": "merchant",
+   "alert_id": null,
+   "row_version": 1,
+   "updated_at": "2026-11-22T18:10:00Z"
+  }
+ ]
+}

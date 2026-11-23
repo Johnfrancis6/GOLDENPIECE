@@ -11,9 +11,10 @@ import { openDb } from '../lib/db/open';
 import { wipe as wipeDb } from '../lib/db/schema';
 import { makeApi, type Api } from '../lib/api';
 import { NetworkError } from '../lib/sync';
+import { getEngine } from './engine';
 import { secureDelete, secureGet, secureSet } from '../lib/platform/secure';
 import { randomHex } from '../lib/platform/crypto';
-import { deviceId, deviceInfo, detectSecurityLevel } from '../lib/platform/device';
+import { deviceId, deviceInfo, detectSecurityLevel, systemAuthenticate } from '../lib/platform/device';
 import { uuidv7 } from '../lib/uuid';
 import {
   INITIAL, afterSecurity, phaseOf, restore, securityDowngraded, shouldRelock,
@@ -79,6 +80,10 @@ type Ctx = {
   reset: () => Promise<void>;
   recordConsents: (ai: boolean, crash: boolean) => Promise<Fail | null>;
   minVersion: string | null;
+  /** C20 eye: amounts hidden now (persisted choice, unless revealed this run). */
+  amountsHidden: boolean;
+  /** Hide at once; show after the system prompt (account users on a phone). */
+  toggleAmounts: () => Promise<void>;
 };
 
 const AppCtx = createContext<Ctx | null>(null);
@@ -294,16 +299,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [relogin]);
 
   const recordConsents = useCallback(async (ai: boolean, crash: boolean) => {
+    const items = [
+      { kind: 'service', granted: true, text_version: CONSENT_VERSION },
+      { kind: 'ai_categorisation', granted: ai, text_version: CONSENT_VERSION },
+      { kind: 'crash_reports', granted: crash, text_version: CONSENT_VERSION },
+    ];
     try {
-      await api.rpc('record_consents', { p_items: [
-        { kind: 'service', granted: true, text_version: CONSENT_VERSION },
-        { kind: 'ai_categorisation', granted: ai, text_version: CONSENT_VERSION },
-        { kind: 'crash_reports', granted: crash, text_version: CONSENT_VERSION },
-      ] });
+      await api.rpc('record_consents', { p_items: items });
     } catch (e) {
       const f = failOf(e);
       if (f.key !== 'offline') return f;
-      // offline: kept locally, sent by B6.4's outbox at the next connection
+      // offline: queued in the outbox, replayed at the next connection (B6.4)
+      await getEngine(api).then((en) => en.enqueue('record_consents', { items })).catch(() => {});
     }
     if (crash) initCrashReports();
     await patch({ consents: { ai, crash }, done: true });
@@ -313,13 +320,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const unlock = useCallback(() => setLocked(false), []);
 
+  const [revealed, setRevealed] = useState(false);
+  const amountsHidden = !!st?.hideAmounts && !revealed;
+  const toggleAmounts = useCallback(async () => {
+    const s = stRef.current!;
+    if (!(s.hideAmounts && !revealed)) { setRevealed(false); await patch({ hideAmounts: true }); return; }
+    if (s.mode === 'account' && s.security && Platform.OS !== 'web') {
+      const prompt = s.lang === 'en' ? 'Show amounts' : 'Afficher les montants';
+      const ok = await systemAuthenticate(prompt, s.lang === 'en' ? 'Cancel' : 'Annuler', s.security.plan.unlock === 'biometric_weak').catch(() => false);
+      if (!ok) return;
+    }
+    setRevealed(true);
+  }, [patch, revealed]);
+
   const lang: Lang = st?.lang ?? deviceLang();
   const phase = phaseOf(st, { appVersion: APP_VERSION, minVersion, locked });
   const value = useMemo<Ctx | null>(() => st && ({
     st, phase, lang, api, patch, setStep, warmup, startDemo, signUp, verifyCode, resendCode, login, forgot,
     chooseSecurity, setPin, checkPin, unlock, checkDeviceSecurity, relogin, reset, recordConsents, minVersion,
+    amountsHidden, toggleAmounts,
   }), [st, phase, lang, api, patch, setStep, warmup, startDemo, signUp, verifyCode, resendCode, login, forgot,
-    chooseSecurity, setPin, checkPin, unlock, checkDeviceSecurity, relogin, reset, recordConsents, minVersion]);
+    chooseSecurity, setPin, checkPin, unlock, checkDeviceSecurity, relogin, reset, recordConsents, minVersion,
+    amountsHidden, toggleAmounts]);
 
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

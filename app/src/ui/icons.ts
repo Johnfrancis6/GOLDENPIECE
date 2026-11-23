@@ -52,6 +52,7 @@ import ShieldX from 'lucide-react-native/icons/shield-x';
 import ShoppingCart from 'lucide-react-native/icons/shopping-cart';
 import Smartphone from 'lucide-react-native/icons/smartphone';
 import Sparkles from 'lucide-react-native/icons/sparkles';
+import Tags from 'lucide-react-native/icons/tags';
 import TrendingDown from 'lucide-react-native/icons/trending-down';
 import TrendingUp from 'lucide-react-native/icons/trending-up';
 import User from 'lucide-react-native/icons/user';
@@ -112,6 +113,7 @@ export const ICONS = {
   'shopping-cart': ShoppingCart,
   smartphone: Smartphone,
   sparkles: Sparkles,
+  tags: Tags,
   'trending-down': TrendingDown,
   'trending-up': TrendingUp,
   user: User,
