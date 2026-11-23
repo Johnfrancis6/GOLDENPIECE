@@ -28,7 +28,7 @@ Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22;
 Tecno Spark 50 screen type/density (assumed LCD); GPU cost of gradients/glow; widget sizes 2×1 / 2×2; G6 candles at 3M (≈ 3 dp bodies) on the phone; G5 Sankey at large font; risk-scale thresholds of B12 (defaults, not validated figure by figure). API gaps to raise: lender name in `get_portfolio.debts`, monthly 5Y candles, `spark_30d`/`change_30d` for Home quotes.
 
 ## Do first
-S5 Spending is validated (screens/s5-spending.md). If this is a new session: greet Franco in French in 3 lines (Spending done; this session continues with Alerts; D11 and D12 apply), then ask the question round for **B15 "Pourquoi ?" sheet + G8 score gauge** (B14 validated 2026-11-23 without preview). If B15 questions were already asked in the previous session, ask Franco for his answers first. Franco said "avance sur les autres tâches": keep rounds short; he may validate without preview.
+S5 Spending is validated (screens/s5-spending.md). If this is a new session: greet Franco in French in 3 lines (Spending done; this session continues with Alerts; D11 and D12 apply), then ask the question round for **S6 Alerts** (B14, B15 + G8 validated 2026-11-23 without preview). If S6 questions were already asked in the previous session, ask Franco for his answers first. Franco said "avance sur les autres tâches": keep rounds short; he may validate without preview.
 
 ## Order (item by item)
 1. Alerts: **B14** "Votre banque a été prévenue" (reuse C22 timeline, B4, B13) → **B15 "Pourquoi ?" sheet + G8 score gauge** (40/70 marks; reuse C15, C9, B12 style) → **S6 Alerts** (D8: no Alertes tab; open-alert header icon, Home strip, past alerts in Settings).
