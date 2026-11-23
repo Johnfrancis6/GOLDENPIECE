@@ -404,3 +404,24 @@ Format: decision → problem → alternative → trade-off → recommendation �
 | 15 | Country needing dedicated data | No |
 | 2 | Tecno Spark 50 specs | pending (needed before B6, 2026-12-15) |
 | 3 | Deadline 2027-01-29 and ~3 sessions/week | pending |
+
+---
+
+# Session 3 (design system)
+
+## S3-1 — Input field boundary in the dark theme
+
+- **Decision (C2, Franco 2026-11-23):** filled fields, no border at
+  rest (fill `#181818` on page `#060606`), label above.
+- **Problem:** WCAG 2.2 SC 1.4.11 asks that the visual cue identifying a
+  control reach 3:1 against what is next to it. Measured: field fill vs
+  page **1.1:1** (dark); light theme uses a 1 dp `rgba(0,0,0,0.10)`
+  line, ≈ 1.3:1. The label above and the position make fields
+  recognisable, which many audits accept, but a strict audit can flag it.
+- **Alternative:** a 1 dp `border.control` line at rest (`#737373` dark
+  4.3:1, `#858585` light 3.4:1), 2 dp focus/error borders unchanged.
+- **Trade-off:** + strict 1.4.11 compliance, fields obvious for
+  low-vision users; − slightly busier forms, less Finary-flat.
+- **Recommendation:** keep the validated look for the prototype; switch
+  to the 1 dp line if an accessibility review asks for it (one token,
+  `component.input.restBorder`). Franco decides.

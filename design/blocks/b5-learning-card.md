@@ -100,12 +100,11 @@ Two static Skia arcs after one sweep; no per-frame JS; flat card.
 | done.text | Une opération inhabituelle vous sera désormais signalée. | You will now be told about any unusual operation. |
 | done.ok | OK | OK |
 
-## 10. Open point (not verified)
+## 10. Fraud rules during learning
 
-The reassurance line assumes the fraud rules (R1-R6: SIM swap, new
-device at night…) stay active during learning; the brief only says
-anomaly alerts are inactive. To confirm with the backend session; if
-false, drop the line.
+Confirmed: fraud rules and context stay active from day one; only the
+anomaly part waits for learning ([CHALLENGES S2-7](../../docs/CHALLENGES.md#s2-7--fraud-rules-during-the-learning-phase),
+validated by Franco 2026-11-22). The reassurance line is therefore true.
 
 ## 11. Where used
 

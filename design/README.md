@@ -26,6 +26,7 @@ Files are in English; UI copy is French first, then English.
 | C20 Help triggers ("?", En savoir plus, eye with fingerprint to show) | [components/help-triggers.md](components/help-triggers.md) · [preview](previews/c20-help-triggers.png) | 2026-11-22 |
 | C21 Institution + category badges (colour categories, operator monograms) | [components/badges.md](components/badges.md) · [preview](previews/c21-badges.png) | 2026-11-22 |
 | C22 Status timeline (pulsing current step) | [components/status-timeline.md](components/status-timeline.md) · [preview](previews/c22-status-timeline.png) · [animated](previews/c22-status-timeline.html) | 2026-11-22 |
+| C2 Input + C3 Code/PIN + C4 Keypad (filled fields, own keypad, shake on wrong code, 1 min lock) | [components/input-pin-keypad.md](components/input-pin-keypad.md) · [preview](previews/c2-c4-input-pin-keypad.png) · [animated](previews/c3-pin-error.html) | 2026-11-23 |
 | G0 Chart base + G1 Line/area + G2 Sparkline | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) · [preview](previews/g0-g1-g2-charts.png) · [animated](previews/g0-g1-g2-charts.html) | 2026-11-22 |
 | B1 Net-worth header | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) · [preview](previews/b1-networth-header.png) | 2026-11-22 |
 | B4 Alert card (Home strip = one card + link; > 70 highlighted; whole card tappable; compact variant) | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) · [preview](previews/b4-alert-card.png) | 2026-11-22 |
@@ -36,7 +37,7 @@ Files are in English; UI copy is French first, then English.
 | **S2 Home** (Alertes → Budget → Marchés; light glow gold only; centred small title on scroll; profile circle → Settings) | [screens/s2-home.md](screens/s2-home.md) · [preview](previews/s2-home.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Alerts step: C2-C4** (input, PIN, keypad), then B13, B14, B15 + G8, S6. Home (S2) is done. Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **B13 "C'est bien vous ?"**, then B14, B15 + G8, S6 (Alerts step; C2-C4 done). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -208,10 +209,10 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 ## Build order
 
 1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
-2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓.
+2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓ (C2-C4 ✓ with the Alerts step).
 3. **Chart base G0**, then G1 + G2 ✓.
 4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
-5. **Alerts:** C2-C4 (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
+5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** B2, B3, B17, B20, B22, then S3.
 7. **Spending:** B7, G3, G5, B6 (already done), then S5.
 8. **Placements:** B10, B11, B12, G4, G6, G7, B18, then S4.
