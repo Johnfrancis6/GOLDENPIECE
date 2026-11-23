@@ -264,7 +264,7 @@ $$;
 
 create function api.list_alerts(p_status text default 'open', p_cursor text default null) returns jsonb
 language plpgsql stable security definer set search_path = '' as $$
-declare uid uuid := auth.uid(); v_ts timestamptz; v_id uuid; v_items jsonb; v_last record; v_n int;
+declare uid uuid := auth.uid(); v_ts timestamptz; v_id uuid; v_items jsonb; v_n int; v_next text;
 begin
   if uid is null then perform core.api_error('FORBIDDEN', 'auth.required'); end if;
   if p_status not in ('open', 'all') then perform core.api_error('INVALID', 'alerts.bad_status'); end if;
@@ -274,20 +274,16 @@ begin
     exception when others then perform core.api_error('INVALID', 'alerts.bad_cursor'); end;
   end if;
   with q as (
-    select a.* from core.alerts a where a.user_id = uid
+    select a.id, a.created_at, row_number() over (order by a.created_at desc, a.id desc) rn
+    from core.alerts a where a.user_id = uid
       and (p_status = 'all' or a.status in ('open', 'awaiting_user', 'escalated', 'in_review'))
       and (v_ts is null or (a.created_at, a.id) < (v_ts, v_id))
     order by a.created_at desc, a.id desc limit 21)
-  select jsonb_agg(core.alert_item(q) order by q.created_at desc, q.id desc) filter (where rn <= 20), count(*)
-    into v_items, v_n
-  from (select q.*, row_number() over (order by q.created_at desc, q.id desc) rn from q) q;
-  select created_at, id into v_last from (
-    select a.created_at, a.id from core.alerts a where a.user_id = uid
-      and (p_status = 'all' or a.status in ('open', 'awaiting_user', 'escalated', 'in_review'))
-      and (v_ts is null or (a.created_at, a.id) < (v_ts, v_id))
-    order by a.created_at desc, a.id desc limit 20) z order by created_at, id limit 1;
-  return jsonb_build_object('items', coalesce(v_items, '[]'),
-    'next_cursor', case when v_n > 20 then v_last.created_at::text || '|' || v_last.id end);
+  select jsonb_agg(core.alert_item(a) order by q.rn) filter (where q.rn <= 20), count(*),
+         (array_agg(q.created_at::text || '|' || q.id) filter (where q.rn = 20))[1]
+    into v_items, v_n, v_next
+  from q join core.alerts a on a.id = q.id;
+  return jsonb_build_object('items', coalesce(v_items, '[]'), 'next_cursor', case when v_n > 20 then v_next end);
 end $$;
 
 create function core.alert_timeline(al core.alerts) returns jsonb

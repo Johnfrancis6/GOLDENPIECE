@@ -49,7 +49,7 @@ insert into ops.scoring_params (key, scope, value, default_value, min_value, max
   ('z1', 'global', 4.5, 4.5, 4, 7),
   ('mad_floor', 'global', 0.15, 0.15, 0.05, 0.5),
   ('hour_r0', 'global', 0.95, 0.95, 0.85, 0.98),
-  ('check_cap', 'global', 0.65, 0.65, 0.5, 1),
+  ('check_cap', 'global', 0.55, 0.55, 0.4, 1),
   ('min_amount_eur', 'global', 8, 8, 0, 30),                 -- anomaly checks skip smaller payments
   ('x0', 'global', 4, 4, 3, 8),                               -- amount ratio check (with the robust z)
   ('x1', 'global', 12, 12, 8, 30),
@@ -336,7 +336,8 @@ begin
            and coalesce(h.payee_first, v_ts) > v_ts - interval '30 days',
     'r5_n', v_r5.n, 'r5_rising', coalesce(v_r5.rising, false),
     'c1', v_dev.security_level, 'unlock', v_dev.unlock_method, 'c2', round(v_dev.age_h::numeric, 1),
-    'c3', (v_bal_eur is not null and v_eur >= 0.5 * v_bal_eur) or (h.p99_amt is not null and h.n_dbit >= 20 and v_eur >= h.p99_amt),
+    -- c3 amount_large: ≥ 50 % of the balance (the "≥ user p99" half of §7.2 is dropped: it repeats the amount check)
+    'c3', coalesce(v_bal_eur is not null and v_eur >= 0.5 * v_bal_eur, false),
     'c4', null,
     'p95_amount_eur', round(h.p95_amt::numeric, 2), 'amount_eur', round(v_eur::numeric, 2),
     'local_time', to_char(v_local, 'HH24:MI'), 'local_hour', v_hour, 'op', v_op, 'category', t.category_id,
@@ -397,7 +398,6 @@ begin
     if s > s_amt then s_amt := s; amt_reason := jsonb_build_object('code', 'AMOUNT_VS_CATEGORY',
         'params', jsonb_build_object('x', round((f ->> 'x2')::numeric), 'category', f ->> 'category')); end if;
   end if;
-  if s_amt > 0 then checks := checks || jsonb_build_array(amt_reason || jsonb_build_object('s', s_amt)); end if;
   if (f ->> 'f3')::int = 1 then
     checks := checks || jsonb_build_array(jsonb_build_object('code', 'NEW_PAYEE', 'params', '{}'::jsonb,
                                                              's', core.param('new_payee_s')));
@@ -408,9 +408,11 @@ begin
   s := core.clamp01(((f ->> 'f6')::float8 - v_r0) / v_r0);
   if s > 0 then checks := checks || jsonb_build_array(jsonb_build_object('code', 'VELOCITY',
       'params', jsonb_build_object('n', (f ->> 'n_1h')::int), 's', s)); end if;
+  -- today's outflow is the same evidence as one large amount: the amount group counts once
   s := core.clamp01(((f ->> 'f7')::float8 - v_r0) / v_r0);
-  if s > 0 then checks := checks || jsonb_build_array(jsonb_build_object('code', 'DAILY_OUTFLOW',
-      'params', jsonb_build_object('x', round((f ->> 'f7')::numeric)), 's', s)); end if;
+  if s > s_amt then s_amt := s; amt_reason := jsonb_build_object('code', 'DAILY_OUTFLOW',
+      'params', jsonb_build_object('x', round((f ->> 'f7')::numeric))); end if;
+  if s_amt > 0 then checks := checks || jsonb_build_array(amt_reason || jsonb_build_object('s', s_amt)); end if;
   -- one check alone stays below the bank band (cap), two strong ones reach it
   select 1 - coalesce(exp(sum(ln(greatest(1e-12, 1 - least((c ->> 's')::float8, core.param('check_cap')))))), 1)
     into a_thr from jsonb_array_elements(checks) c;

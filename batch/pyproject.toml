@@ -7,6 +7,8 @@ dependencies = ["numpy>=2"]
 [project.optional-dependencies]
 test = ["pytest>=8"]
 local = ["psycopg[binary]>=3.2"]
+# B5: Isolation Forest training (pinned: the SQL parity fixture is generated with it)
+ml = ["scikit-learn==1.9.1"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
