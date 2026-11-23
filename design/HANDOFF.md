@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -46,10 +46,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B5 Learning card (two C17 orange rings, fraud-reassurance line, L5 finished state with grey OK) | validated 2026-11-22 | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) |
 | B6 Budget ring (Home: two tiles "Ce mois" + worst category; D3: badge left, ring right) | validated 2026-11-22 | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) |
 | B9 Quote row (one card, freshness line under it, 1-month period; **G2 sparklines get a light fading area**, Franco 2026-11-23) | validated 2026-11-23 | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) |
-| Tokens | v0.24.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow) | [tokens.json](tokens.json) |
+| B8 Chart frame (no card; title, summary sentence, 22 sp value driven by scrub, period bar or month pill, chart, controls, freshness) | validated 2026-11-23 | [blocks/b8-chart-frame.md](blocks/b8-chart-frame.md) |
+| Tokens | v0.25.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **B8 Chart
-frame** → **S2 Home layout** (first full screen: check glow C light alphas
+**Next items, in order** (README "Build order"): **S2 Home layout** (first full screen: check glow C light alphas
 there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
@@ -100,6 +100,8 @@ yet merged into `main`; Franco merges through a pull request).
 - Progress is shown as **rings**, not bars (Franco, from a reference with
   ring gauges): he wants colours **crisp and saturated** but harmonious,
   never blurred or washed out.
+- He asked how many steps remain (2026-11-23): after B8, 41 items ≈ 30
+  validation rounds; give such counts by section when asked.
 - Typical rhythm (continuation 2): ask ≤ 3 questions with labelled
   options and a recommended default → he answers "A, oui" → build the
   preview (static PNG at scale 2, plus an animated HTML with embedded
