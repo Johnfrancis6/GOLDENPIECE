@@ -69,7 +69,7 @@ on any device; the push N "Learning finished" points here.
 
 | Event | Motion |
 |---|---|
-| First view | each arc sweeps from 0 to its value, 1100 ms, `enter` easing (Skia path trim), second ring starts 80 ms later (stagger rows) |
+| First view | C17 entry: each arc sweeps from 0 to its value in 1100 ms with the very light overshoot (backOut s = 0.9, peak ≈ +3 %, Franco 2026-11-23; see C17), second ring starts 80 ms later |
 | Count changes | arc sweeps old → new, 550 ms (`chartPeriodMorph`) |
 | Becomes finished | arc completes, colour cross-fades orange → green 320 ms, check fades in 320 ms; text cross-fades |
 | "OK" | card opacity 1 → 0, 224 ms (exit), the list closes up 320 ms |

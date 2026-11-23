@@ -65,8 +65,7 @@ it is going: never mixed.
 
 ## 6. Motion
 
-C17: arc sweeps 0 → value in 1100 ms (`enter`, Skia path trim) on first
-view; tiles/rows stagger 80 ms; value change old → new 550 ms; a state
+C17 entry: the arc sweeps from 0 to its value in 1100 ms with a **very light overshoot** (Franco, 2026-11-23, ring-gauge style): Skia path trim end = value × backOut(t, s = 0.9), peak ≈ +3 % of the value, then settles; the centre label counts 0 → value with `enter` (no overshoot); a ring at ≥ 100 % cannot pass the full turn, so it draws to full with `enter` and pulses scale 1 → 1.04 → 1 over the last 18 % of the time; nothing is drawn while trim = 0 (no round-cap dot); rings stagger 80 ms. Preview: [../previews/m-entry-rings-sankey.html](../previews/m-entry-rings-sankey.html); tiles/rows stagger 80 ms; value change old → new 550 ms; a state
 change (ok → near → over) cross-fades the arc colour 320 ms. Reduced
 motion: drawn at once. Press: C7/C6 pressed fill, no scale.
 

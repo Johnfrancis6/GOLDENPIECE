@@ -39,6 +39,8 @@ a browser; it uses `../fonts/`).
 | `chartLine` | 1100 | line drawn from left to right — M8 |
 | `chartBars` | 700 | each bar grows from its base, 70 ms stagger — M8 |
 | `chartPeriodMorph` | 550 | line reshapes to the new period — M8 |
+| `ringEntry` | 1100 | C17 rings: path trim with a very light overshoot (backOut s 0.9, ≈ +3 %), full rings pulse 1.04; stagger 80 — M8 (Franco 2026-11-23) |
+| `sankeyEntry` | 600 + 900 | G5: hub draws top → bottom 600, then bands grow out of the hub and saturate 900 with a soft end (0.16, 1, 0.3, 1), stagger 50 — M8 (Franco 2026-11-23) |
 | `sheen` | 1400 | gold sheen pass — M13 |
 
 Stagger: list rows 80 ms, bars 70 ms, at most 6 staggered items (the rest

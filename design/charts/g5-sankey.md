@@ -81,8 +81,7 @@ amount in text, so colour is never alone.
 
 ## 6. Motion (M8)
 
-First view: nodes fade in 320 ms; flows draw left → right (Skia path
-trim on the ribbon mask) 900 ms `enter`, stagger 60 ms. Month change:
+First view (Franco, 2026-11-23; preview [../previews/m-entry-rings-sankey.html](../previews/m-entry-rings-sankey.html)): (1) the **hub bar draws top → bottom**, scaleY 0 → 1 from its top edge, 600 ms `standard` (0.4, 0, 0.2, 1); (2) once it is whole, **each band grows out of the hub** (left bands towards the sources, right bands towards the uses): scaleX 0 → 1 with its origin on the hub edge and opacity 0 → its final 0.34 / 0.26 ("saturates"), 900 ms, easing (0.16, 1, 0.3, 1) — fast start, **soft end**; bands start 50 ms apart in node order (sources, then uses top → bottom); (3) each side node and its labels fade in 320 ms when its band is ≈ 60 % out. Total ≈ 2 s. Transform/opacity only. Month change:
 node heights and ribbons morph 550 ms (`morph`), labels cross-fade.
 Selection dim 150 ms. Reduced motion: drawn at once.
 

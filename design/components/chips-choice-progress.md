@@ -61,8 +61,7 @@ Contrast against the track: dark ≥ 5.99:1, light ≥ 3.51:1 (≥ 3:1, script).
 Status line under the title: "Reste 38 000 F CFA" `text.secondary`; over:
 "Dépassé de 1 500 F CFA" in `#FF7B6E` dark / `#C8283C` light (loss, text).
 
-Motion: the arc sweeps from 0 to its value in 1100 ms, `enter` easing
-(Skia path trim, as the chart line draw M8), on first view only; value
+Motion (first view only): the arc sweeps from 0 to its value in 1100 ms with a **very light overshoot** (Franco, 2026-11-23, ring-gauge style): Skia path trim end = value × backOut(t, s = 0.9), peak ≈ +3 % of the value, then settles; the centre label counts 0 → value with `enter` (no overshoot); a ring at ≥ 100 % cannot pass the full turn, so it draws to full with `enter` and pulses scale 1 → 1.04 → 1 over the last 18 % of the time; nothing is drawn while trim = 0 (no round-cap dot); rings stagger 80 ms. Preview: [../previews/m-entry-rings-sankey.html](../previews/m-entry-rings-sankey.html); value
 changes sweep from old to new in `chartPeriodMorph` 550 ms. Reduced
 motion: drawn at once. TalkBack: "Alimentation, 62 % du budget, reste
 38 000 francs CFA".
