@@ -38,6 +38,9 @@ Spending and Alerts are complete (S5, S6, B14, B15 + G8 validated 2026-11-23). G
 5. M14 App opening — last (Franco found the first proposal mediocre).
 Ask Franco once, before Onboarding, whether he wants to design it fully or delegate parts to build sessions (as D10).
 
+## Handing over to a new session
+When Franco asks to continue in a new session, update this file, push, then **create the session yourself** (Franco, 2026-11-23) on this repository and branch with the prompt "Lis design/NEXT_SESSION.md sur la branche claude/brave-bardeen-g5ro94 et suis-le exactement…", and give him its link.
+
 ## Method for each item
 - Ask ≤ 3 questions with labelled options and a recommended default; never ask about micro-details (decide them, write the rule, leave a build instruction as in formats.md §7).
 - Preview only what decides the item: HTML with tokens and design/fonts → Playwright PNG at deviceScaleFactor 2 (split images taller than 8000 px); check it yourself by eye (wrapping, clipping, overlap, wrong Lucide glyph, D11 thresholds, text contrast when dimming) before SendUserFile (display "render"). Lucide: `npm pack lucide-static@1.77.0`.
