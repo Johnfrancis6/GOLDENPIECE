@@ -63,6 +63,8 @@ on a low/mid-range Android phone (Tecno Spark 50).
 
 **Next items** (end of the Placements session, 2026-11-23): Placements is **complete** (B10, B11 + G4, B12, G6, G7, B18, S4). Next: **S5 Spending layout** — Franco was asked at the end of S4 whether to assemble it (short round) or leave it to build sessions (answer pending, see Open points); then **Alerts: B14, B15 + G8, S6**; Accounts (S3) left to build sessions (D10); then Onboarding (B19, B21, B24, S1, T), Settings (B16, B23, S7), N/W/X/D, M14 App opening (last). Franco's rule D11 (clean screens) applies to all of them.
 
+Starting prompt for the next session: [NEXT_SESSION.md](NEXT_SESSION.md) (Franco 2026-11-23: Spending S5 first, then the others).
+
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
 
