@@ -1,0 +1,13 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C3 PIN</title><style>@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}body{margin:0;background:#060606;font:15px/22px P;color:#F5F5F5;display:grid;place-items:center;min-height:100vh}.ph{width:360px;text-align:center}
+.pt{font:600 24px/32px P}.ps{font:400 13px/18px P;color:#A3A3A3;margin-top:4px}
+.dots{display:flex;justify-content:center;gap:16px;margin-top:40px}.dots i{width:14px;height:14px;border-radius:50%;box-sizing:border-box;border:2px solid #737373;transition:background-color 120ms,border-color 120ms,transform 120ms cubic-bezier(.22,1,.36,1)}
+.dots i.on{background:#F5F5F5;border-color:#F5F5F5;transform:scale(1.15)}.dots i.on.set{transform:scale(1)}.dots.err i{background:#FF6B7A!important;border-color:#FF6B7A!important}
+.shake{animation:sh 360ms cubic-bezier(.33,0,.15,1)}@keyframes sh{0%{transform:translateX(0)}15%{transform:translateX(-8px)}35%{transform:translateX(7px)}55%{transform:translateX(-5px)}75%{transform:translateX(3px)}100%{transform:translateX(0)}}
+.perr{color:#FF6B7A;font:500 13px/18px P;margin-top:16px;min-height:18px;opacity:0;transition:opacity 320ms}.perr.v{opacity:1}.note{font:400 12px/16px P;color:#6E6E6E;margin-top:60px;padding:0 20px}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}.dots i{transition:none}}</style><body><div class="ph"><div class="pt">Entrez votre code</div><div class="ps">Pour répondre à l’alerte</div>
+<div class="dots" id="d"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="perr" id="m"></div>
+<div class="note">Démo en boucle : saisie (chaque point se remplit en 120 ms), code faux → tremblement 360 ms (±8 dp, 3 allers-retours amortis) + rouge, puis les points se vident.</div></div><script>const d=document.getElementById('d'),m=document.getElementById('m'),is=[...d.children];const w=t=>new Promise(r=>setTimeout(r,t));
+async function loop(){for(;;){d.className='dots';m.className='perr';is.forEach(i=>i.className='');await w(900);
+for(const i of is){i.className='on';await w(130);i.classList.add('set');await w(220)}
+await w(150);d.className='dots err shake';m.textContent='Code incorrect. Il vous reste 3 essais.';m.className='perr v';await w(1800);
+is.forEach(i=>i.className='');d.className='dots';await w(1600)}}loop();</script></body></html>

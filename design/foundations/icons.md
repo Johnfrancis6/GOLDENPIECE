@@ -76,7 +76,8 @@ list additions in their report (formats.md §7 rule).
   There is **no Alertes tab**.
 - When at least one alert is open, the `shield-alert` icon with a dot
   appears in the screen header (all four tabs), next to the hide-amounts
-  action; it opens the alert list (L1). It also shows as the Home alert
+  action; with **one** open alert it opens that alert directly, with two
+  or more the alert list (L1) (S6, Franco 2026-11-23). It also shows as the Home alert
   strip (B4) and as a push notification. No open alert → no icon.
 - Past alerts: Settings → "Historique des alertes".
 

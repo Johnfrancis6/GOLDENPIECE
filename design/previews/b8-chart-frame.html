@@ -1,0 +1,193 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>B8</title><style>@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+body{margin:0;background:#2a2a2a;font:15px/22px P}.w{display:flex;gap:16px;padding:16px;width:max-content;align-items:flex-start}.col{display:flex;flex-direction:column;gap:8px;align-items:center}.cap{font:500 13px P;color:#ddd}
+.ph{width:360px;box-sizing:border-box;padding:8px 0 16px;background:var(--bg);color:var(--tp)}.ph>*{margin-left:20px;margin-right:20px}.ph>.chart{margin:0}
+.dark{--bg:#060606;--s3:#222222;--tp:#F5F5F5;--ts:#A3A3A3;--line:#FF7A2F;--ga:0.24;--gain:#3DD68C;--br:#FF7A2F}
+.light{--bg:#F4F4F4;--s3:#E5E5E5;--tp:#0A0A0A;--ts:#5C5C5C;--line:#D9560F;--ga:0.16;--gain:#0E7A43;--br:#B4410F}
+.lbl{font:500 11px/14px P;color:var(--ts);opacity:.7;margin-top:20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.st{font:600 18px/26px P;display:flex;align-items:center;gap:2px}.st .q{width:28px;height:28px;display:grid;place-items:center;color:var(--ts)}
+sup{font-size:9px;line-height:0}.sum{font:400 13px/18px P;color:var(--ts);margin-top:2px}
+.val{font:600 22px/28px P;font-variant-numeric:tabular-nums;margin-top:12px}
+.chg{font:500 13px/18px P;display:flex;gap:6px;align-items:center;margin-top:2px}.chg .g{color:var(--gain);display:inline-flex;gap:4px;align-items:center}.chg .d{color:var(--ts);font-weight:400}
+.per{margin-top:16px;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;background:var(--s3);font:400 13px P;color:var(--ts)}.per b{color:var(--tp);font-weight:600}
+.chart{position:relative;margin-top:8px;height:210px}.chart svg{position:absolute;left:0;top:0}
+.ax{position:absolute;right:20px;font:400 11px/14px P;color:var(--ts)}.xl{position:absolute;bottom:-2px;font:400 11px/14px P;color:var(--ts)}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:8px}.ib{width:40px;height:40px;border-radius:50%;background:var(--s3);display:grid;place-items:center}.lnk{margin-left:auto;font:600 13px/18px P;color:var(--br)}
+.fresh{font:400 12px/16px P;color:var(--ts);margin-top:8px}
+.nd{margin-top:12px;border:1px dashed var(--ts);border-radius:12px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:.9}.nd b{font:500 15px/22px P}.nd small{font:400 13px/18px P;color:var(--ts)}</style><body><div class="w"><div class="col"><div class="ph dark"><div class="lbl">P6 · cadre de graphique</div>
+<div class="st">Évolution du portefeuille<span class="q"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="16"
+  height="16"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.62"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="10" />
+  <path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" />
+  <path d="M12 17h.01" />
+</svg></span></div><div class="sum">Votre portefeuille a gagné 8,4 % depuis le&nbsp;1<sup>er</sup>&nbsp;janvier.</div>
+<div class="val" id="v_darkrest"></div><div class="chg"><span class="g"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="16"
+  height="16"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.62"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M16 7h6v6" />
+  <path d="m22 7-8.5 8.5-5-5L2 17" />
+</svg>+373 000 F (+8,4 %)</span><span class="d">depuis le 1<sup>er</sup>&nbsp;janv.</span></div><div class="per">Période <b>Année</b><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m6 9 6 6 6-6" />
+</svg></div><div class="chart" data-mode="rest" data-th="dark"></div>
+<div class="ctl"><span class="ib"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m15 18-6-6 6-6" />
+</svg></span><span class="ib"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m9 18 6-6-6-6" />
+</svg></span><span class="lnk">Voir en tableau</span></div>
+<div class="fresh">Cours différés (~15 min) · au 22 nov., 14:05</div>
+<div class="lbl" style="margin-top:32px">D1 · par mois, données insuffisantes</div><div class="st">Dépenses par catégorie</div><div class="sum">Comparez ce mois au précédent.</div>
+<div class="per">Mois <b>Novembre</b><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m6 9 6 6 6-6" />
+</svg></div><div class="nd"><b>Données insuffisantes</b><small>Il faut au moins deux mois d’opérations.</small></div>
+</div><div class="cap">B8 · sombre</div></div><div class="col"><div class="ph light"><div class="lbl">P6 · glisser le doigt</div>
+<div class="st">Évolution du portefeuille<span class="q"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="16"
+  height="16"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.62"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="10" />
+  <path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" />
+  <path d="M12 17h.01" />
+</svg></span></div><div class="sum">Votre portefeuille a gagné 8,4 % depuis le&nbsp;1<sup>er</sup>&nbsp;janvier.</div>
+<div class="val" id="v_lightscrub"></div><div class="chg"><span class="d">mardi 12 août 2026</span></div><div class="per">Période <b>Année</b><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m6 9 6 6 6-6" />
+</svg></div><div class="chart" data-mode="scrub" data-th="light"></div>
+<div class="ctl"><span class="ib"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m15 18-6-6 6-6" />
+</svg></span><span class="ib"><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m9 18 6-6-6-6" />
+</svg></span><span class="lnk">Voir en tableau</span></div>
+<div class="fresh">Glissez le doigt sur la courbe · ‹ › point par point</div>
+<div class="lbl" style="margin-top:32px">D1 · par mois, données insuffisantes</div><div class="st">Dépenses par catégorie</div><div class="sum">Comparez ce mois au précédent.</div>
+<div class="per">Mois <b>Novembre</b><svg
+  
+  xmlns="http://www.w3.org/2000/svg"
+  width="20"
+  height="20"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.10"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m6 9 6 6 6-6" />
+</svg></div><div class="nd"><b>Données insuffisantes</b><small>Il faut au moins deux mois d’opérations.</small></div>
+</div><div class="cap">B8 · clair, doigt sur la courbe</div></div></div><script>
+let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+function series(n,s,d,v){const a=[s];for(let i=1;i<n;i++)a.push(a[i-1]*(1+d+(rnd()-.5)*v));return a}
+const D=series(47,4.44e6,0.0018,0.016);const k=4.8123e6/D.at(-1);for(let i=0;i<D.length;i++)D[i]*=k;
+const sp=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');const fmt=v=>Math.round(v/100)*100;
+const W=360,H=210,PL=20,PR=56,PT=12,PB=26;
+function geom(d){const mn=Math.min(...d),mx=Math.max(...d),pad=(mx-mn)*.12;const lo=mn-pad,hi=mx+pad;return {pts:d.map((v,i)=>[PL+i*(W-PL-PR)/(d.length-1),PT+(1-(v-lo)/(hi-lo))*(H-PT-PB)]),lo,hi}}
+function smooth(p){let s=`M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;for(let i=1;i<p.length;i++){const [x0,y0]=p[i-1],[x1,y1]=p[i],cx=(x0+x1)/2;s+=` C${cx.toFixed(1)},${y0.toFixed(1)} ${cx.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`}return s}
+function chartSVG(id,d,cursor){const g=geom(d),line=smooth(g.pts),area=line+` L${g.pts.at(-1)[0]},${H-PB} L${PL},${H-PB} Z`;
+let stops='';for(let k=0;k<=12;k++){const t=k/12;stops+=`<stop offset="${t}" stop-color="var(--line)" stop-opacity="calc(var(--ga) * ${(Math.pow(1-t,1.8)).toFixed(3)})"/>`}
+const ticks=[0.15,0.5,0.85].map(f=>{const v=g.hi-(g.hi-g.lo)*f;return `<div class="ax" style="top:${PT+f*(H-PT-PB)-7}px">${(v/1e6).toFixed(2).replace('.',',')} M</div>`}).join('');
+let cur='';if(cursor!=null){const [x,y]=g.pts[cursor];cur=`<line x1="${x}" x2="${x}" y1="${PT}" y2="${H-PB}" stroke="var(--ts)" stroke-opacity=".6" stroke-width="1"/><circle cx="${x}" cy="${y}" r="6" fill="var(--line)" stroke="var(--bg)" stroke-width="2.5"/>`}
+return `<svg width="${W}" height="${H}"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1">${stops}</linearGradient></defs><path d="${area}" fill="url(#g${id})"/><path d="${line}" fill="none" stroke="var(--line)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${cur}</svg>`+ticks+['janv.','avr.','juil.','oct.'].map((m,i)=>`<div class="xl" style="left:${PL+i*(W-PL-PR)/3.3}px">${m}</div>`).join('')}
+document.querySelectorAll('.chart').forEach((c,i)=>{const s=c.dataset.mode==='scrub';c.innerHTML=chartSVG('c'+i,D,s?31:null);
+document.getElementById('v_'+c.dataset.th+c.dataset.mode).textContent=sp(fmt(s?D[31]:D.at(-1)))+' F';});
+</script></body></html>

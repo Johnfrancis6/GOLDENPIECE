@@ -26,11 +26,46 @@ Files are in English; UI copy is French first, then English.
 | C20 Help triggers ("?", En savoir plus, eye with fingerprint to show) | [components/help-triggers.md](components/help-triggers.md) · [preview](previews/c20-help-triggers.png) | 2026-11-22 |
 | C21 Institution + category badges (colour categories, operator monograms) | [components/badges.md](components/badges.md) · [preview](previews/c21-badges.png) | 2026-11-22 |
 | C22 Status timeline (pulsing current step) | [components/status-timeline.md](components/status-timeline.md) · [preview](previews/c22-status-timeline.png) · [animated](previews/c22-status-timeline.html) | 2026-11-22 |
+| C2 Input + C3 Code/PIN + C4 Keypad (filled fields, own keypad, shake on wrong code, 1 min lock) | [components/input-pin-keypad.md](components/input-pin-keypad.md) · [preview](previews/c2-c4-input-pin-keypad.png) · [animated](previews/c3-pin-error.html) | 2026-11-23 |
+| B13 "C'est bien vous ?" (full screen, unlock on answer, Non → B14) | [blocks/b13-is-it-you.md](blocks/b13-is-it-you.md) · [preview](previews/b13-is-it-you.png) | 2026-11-23 |
 | G0 Chart base + G1 Line/area + G2 Sparkline | [charts/g0-g1-g2.md](charts/g0-g1-g2.md) · [preview](previews/g0-g1-g2-charts.png) · [animated](previews/g0-g1-g2-charts.html) | 2026-11-22 |
 | B1 Net-worth header | [blocks/b1-networth-header.md](blocks/b1-networth-header.md) · [preview](previews/b1-networth-header.png) | 2026-11-22 |
+| B4 Alert card (Home strip = one card + link; > 70 highlighted; whole card tappable; compact variant) | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) · [preview](previews/b4-alert-card.png) | 2026-11-22 |
+| B5 Learning card (two orange rings days/operations, not dismissible, once "alertes actives" + OK) | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) · [preview](previews/b5-learning-card.png) | 2026-11-22 |
+| B6 Budget ring (Home two tiles total + worst category; "Reste"/"Dépassé de"; D3 row badge left, ring right) | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) · [preview](previews/b6-budget-ring.png) | 2026-11-22 |
+| B9 Quote row (5 Home quotes in one card, freshness line, 1-month sparkline + change; G2 sparklines now with a light fading area) | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) · [preview](previews/b9-quote-row.png) | 2026-11-23 |
+| B8 Chart frame (on the page, small value line driven by the scrub, visible summary sentence, month pill) | [blocks/b8-chart-frame.md](blocks/b8-chart-frame.md) · [preview](previews/b8-chart-frame.png) | 2026-11-23 |
+| **S2 Home v2** (Franco reference layout: greeting, net-worth card carousel, 4 round actions, 2 tiles, latest operations, floating pill bar with labels; chart moved to the "Patrimoine" sub-page) | [screens/s2-home.md](screens/s2-home.md) · [preview](previews/s2-home-v2.png) | 2026-11-23 (v2) |
+| B7 Stat tiles (2 × 2 cards, plain sentence under the value, only "Évolution" coloured) | [blocks/b7-stat-tiles.md](blocks/b7-stat-tiles.md) · [preview](previews/b7-stat-tiles.png) | 2026-11-23 |
+| G3 Bars (horizontal, category colours, black "v" arrow for last month inside the bar, top 6 + Autres) | [charts/g3-bars.md](charts/g3-bars.md) · [preview](previews/g3-bars.png) | 2026-11-23 |
+| G5 Sankey (sources → Revenus → top 6 + Autres + Épargne; flows in destination colour; lists at large font) | [charts/g5-sankey.md](charts/g5-sankey.md) · [preview](previews/g5-sankey.png) | 2026-11-23 |
+| B22 Categories & rules (one list card → category screen; rules as sentences; "Appliquer aux N" short sheet with preview, pre-checked rule box) | [blocks/b22-categories-rules.md](blocks/b22-categories-rules.md) · [preview](previews/b22-categories-rules.png) | 2026-11-23 |
+| B10 Position, real-estate and debt rows (one card per group with subtotal and a light Lucide icon by the heading; value + unrealised tag; "À réévaluer" warning tag; debts not red) | [blocks/b10-holding-rows.md](blocks/b10-holding-rows.md) · [preview](previews/b10-holding-rows.png) | 2026-11-23 |
+| B11 Allocation list + G4 Donut (thin ring, total in the centre, tap highlights a slice; Classe · Devise · Pays chips; gross assets incl. real estate) | [blocks/b11-allocation-list.md](blocks/b11-allocation-list.md) · [charts/g4-donut.md](charts/g4-donut.md) · [preview](previews/b11-g4-allocation.png) | 2026-11-23 |
+| B12 "?" sheet (definition + your figure + how to read it; neutral Faible · Moyen · Élevé scale for risk figures; method sheet with folded "Formule") | [blocks/b12-help-sheet.md](blocks/b12-help-sheet.md) · [preview](previews/b12-help-sheet.png) | 2026-11-23 |
+| G6 Candlestick (line by default + Courbe · Bougies switch; green/red filled; ≤ ~60 candles: 3M daily, 1A weekly, 5A monthly) | [charts/g6-candlestick.md](charts/g6-candlestick.md) | 2026-11-23 |
+| G7 Positive/negative bars ("Ce qui a compté": centre zero axis, gains right in green, losses left in red, Par actif · Par classe) | [charts/g7-pos-neg-bars.md](charts/g7-pos-neg-bars.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
+| B18 Form (sub-page with x, kind chips, filled fields, live total, pinned Enregistrer, offline "En attente", sale > held refused) | [blocks/b18-form.md](blocks/b18-form.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
+| B14 "Votre banque a été prévenue" (full screen; B4 compact + C22 timeline + one advice banner; Appeler ma banque / Fermer; validated without preview) | [blocks/b14-bank-notified.md](blocks/b14-bank-notified.md) | 2026-11-23 |
+| B15 "Pourquoi ?" sheet + G8 score gauge (bar with 40/70 marks and named zones, no number; ≤ 3 reasons with weight in words; "Votre appareil" only when relevant; validated without preview) | [blocks/b15-why-sheet.md](blocks/b15-why-sheet.md) · [charts/g8-score-gauge.md](charts/g8-score-gauge.md) | 2026-11-23 |
+| Entry motion: C17 rings (light overshoot, full rings pulse) and G5 Sankey (hub draws, then bands grow out and saturate) | [foundations/motion.md](foundations/motion.md) · [animated](previews/m-entry-rings-sankey.html) · [frames](previews/m-entry-rings-sankey.png) | 2026-11-23 |
+| B19 Step screen (96 dp tinted Lucide icon, neutral orange / warning yellow; centred title + ≤ 3 lines; primary pinned with one text button above; C17 dots only in the sign-up flow) | [blocks/b19-step-screen.md](blocks/b19-step-screen.md) · [preview](previews/b19-step-screen.png) | 2026-11-23 |
+| B21 Institution picker (title + one neutral "simulation" tag and line; "Mobile money" then "Banques" in one-card lists; search when > 8; tap = next step; "Autre banque" → demo bank; fictitious names only) | [blocks/b21-institution-picker.md](blocks/b21-institution-picker.md) · [preview](previews/b21-institution-picker.png) | 2026-11-23 |
+| B16 Settings list (grey 20 dp Lucide icon, no tile; value + chevron on one line; switch without chevron; last "Compte" group, "Supprimer mon compte" red without icon, confirmation required; value under the name at 200 %) | [blocks/b16-settings-list.md](blocks/b16-settings-list.md) · [preview](previews/b16-settings-list.png) | 2026-11-23 |
+| B23 Device row (smartphone icon, model + "Actif … · city", "Cet appareil" tag; tap → C9 sheet with "Déconnecter cet appareil"; biometric/code, row fades, C11 toast) | [blocks/b23-device-row.md](blocks/b23-device-row.md) · [preview](previews/b23-device-row.png) | 2026-11-23 |
+| **S7 Settings** (one scrolling page, 6 groups Général · Sécurité · Notifications · Mes données · Aide · Compte; profile card, demo card with "Créer mon compte"; "Montants visibles" off, sheet + unlock to turn on) | [screens/s7-settings.md](screens/s7-settings.md) · [preview](previews/s7-settings.png) | 2026-11-23 |
+| **N Notifications** (3 channels Sécurité · Budgets · Marchés; 7 types; lock screen = general text; Oui / Non → unlock → B13 pre-selected; Budgets/Marchés ≤ 1 per day, quiet 22:00-07:00; amounts hidden by default) | [screens/n-notifications.md](screens/n-notifications.md) · [preview](previews/n-notifications.png) | 2026-11-23 |
+| **W Widgets** (Patrimoine 2×2 with 30-day line, Patrimoine 2×1, Budget, Alertes; amounts "••• F" by default, config switch + unlock; follows system theme) | [screens/w-widgets.md](screens/w-widgets.md) · [preview](previews/w-widgets.png) | 2026-11-23 |
+| **X Copy FR/EN** (one file, wins over item tables; reason codes long + short, feature names, "?" texts for 20 figures, C8/C10/C11/C18/C19 state messages; 836 strings measured at 360 dp, 100 %/200 %, 0 over) | [copy/fr-en.md](copy/fr-en.md) · [length check](copy/check/) | 2026-11-23 |
+| **M14 App opening "Le plan"** (from Franco's Deel reference: dot draws coin + G over dashed guides, outline fills with the ember accent, GOLDENPIECE rises with a light bounce, 300 ms hold, mark → Home card, Home builds; 4.3 s, cold start only; warm start 320 ms fade; reduced motion 150 ms fade) | [foundations/motion.md §4b](foundations/motion.md) · [animated](previews/m14-app-opening-plan.html) · [key frames](previews/m14-app-opening-keyframes.png) | 2026-11-23 |
+| **D Bank dashboard** (1280 px, light default; queue 420 + detail master-detail, decision bar pinned, J/K/L/F/C shortcuts; Réglages du modèle table + change log; login/TOTP, Ops, /legal, dark delegated) | [screens/d-bank-dashboard.md](screens/d-bank-dashboard.md) · [preview](previews/d-bank-dashboard.png) | 2026-11-23 |
+| **S1 Onboarding** (flow map: 5 dotted steps Langue · Pays · Compte · Sécurité · Accords; demo branch via persona; O13-O15 offered later from Home; O3 country tap = next; O12 one consents list, controls right, service required; O18 biometric first, PIN fallback) | [screens/s1-onboarding.md](screens/s1-onboarding.md) · [preview](previews/s1-onboarding.png) | 2026-11-23 |
+| **S6 Alerts** (header icon: 1 alert → that alert, ≥ 2 → L1; L1 = open alerts + "Historique des alertes"; history by month in compact rows; shield empty state; L5 once) | [screens/s6-alerts.md](screens/s6-alerts.md) · [preview](previews/s6-alerts.png) | 2026-11-23 |
+| **S5 Spending** (pills Aperçu · Flux · Budgets; one shared month pill; Aperçu hero = G3 value; info banner "N opérations à classer"; Sankey without hub label) | [screens/s5-spending.md](screens/s5-spending.md) · [preview](previews/s5-spending.png) · [200 %](previews/s5-spending-200.png) | 2026-11-23 |
+| **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **B4 Alert card** (Home blocks: B1 ✓, then B4, B5, B6, B9, B8, then S2 Home layout). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+**Design system complete (2026-11-23).** Every inventory item is validated; M14 app opening was the last (2026-11-23). Delegated to build sessions: S3 Accounts (D10), B24 Onboarding pieces and T guided tour (D13), D login/TOTP, Ops, /legal and dark theme. Rules D11 (clean screens) and D12 (no overlapping text) still apply to everything the build sessions compose.
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -40,11 +75,15 @@ Next item: **B4 Alert card** (Home blocks: B1 ✓, then B4, B5, B6, B9, B8, then
 | D2 | Contributions (P9) get a chart: **positive/negative bars** (G7). |
 | D3 | No hidden swipe gestures on list rows. Swipe is used only to dismiss bottom sheets, always with a button alternative. |
 | D4 | Theme: **follows the phone setting** by default; manual light/dark choice in Settings. The design is drawn dark-first. |
-| D5 | Placements internal navigation (P1-P9) is decided at step S4 (proposal: top tabs Portefeuille · Marchés · Risque · Performance). |
+| D5 | Placements internal navigation: **section pills Portefeuille · Marchés · Risque · Performance** (Franco, 2026-11-23); allocation (P2) is a block of Portefeuille, a row opens P6, the one header action is "+" (add trade / property / debt). |
 | D6 | Bank cards get a **gold sheen** animation (M13): colour in [colour.md](foundations/colour.md) §6, motion in F5. |
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
-| D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
+| D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open (one alert → opens it directly, several → L1; S6 2026-11-23), plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
 | D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
+| D10 | **Accounts section (S3: B2, B3, B17, B20; B22 moves to Spending) is left to the build sessions** (Franco, 2026-11-23): they compose it from validated items (C6 rows, C21 badges, C14 tags, C15 badges, C2 search pill, C13 chips, C9 sheets, B20-style key-value lines from B13, C5 amounts) and report choices in one line (formats.md §7). Design goes on with **Spending (S5)**. |
+| D11 | **Clean, uncluttered screens** (Franco, 2026-11-23, for Placements and after): few elements per screen, one idea per block, details behind a tap ("?", sheet, detail screen) rather than shown at once; when in doubt, remove. |
+| D12 | **No overlapping text** (Franco, 2026-11-23, S5): at every revision, adjust elements for legibility; no text may overlap another text, mark or annotation (check 100 % and 200 % font; preview annotations sit outside the phone). |
+| D13 | **Onboarding split** (Franco, 2026-11-23, option A): design sessions draw **B19** step screen, **B21** institution picker and the **S1** flow; **B24** single-screen pieces (card-scan viewfinder, persona card, questionnaire question, aggregator-style consent) and the **T** guided tour (M11) are left to build sessions, composed from validated items (B19, B13, C2-C4, C9, C16, C17, C21, B12) and reported in one line (formats.md §7). |
 
 ---
 
@@ -152,7 +191,7 @@ are those of the brief §3.
 | M11 | Guided tour: spotlight + bubble | |
 | M12 | Status timeline advancing (L3) | |
 | M13 | **Gold sheen on bank cards** (D6): a gold light band sweeps once across the card | O13d (card confirmed), bank cards wherever shown (S3), tour |
-| M14 | **App opening** (Franco 2026-11-22): animation from splash to Home | to design **at the end** of the design system |
+| M14 | **App opening** (Franco 2026-11-22): animation from splash to Home | **validated 2026-11-23** → [foundations/motion.md §4b](foundations/motion.md) |
 
 Every animation has a reduced-motion variant and lasts ≤ 5 s.
 
@@ -192,24 +231,24 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 | # | Deliverable | Content |
 |---|---|---|
 | T | Guided tour | 5-7 steps |
-| N | Notifications | 7 types, 3 channels, small icon, Oui / Non actions, hidden amounts |
-| W | Widgets | net worth (2×1 and 2×2), budget left, open alerts; light and dark; "•••" |
-| X | Copy FR / EN | reason codes, "?" texts, state messages |
-| D | Bank dashboard (web, 1280 px) | queue, detail, decision, model settings, Ops tab; dense layout, keyboard shortcuts |
+| N | Notifications | **validated 2026-11-23** → [screens/n-notifications.md](screens/n-notifications.md) |
+| W | Widgets | **validated 2026-11-23** → [screens/w-widgets.md](screens/w-widgets.md) |
+| X | Copy FR / EN | **validated 2026-11-23** → [copy/fr-en.md](copy/fr-en.md) |
+| D | Bank dashboard (web, 1280 px) | **validated 2026-11-23** → [screens/d-bank-dashboard.md](screens/d-bank-dashboard.md) |
 
 ---
 
 ## Build order
 
 1. **Foundations:** F1 Colour ✓ → F2 Typography ✓ → F3 Spacing / radii / elevation ✓ → F6 Formats ✓ → F4 Icons ✓ → F5 Motion ✓ (+ `tokens.json`).
-2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓.
+2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓ (C2-C4 ✓ with the Alerts step).
 3. **Chart base G0**, then G1 + G2 ✓.
-4. **Home blocks:** B1 ✓, B4, B5, B6, B9, B8, then **S2 Home layout**, the first full screen that tests the whole system.
-5. **Alerts:** C2-C4 (input, needed for the unlock), B13, B14, B15 + G8, then S6. The most important flow of the demo.
-6. **Accounts:** B2, B3, B17, B20, B22, then S3.
-7. **Spending:** B7, G3, G5, B6 (already done), then S5.
-8. **Placements:** B10, B11, B12, G4, G6, G7, B18, then S4.
+4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
+5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14 ✓, B15 + G8 ✓, S6 ✓. The most important flow of the demo.
+6. **Accounts:** left to the build sessions (D10, 2026-11-23).
+7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
+8. **Placements:** B10 ✓, B11 ✓, G4 ✓, B12 ✓, G6 ✓, G7 ✓, B18 ✓, S4 ✓ (2026-11-23).
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
-12. M14 App opening (last, Franco 2026-11-22).
+12. M14 App opening (last, Franco 2026-11-22) — **validated 2026-11-23: design system complete.**
