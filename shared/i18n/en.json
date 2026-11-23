@@ -10,7 +10,16 @@
     "generic": "Something went wrong. Try again.",
     "asset.range": "Period not available.",
     "asset.not_found": "Asset not found.",
-    "market.kind": "Invalid market request."
+    "market.kind": "Invalid market request.",
+    "sync.bad_cursor": "Sync will restart from the beginning.",
+    "questionnaire.invalid": "Invalid answer.",
+    "settings.invalid": "Invalid setting.",
+    "security_event.invalid": "Invalid event.",
+    "mutations.invalid": "Invalid change.",
+    "mutations.unknown_rpc": "This change is not supported by this version.",
+    "mutations.rejected": "Change refused.",
+    "rate_limited": "Too many attempts. Try again later.",
+    "network": "No connection."
   },
   "attr": {
     "coingecko": "Crypto data provided by CoinGecko (coingecko.com).",

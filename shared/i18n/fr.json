@@ -10,7 +10,16 @@
     "generic": "Une erreur est survenue. Réessayez.",
     "asset.range": "Période non disponible.",
     "asset.not_found": "Actif introuvable.",
-    "market.kind": "Requête de marché invalide."
+    "market.kind": "Requête de marché invalide.",
+    "sync.bad_cursor": "Synchronisation à reprendre depuis le début.",
+    "questionnaire.invalid": "Réponse non valide.",
+    "settings.invalid": "Réglage non valide.",
+    "security_event.invalid": "Événement non valide.",
+    "mutations.invalid": "Modification non valide.",
+    "mutations.unknown_rpc": "Modification non prise en charge par cette version.",
+    "mutations.rejected": "Modification refusée.",
+    "rate_limited": "Trop de tentatives. Réessayez plus tard.",
+    "network": "Pas de connexion."
   },
   "attr": {
     "coingecko": "Données crypto fournies par CoinGecko (coingecko.com).",

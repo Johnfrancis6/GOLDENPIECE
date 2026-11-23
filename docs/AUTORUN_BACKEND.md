@@ -90,6 +90,36 @@ release** (BUILD_PLAN §2). B10 ends the chain: it writes the final report
 in CHAIN_LOG and messages Franco in French (release candidate ready to
 install on the Tecno, client test script).
 
+
+## Session sizing (Franco, 2026-11-23) — every session from B6 on
+
+A session must stay light. Franco: "faire un plan par bloc et par étape
+pour que les sessions ne soient pas trop chargées et passent la main
+automatiquement".
+
+1. **One part = one block group**, not a whole BUILD_PLAN session. Each
+   BUILD_PLAN session (B6, B9, B7, B8, B10) is split into numbered parts
+   (`B6.1`, `B6.2`, …) listed with their steps in `docs/CHAIN_LOG.md`
+   ("Plan by block and step" of that session). The first part of a
+   session writes that plan if it is missing; each part may refine the
+   plan of the parts after it, never enlarge its own.
+2. **Size of a part**: about 3-6 steps, each step one block/component or
+   one flow piece with its test or screenshot. If a part is not done
+   after its steps, cut it: commit what works, move the rest to the next
+   part in the plan.
+3. **End of every part** (no exception, no waiting for Franco):
+   commit + push on the session branch → append a short CHAIN_LOG section
+   (`B6.2 — …`: done / measured / defects / next part) → create the next
+   session with `create_session` (this repo, revision = this branch) and
+   the prompt: "Read docs/AUTORUN_BACKEND.md on branch <branch> and follow
+   it exactly: you are session <next part>." → stop.
+4. All parts of one BUILD_PLAN session share **one branch and one PR**
+   (draft PR opened by the first part, marked ready by the last part).
+   The last part of a session starts the first part of the next session
+   (new branch from the current one, per the Order line above).
+5. Questions for Franco (French) are asked once, by the part that needs
+   the answer; the part marks the step blocked and continues.
+
 ## Visual build sessions (B6 → B10) — extra rules
 
 - The design is **validated and final**: copy `design/` (tokens.json
