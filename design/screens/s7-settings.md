@@ -45,8 +45,9 @@ row is one line per side at 100 %.
 Off by default (brief §3.9: amounts hidden in notifications). Turning it
 on: the switch stays off and a C9 short sheet opens: title "Afficher les
 montants ?", text "Les montants seront visibles dans les notifications,
-même sur l'écran verrouillé. Toute personne qui voit votre téléphone
-pourra les lire.", primary "Afficher les montants", text button "Garder
+une fois le téléphone déverrouillé. Toute personne qui utilise votre
+téléphone pourra les lire." (aligned with N, 2026-11-23: the lock screen
+always shows the general text), primary "Afficher les montants", text button "Garder
 masqués". Primary → biometric / app PIN → switch turns on (C16 motion).
 Turning it off needs no confirmation.
 
@@ -72,5 +73,5 @@ Turning it off needs no confirmation.
 | Aide · Rejouer la visite · Installer l'app · À propos | Help · Replay the tour · Install the app · About |
 | Démo · Réinitialiser la démo | Demo · Reset the demo |
 | Afficher les montants ? | Show amounts? |
-| Les montants seront visibles dans les notifications, même sur l'écran verrouillé. Toute personne qui voit votre téléphone pourra les lire. | Amounts will be visible in notifications, even on the lock screen. Anyone who sees your phone can read them. |
+| Les montants seront visibles dans les notifications, une fois le téléphone déverrouillé. Toute personne qui utilise votre téléphone pourra les lire. | Amounts will be visible in notifications once the phone is unlocked. Anyone who uses your phone can read them. |
 | Afficher les montants · Garder masqués | Show amounts · Keep hidden |
