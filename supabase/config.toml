@@ -461,3 +461,9 @@ verify_jwt = false
 
 [functions.market-eod]
 verify_jwt = false
+
+[functions.notify]
+verify_jwt = false
+
+[functions.categorise-llm]
+verify_jwt = false

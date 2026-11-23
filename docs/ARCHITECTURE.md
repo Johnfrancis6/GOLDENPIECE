@@ -362,6 +362,20 @@ Events scored: booked debit/outgoing transactions and mobile-money
 features (mule and fake-deposit rules) but are scored only by fraud
 rules. Security events are scored by fraud rules only.
 
+**As built (B5, 2026-11-23) — deviations from this section:**
+
+- Everything above runs **in SQL** (`core.score_features`, `core.score_compute`, `core.score_transaction`), called
+  by `core.ingest_entries` in the ingest transaction, so the Edge tick and the SQL fallback score alike. The
+  Isolation Forest is evaluated in SQL (`core.iforest_raw`, trees in `ops.iforest_trees`, not Storage); parity with
+  sklearn 5.6e-16 to 6.7e-16. No TS scorer.
+- Calibrated on G7 (demo replay): z0 2.5 / z1 4.5 plus an amount-ratio check (x0 4, x1 12); one check alone is capped
+  at 0.55 (stays in the ask band), two strong checks reach the bank band; amount, payee, category and daily outflow
+  form one "amount" group (strongest only); anomaly checks skip payments < 8 € and own-account transfers; charges,
+  direct debits and loan instalments are not scored; hour threshold 0.95; R1 and R4 weight 72 (alone → bank), R5 45;
+  R4 counts new senders and a 4 h pass-through window; `amount_large` (c3) = ≥ 50 % of the balance only.
+- A_if is scaled from the training q99 (not q50: q50 doubled false prompts).
+- An unanswered ask alert gets one reminder after 15 min and stays `awaiting_user` (no automatic escalation).
+
 ### 7.2 Features
 
 | # | Feature | Definition | Used by |

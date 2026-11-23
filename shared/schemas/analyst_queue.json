@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/analyst_queue.json",
+  "title": "api.analyst_queue response (API.md §2.12, BACKEND_NEEDS #9)",
+  "type": "object",
+  "required": [
+    "items",
+    "next_cursor"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": [
+          "alert_id",
+          "created_at",
+          "score",
+          "band",
+          "kind",
+          "reasons",
+          "user_ref",
+          "status",
+          "age_min",
+          "tx",
+          "decided"
+        ],
+        "properties": {
+          "alert_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer"
+          },
+          "band": {
+            "enum": [
+              "ask",
+              "bank",
+              "info",
+              null
+            ]
+          },
+          "kind": {
+            "enum": [
+              "anomaly",
+              "fraud"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "params"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "params": {
+                  "type": "object"
+                },
+                "weight": {
+                  "type": "number"
+                },
+                "s": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "user_ref": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}$"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bank_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "awaiting_user",
+              "confirmed_by_user",
+              "escalated",
+              "in_review",
+              "decided_legit",
+              "decided_fraud",
+              "closed"
+            ]
+          },
+          "age_min": {
+            "type": "integer"
+          },
+          "tx": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "amount": {
+                "$ref": "https://goldenpiece.invalid/schemas/common.json#/$defs/money"
+              },
+              "op_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cp_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "decided": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "by": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string"
+              },
+              "simulated": {
+                "type": "boolean"
+              },
+              "decision": {
+                "enum": [
+                  "legit",
+                  "fraud"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "items": [
+        {
+          "tx": {
+            "amount": {
+              "c": "XOF",
+              "m": 115000
+            },
+            "cp_name": "Électro Plus Sandaga",
+            "op_type": "card"
+          },
+          "band": "ask",
+          "kind": "anomaly",
+          "score": 59,
+          "status": "escalated",
+          "age_min": 1,
+          "bank_id": "banque_baobab",
+          "country": "SN",
+          "decided": null,
+          "reasons": [
+            {
+              "code": "AMOUNT_VS_CATEGORY",
+              "params": {
+                "x": 7,
+                "category": "housing.equipment"
+              },
+              "weight": 46
+            },
+            {
+              "code": "NEW_PAYEE",
+              "params": {},
+              "weight": 25
+            }
+          ],
+          "alert_id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+          "user_ref": "9027cb07",
+          "created_at": "2026-11-23T18:41:02.536587+00:00"
+        }
+      ],
+      "next_cursor": null
+    }
+  ]
+}

@@ -23,6 +23,7 @@ def main() -> int:
                     help="process the users waiting in ops.recompute_queue (≤ 50); no-op when it is empty")
     ap.add_argument("--skip-if-done", action="store_true",
                     help="exit if a batch-nightly already succeeded today (schedule backup of the pg_cron dispatch)")
+    ap.add_argument("--no-scoring", action="store_true", help="skip the B5 scoring step (learning, profiles, model, G7)")
     a = ap.parse_args()
     users = [u.strip() for u in a.users.replace(" ", ",").split(",") if u.strip()] or None
     job = a.job or ("batch-user" if users else "batch-nightly")
@@ -40,6 +41,10 @@ def main() -> int:
         job = "batch-user"
     detail = run(db, users, today, job, a.dry_run)
     print(json.dumps(detail, indent=1))
+    if not a.dry_run and not a.no_scoring:
+        from goldenpiece.analytics import scoring_step
+        day = today or dt.datetime.now(dt.timezone.utc).date()
+        print(json.dumps(scoring_step.run(db, day, users if job == "batch-user" else None), indent=1, default=str))
     return 1 if detail["users"] and len(detail["failed"]) == detail["users"] else 0
 
 

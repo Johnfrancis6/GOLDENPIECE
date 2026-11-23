@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/answer_alert.json",
+  "title": "api.answer_alert response",
+  "type": "object",
+  "required": [
+    "status",
+    "already_answered"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "open",
+        "awaiting_user",
+        "confirmed_by_user",
+        "escalated",
+        "in_review",
+        "decided_legit",
+        "decided_fraud",
+        "closed"
+      ]
+    },
+    "already_answered": {
+      "type": "boolean"
+    },
+    "answer": {
+      "enum": [
+        "me",
+        "not_me"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "status": "escalated",
+      "already_answered": false
+    },
+    {
+      "answer": "not_me",
+      "status": "escalated",
+      "already_answered": true
+    }
+  ]
+}

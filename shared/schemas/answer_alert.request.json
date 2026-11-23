@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/answer_alert.request.json",
+  "title": "api.answer_alert arguments (API.md §2.9)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "p_client_id",
+    "p_alert_id",
+    "p_answer"
+  ],
+  "properties": {
+    "p_client_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "p_alert_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "p_answer": {
+      "enum": [
+        "me",
+        "not_me"
+      ]
+    },
+    "p_device_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    }
+  },
+  "examples": [
+    {
+      "p_client_id": "e9489b31-0115-4bc5-8605-c364a5ce8e11",
+      "p_alert_id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+      "p_answer": "not_me"
+    }
+  ]
+}

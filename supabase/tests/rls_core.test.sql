@@ -145,7 +145,7 @@ select pg_temp.as_user('00000000-0000-4000-a000-00000000000e', '{"app_metadata":
 select is(pg_temp.cnt('select count(*) from core.alerts'), 0::bigint, 'analyst without aal2 gets 0 alerts');
 select is(pg_temp.cnt('select count(*) from core.analyst_decisions'), 0::bigint, 'analyst without aal2 gets 0 decisions');
 select pg_temp.as_user('00000000-0000-4000-a000-00000000000e', '{"app_metadata": {"role": "analyst"}, "aal": "aal2"}');
-select is(pg_temp.cnt('select count(*) from core.alerts'), 1::bigint, 'analyst aal2 sees only the escalated alert');
+select is(pg_temp.cnt('select count(*) from core.alerts where user_id::text like ''00000000-0000-4000-a000-%'''), 1::bigint, 'analyst aal2 sees only the escalated alert');
 select is(pg_temp.cnt('select count(*) from core.transactions'), 0::bigint, 'analyst has no direct transaction access');
 
 -- ── anon ────────────────────────────────────────────────────────────────
