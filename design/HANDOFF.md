@@ -54,9 +54,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | G3 Bars (A, A, A + Franco: last-month level = small black "v" arrow inside the bar, 2 dp under its top edge, crisp; white 1 dp outline in light) | validated 2026-11-23 | [charts/g3-bars.md](charts/g3-bars.md) |
 | G5 Sankey (A, A, A: 3 columns with a "Revenus" hub, flows in destination colour, top 6 + Autres + Épargne; overspend = yellow "Épargne" source; ≥ 150 % font → two lists) | validated 2026-11-23 | [charts/g5-sankey.md](charts/g5-sankey.md) |
 | B22 Categories & rules (A, A, A: list card → category screen, no chevron; rules as plain sentences, "Proposée par l'IA" chip only on AI rules; "Appliquer aux N" short sheet, rule box pre-checked) | validated 2026-11-23 | [blocks/b22-categories-rules.md](blocks/b22-categories-rules.md) |
-| Tokens | v0.32.0 (+ `block.statTiles`, `chart.bars`, `chart.sankey`, `block.categoriesRules`): all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, input, pinEntry, keypad, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame, isItYou) + `screen` (home) | [tokens.json](tokens.json) |
+| B10 Position / real-estate / debt rows (A, A, A + Franco: light Lucide icon by each group heading — `chart-line`, `house`, `hand-coins`; D5 decided: pills Portefeuille · Marchés · Risque · Performance) | validated 2026-11-23 | [blocks/b10-holding-rows.md](blocks/b10-holding-rows.md) |
+| Tokens | v0.33.0 (+ `block.holdingRows`; v0.32.0 added `block.statTiles`, `chart.bars`, `chart.sankey`, `block.categoriesRules`): all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, input, pinEntry, keypad, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame, isItYou) + `screen` (home) | [tokens.json](tokens.json) |
 
-**Next items** (Franco, 2026-11-23, end of the Spending session): **Placements (S4) in a new session** — B10, B11, B12, G4, G6, G7, B18, then S4 (D5: internal navigation decided at S4). Franco's instruction for it: **screens clean and uncluttered, not too many elements** (D11). Spending blocks are done; **S5 layout not assembled** (open point below). Still open in Alerts: B14, B15 + G8, S6. Accounts (S3) left to build sessions (D10). Then Onboarding, Settings, N/W/X/D, M14 App opening (last).
+**Next items** (Placements session, 2026-11-23): B10 ✓ — next **B11 + G4**, then B12, B12, G4, G6, G7, B18, then S4 (D5: internal navigation decided at S4). Franco's instruction for it: **screens clean and uncluttered, not too many elements** (D11). Spending blocks are done; **S5 layout not assembled** (open point below). Still open in Alerts: B14, B15 + G8, S6. Accounts (S3) left to build sessions (D10). Then Onboarding, Settings, N/W/X/D, M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -125,6 +126,7 @@ yet merged into `main`; Franco merges through a pull request).
 - An ambiguous answer: state the interpretation in one line in the reply
   (e.g. theme "oui" was read as "follow the phone setting", D4).
 
+- 2026-11-23 (Placements session): "A, A, A" for D5 + B10, then "je valide mais" adding light illustrative icons by the group headings (made `text.secondary`, 20 dp: discreet, D11).
 - 2026-11-23 (Spending session): answered "A, A, A" to every question round; one change on G3 (previous-month level as a small **black "v" arrow** inside the bar, crisp, with a gap from the edge — he describes such shapes precisely in words). Asked for **clean, uncluttered screens** for what follows (D11).
 
 ## His references so far (style direction)
@@ -165,7 +167,8 @@ yet merged into `main`; Franco merges through a pull request).
 - **S5 Spending layout not done** (Franco moved to Placements after B22, 2026-11-23). Blocks are ready: month pill (B8), B7 tiles, G3 in B8, G5 in B8, D3 = B6 rows, D4 = B22. Ask Franco once: assemble S5 in a short round (recommended: section pills Aperçu · Flux · Budgets at the top, D4 reached from a "Catégories et règles" row + Settings, `uncategorised_count` as a C8 info banner "12 opérations à classer") or leave it to build sessions like D10. Check at 360 × 800 and 200 % font.
 - Spending self-critique (2026-11-23): **G5 Sankey** is the fragile item — labels limited to ~16 characters on the left, tiny sources get 34 dp slots (plot grows), flows in light theme are pale (0.26) and may look washed out on the Tecno LCD; at ≥ 150 % font it falls back to lists (the plot is not tested at large font). **G3** at 200 % stacks rows (tested in preview only); the previous-month arrow is nudged up to 9 dp to stay readable, so it is approximate near the bar end. **B7** context sentences are written to fit 2 lines in FR; EN length not checked. **B22** sheet at 200 % scrolls with pinned buttons (seen in preview, scroll not tested).
 
-- D5: Placements internal navigation decided at step S4.
+- D5 decided 2026-11-23: section pills Portefeuille · Marchés · Risque · Performance, header "+".
+- API gap (B10): `get_portfolio.debts` has no lender name; the debt row subtitle wants "Lender · rate". Raise with Franco / build sessions as a contract change.
 - M13 gold sheen: done in F5 (1.4 s, once on first view + on tap); where
   exactly bank-card visuals appear is decided with S3 (accounts).
 - M14 App opening: Franco found the first proposal mediocre; design it

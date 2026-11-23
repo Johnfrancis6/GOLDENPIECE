@@ -40,9 +40,10 @@ Files are in English; UI copy is French first, then English.
 | G3 Bars (horizontal, category colours, black "v" arrow for last month inside the bar, top 6 + Autres) | [charts/g3-bars.md](charts/g3-bars.md) · [preview](previews/g3-bars.png) | 2026-11-23 |
 | G5 Sankey (sources → Revenus → top 6 + Autres + Épargne; flows in destination colour; lists at large font) | [charts/g5-sankey.md](charts/g5-sankey.md) · [preview](previews/g5-sankey.png) | 2026-11-23 |
 | B22 Categories & rules (one list card → category screen; rules as sentences; "Appliquer aux N" short sheet with preview, pre-checked rule box) | [blocks/b22-categories-rules.md](blocks/b22-categories-rules.md) · [preview](previews/b22-categories-rules.png) | 2026-11-23 |
+| B10 Position, real-estate and debt rows (one card per group with subtotal and a light Lucide icon by the heading; value + unrealised tag; "À réévaluer" warning tag; debts not red) | [blocks/b10-holding-rows.md](blocks/b10-holding-rows.md) · [preview](previews/b10-holding-rows.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Placements (S4): B10, B11, B12, G4, G6, G7, B18, then S4** — new session, Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Placements (S4): B10 ✓, then B11 + G4, B12, G6, G7, B18, then S4** — Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -52,7 +53,7 @@ Next item: **Placements (S4): B10, B11, B12, G4, G6, G7, B18, then S4** — new 
 | D2 | Contributions (P9) get a chart: **positive/negative bars** (G7). |
 | D3 | No hidden swipe gestures on list rows. Swipe is used only to dismiss bottom sheets, always with a button alternative. |
 | D4 | Theme: **follows the phone setting** by default; manual light/dark choice in Settings. The design is drawn dark-first. |
-| D5 | Placements internal navigation (P1-P9) is decided at step S4 (proposal: top tabs Portefeuille · Marchés · Risque · Performance). |
+| D5 | Placements internal navigation: **section pills Portefeuille · Marchés · Risque · Performance** (Franco, 2026-11-23); allocation (P2) is a block of Portefeuille, a row opens P6, the one header action is "+" (add trade / property / debt). |
 | D6 | Bank cards get a **gold sheen** animation (M13): colour in [colour.md](foundations/colour.md) §6, motion in F5. |
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
 | D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
@@ -222,7 +223,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
 7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
-8. **Placements (next, new session):** B10, B11, B12, G4, G6, G7, B18, then S4.
+8. **Placements (in progress):** B10 ✓, B11, B12, G4, G6, G7, B18, then S4.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
