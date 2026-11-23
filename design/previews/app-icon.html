@@ -1,0 +1,47 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>App icon</title>
+<style>
+@font-face{font-family:P;src:url(../fonts/PoppinsGP-Medium.ttf);font-weight:500}
+@font-face{font-family:P;src:url(../fonts/PoppinsGP-SemiBold.ttf);font-weight:600}
+body{margin:0;background:#2a2a2a;color:#ddd;font:500 13px/18px P}
+.w{display:flex;gap:20px;padding:20px;width:max-content}
+.col{display:flex;flex-direction:column;gap:14px;align-items:center;width:300px}
+h2{font:600 15px/20px P;margin:0;color:#fff}
+.big{width:220px;height:220px;border-radius:50px;overflow:hidden}
+.row{display:flex;gap:14px;align-items:flex-end}
+.lab{font:500 11px/14px P;color:#bbb;text-align:center;margin-top:4px}
+.home{width:300px;padding:16px 0;border-radius:18px;display:flex;justify-content:center;gap:22px}
+.home.d{background:#0f0f0f}.home.l{background:#E9E6E1}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;font:500 11px P}
+.home.d .app{color:#eee}.home.l .app{color:#222}
+.ad{width:56px;height:56px;border-radius:50%;overflow:hidden}
+.notif{width:300px;background:#1d1d1d;border-radius:16px;padding:10px 12px;display:flex;gap:8px;align-items:center;font:500 12px P;color:#ccc}
+.notif b{color:#fff;font-weight:600}
+.cap{max-width:300px;font:500 12px/17px P;color:#ccc}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE3A3"/><stop offset=".45" stop-color="#FFC97A"/><stop offset="1" stop-color="#FF9A45"/></linearGradient>
+<linearGradient id="goldd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC97A"/><stop offset=".6" stop-color="#FFB45C"/><stop offset="1" stop-color="#E8452A"/></linearGradient>
+<linearGradient id="bgd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262626"/><stop offset="1" stop-color="#0B0B0B"/></linearGradient>
+<g id="coins"><circle cx="54.00" cy="31.00" r="10"/><circle cx="70.26" cy="37.74" r="10"/><circle cx="77.00" cy="54.00" r="10"/><circle cx="70.26" cy="70.26" r="10"/><circle cx="54.00" cy="77.00" r="10"/><circle cx="37.74" cy="70.26" r="10"/><circle cx="31.00" cy="54.00" r="10"/><circle cx="37.74" cy="37.74" r="10"/></g>
+<path id="spark" d="M54 43 A11 11 0 0 0 65 54 A11 11 0 0 0 54 65 A11 11 0 0 0 43 54 A11 11 0 0 0 54 43Z"/>
+<mask id="cut"><rect width="108" height="108" fill="#000"/><use href="#coins" fill="#fff"/><use href="#spark" fill="#fff"/></mask>
+<!-- A: white translucent coins (overlaps brighten), gold sparkle -->
+<g id="markA"><use href="#coins" fill="#FFFFFF" fill-opacity=".62"/><use href="#spark" fill="url(#gold)"/></g>
+<!-- B: gold translucent coins, white sparkle -->
+<g id="markB"><use href="#coins" fill="#FFB45C" fill-opacity=".72"/><use href="#spark" fill="#FFFFFF"/></g>
+<!-- C: white coins, gold coin at 12 o'clock + gold sparkle -->
+<g id="markC"><use href="#coins" fill="#FFFFFF" fill-opacity=".62"/><circle cx="54" cy="31" r="10" fill="url(#goldd)"/><use href="#spark" fill="url(#gold)"/></g>
+<!-- monochrome small icon: silhouette (coins + sparkle), white -->
+<g id="mono"><use href="#coins" fill="#fff"/><use href="#spark" fill="#fff"/></g></defs></svg>
+<div class="w" id="cols"></div>
+<script>
+const V=[['A','Cœur doré','8 pièces blanches translucides en anneau (les chevauchements s\'éclairent), une étoile en or au centre : la « golden piece ». Sobre, l\'or au cœur.'],
+['B','Anneau doré','Les 8 pièces en or translucide, étoile blanche au centre. Plus chaud, plus visible sur l\'écran d\'accueil.'],
+['C','Pièce de tête','Comme A, plus une pièce pleine en or en haut : un repère « la pièce qui compte ».']];
+const ic=(m,s,bg='url(#bgd)')=>`<svg width="${s}" height="${s}" viewBox="0 0 108 108"><rect width="108" height="108" fill="${bg}"/><use href="#mark${m}"/></svg>`;
+document.getElementById('cols').innerHTML=V.map(([m,t,c])=>`<div class="col"><h2>${m} · ${t}</h2>
+<div class="big">${ic(m,220)}</div>
+<div class="home d"><div class="app"><div class="ad">${ic(m,56)}</div>GOLDENPIECE</div><div class="app"><div class="ad">${ic(m,56,'#060606')}</div>sur noir</div></div>
+<div class="home l"><div class="app"><div class="ad">${ic(m,56)}</div>GOLDENPIECE</div><div class="app"><div class="ad">${ic(m,56,'#060606')}</div>sur noir</div></div>
+<div class="notif"><svg width="18" height="18" viewBox="20 20 68 68"><use href="#mono"/></svg><span><b>GOLDENPIECE</b> · Sécurité</span></div>
+<div class="cap">${c}</div></div>`).join('');
+</script>

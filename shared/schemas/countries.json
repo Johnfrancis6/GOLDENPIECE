@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/countries.json",
+  "title": "api.countries(p_lang) response (anon; also bundled in the app)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["iso2", "name", "dial_code", "profile_id", "default_tz", "timezones", "operators"],
+    "properties": {
+      "iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
+      "name": { "type": "string" },
+      "dial_code": { "type": ["string", "null"], "pattern": "^\\+\\d{1,4}$" },
+      "profile_id": { "enum": ["SN", "CI", "CM", "UEMOA", "CEMAC", "AFRICA", "DIASPORA"] },
+      "default_tz": { "type": "string" },
+      "timezones": { "type": "array", "items": { "type": "string" } },
+      "operators": { "type": "array", "items": { "type": "string" } }
+    },
+    "additionalProperties": false
+  },
+  "examples": [[{ "iso2": "SN", "name": "Sénégal", "dial_code": "+221", "profile_id": "SN", "default_tz": "Africa/Dakar", "timezones": ["Africa/Dakar"], "operators": ["teranga_mobile", "kola_money", "savane_pay"] }]]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/health.json",
+  "title": "Edge Function health: 200 when ok, 503 otherwise (ARCHITECTURE §11)",
+  "type": "object",
+  "required": ["ok", "failing", "warnings", "checks"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "failing": { "type": "array", "items": { "enum": ["db_unreachable", "quotes_stale", "batch_late", "dispatch_failed", "groq_backlog", "push_slow"] } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "checks": { "type": "object", "additionalProperties": { "enum": ["ok", "failing", "not_applicable"] } },
+    "db_size_mb": { "type": "number" },
+    "at": { "$ref": "common.json#/$defs/timestamp" }
+  },
+  "additionalProperties": false,
+  "examples": [{ "ok": true, "failing": [], "warnings": [], "checks": { "db": "ok", "batch": "not_applicable" }, "db_size_mb": 16, "at": "2026-11-23T15:51:28Z" }]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/register_device.request.json",
+  "title": "api.register_device arguments → response {new_device: boolean}",
+  "type": "object",
+  "required": ["p_device_id", "p_platform", "p_app_version", "p_security_level", "p_unlock_method"],
+  "properties": {
+    "p_device_id": { "$ref": "common.json#/$defs/uuid" },
+    "p_platform": { "enum": ["android", "ios"] },
+    "p_app_version": { "type": "string" },
+    "p_security_level": { "enum": ["strong", "weak", "secret", "none"] },
+    "p_unlock_method": { "enum": ["biometric_strong", "biometric_weak", "device_secret", "app_pin"] },
+    "p_label": { "type": "string" },
+    "p_os_version": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "examples": [{ "p_device_id": "0193a1b2-0000-7000-8000-000000000001", "p_platform": "android", "p_app_version": "0.1.0", "p_security_level": "weak", "p_unlock_method": "app_pin", "p_label": "Tecno Spark 50" }]
+}

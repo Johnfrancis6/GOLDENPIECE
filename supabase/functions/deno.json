@@ -1,0 +1,6 @@
+{
+  "lock": false,
+  "imports": { "@std/assert": "jsr:@std/assert@1.0.14" },
+  "fmt": { "lineWidth": 110 },
+  "lint": { "rules": { "exclude": ["no-explicit-any"] } }
+}

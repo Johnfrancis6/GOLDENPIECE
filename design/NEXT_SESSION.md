@@ -1,13 +1,13 @@
-# GOLDENPIECE design system — complete (2026-11-23); open point: app icon
+# GOLDENPIECE design system — complete (2026-11-23)
 
 You continue the reference design system of the GOLDENPIECE app (Android personal-finance prototype, fictitious data; reference phone Tecno Spark 50; it must stay smooth on low/mid-range hardware) with Franco. Repository Johnfrancis6/GOLDENPIECE, branch `claude/brave-bardeen-g5ro94`: commit and push only there; never merge into main (Franco merges through a pull request when he asks). **Write to Franco in French**; every file in `design/` stays in English (UI copy: French first, then English).
 
 ## State (2026-11-23)
 **The design system is complete.** M14 app opening "Le plan" was validated on 2026-11-23 (light bounce on the wordmark, 300 ms hold, 4.3 s; foundations/motion.md §4b, tokens v0.54.0, key frames previews/m14-app-opening-keyframes.png). The Home "Plus gros poste" ring was fixed the same day (C17 Mini 44 dp; it was clipped by flex shrink).
 
-**Only open point:** Franco was asked whether the coin-G mark (filled gold coin, dark G, ember bar) becomes the app icon (adaptive icon foreground, also the Android 12 splash) and the notification small icon (monochrome G-in-coin silhouette), replacing the placeholders in N and D. If he says yes: write it in foundations/icons.md ("App icon" section: adaptive icon 108 dp canvas, 66 dp safe zone, foreground = filled coin, background `bg`; monochrome small icon 24 dp, white on transparent), update screens/n-notifications.md and screens/d-bank-dashboard.md, add a small PNG, bump tokens, commit, push. If he says no, ask what he wants instead (≤ 3 options).
+**App icon chosen (2026-11-23):** direction A "Cœur doré" (8 translucent coins on a ring + gold sparkle; original, not the third-party logo Franco showed), foundations/icons.md §11, tokens `icon.app` (v0.55.0); M14 now draws this mark (dot draws the ring, second dot the sparkle, coins drop, sparkle turns gold). Nothing is open in design. M14 adapted to the mark: validated. Backend contract changes needed before the visual build: BACKEND_NEEDS.md.
 
-Otherwise, a new session here only answers Franco's design questions; app work belongs to build sessions (HANDOFF.md "What build sessions do first").
+A new session here only answers Franco's design questions; app work belongs to build sessions (HANDOFF.md "What build sessions do first").
 
 ## Standing rules from Franco
 - **D11 — clean, uncluttered screens.** Default thresholds (state them; he can change them): at 360 × 800 the first screen shows the hero + at most 3 blocks; one header action (the eye is the cross-tab amount control, accepted with "+" on Placements); a list row has at most 2 text lines per side (settings rows: 1 line per side); one chart per frame; anything secondary goes behind a tap ("?" → B12 sheet, C9 sheet, detail screen). When in doubt, remove. Check every preview against these thresholds before sending.
@@ -31,7 +31,7 @@ Foundations F1-F6; components C1-C22; charts G0-G8; blocks B1, B4-B16, B18, B19,
 Tecno Spark 50 screen type/density (assumed LCD); GPU cost of gradients/glow; widget sizes 2×1 / 2×2 (assumed); G6 candles at 3M on the phone; G5 Sankey at large font; B12 risk-scale thresholds; SIM country readable for the O3 suggestions. API gaps to raise: lender name in `get_portfolio.debts`, monthly 5Y candles, `spark_30d`/`change_30d` for Home quotes.
 
 ## Do first
-Greet Franco in French in 2 lines: the design system is complete; the only open question is the app icon (coin-G mark). Ask it if he has not answered.
+Greet Franco in French in 2 lines: the design system is complete (icon A chosen, M14 adapted); ask what he wants next.
 
 ## Items, in order
 1. **N — Notifications — validated 2026-11-23** (brief §3.9; README inventory row N): 7 types (confirm it's you 40-70 with Yes / No actions, reminder once after 15 min, bank alerted > 70, bank decision, budget 80 % / 100 %, concentration, learning finished), 3 Android channels (Security, Budgets, Markets), small monochrome icon, **amounts hidden by default** (S7 "Montants visibles" switch, off; turning it on needs a sheet + unlock), FR/EN text. Reuse: B13 (what Yes / No open), B14, C15 badge wording, S7 notification rows. Preview: Android-style notification cards (collapsed / expanded, lock screen with hidden amounts), light and dark.

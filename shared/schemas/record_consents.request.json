@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/record_consents.request.json",
+  "title": "api.record_consents arguments → response {ok, recorded}",
+  "type": "object",
+  "required": ["p_items"],
+  "properties": {
+    "p_items": {
+      "type": "array", "minItems": 1, "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["kind", "granted", "text_version"],
+        "properties": {
+          "kind": { "enum": ["service", "ai_categorisation", "notifications", "crash_reports", "terms", "privacy"] },
+          "granted": { "type": "boolean" },
+          "text_version": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [{ "p_items": [{ "kind": "terms", "granted": true, "text_version": "0.1-draft" }] }]
+}

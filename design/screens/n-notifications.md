@@ -52,7 +52,7 @@ colours, radius and action style are the system's). The app controls:
 
 | Part | Rule |
 |---|---|
-| Small icon | monochrome vector 24 dp (`ic_stat_gp`): a coin outline (circle r 9.5, stroke 2.6) with a "G" inside; white on transparent; **placeholder until the app icon (M14)** |
+| Small icon | monochrome vector 24 dp (`ic_stat_gp`): the brand mark silhouette (8 coins on a ring + sparkle, foundations/icons.md §11), white on transparent — **replaces the "G" placeholder (Franco 2026-11-23)** |
 | Accent | `setColor(#FF7A2F)` (brand orange; tints the icon circle where the system allows) |
 | Title | ≤ 40 characters FR and EN (one line at 360 dp, 14 sp SemiBold) |
 | Text | ≤ 90 characters; collapsed = 1 line (ellipsis by the system), expanded = `BigTextStyle` full text |

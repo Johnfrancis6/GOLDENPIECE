@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/common.json",
+  "title": "Common definitions (API.md §1)",
+  "$defs": {
+    "currency": { "enum": ["XOF", "XAF", "EUR", "USD"] },
+    "uuid": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "lang": { "enum": ["fr", "en"] },
+    "money": {
+      "description": "Minor units + currency; r = value already converted to the user's reference currency.",
+      "type": "object",
+      "required": ["m", "c"],
+      "properties": {
+        "m": { "type": "integer" },
+        "c": { "$ref": "#/$defs/currency" },
+        "r": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "reason": {
+      "description": "Reason code + params; texts live in shared/i18n.",
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z0-9_.]+$" },
+        "params": { "type": "object" },
+        "weight": { "type": "number" }
+      }
+    },
+    "error": {
+      "description": "PostgREST custom error body (core.api_error). HTTP status: INVALID 400, FORBIDDEN 403, NOT_FOUND 404, CONFLICT 409, REJECTED 422, MIN_VERSION 426, RATE_LIMITED 429 (+ Retry-After).",
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "enum": ["CONFLICT", "REJECTED", "RATE_LIMITED", "NOT_FOUND", "FORBIDDEN", "MIN_VERSION", "INVALID"] },
+        "message": { "type": "string", "description": "message_key for shared/i18n" },
+        "details": { "type": "null" },
+        "hint": { "type": ["string", "null"], "description": "retry_after_s when RATE_LIMITED" }
+      }
+    },
+    "envelope": {
+      "description": "Screen RPC envelope; not_modified when the caller's p_etag matches.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["etag", "not_modified"],
+          "properties": { "etag": { "type": "string" }, "not_modified": { "const": true } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["etag", "as_of", "not_modified", "data"],
+          "properties": {
+            "etag": { "type": "string" },
+            "as_of": { "$ref": "#/$defs/timestamp" },
+            "not_modified": { "const": false },
+            "data": { "type": "object" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

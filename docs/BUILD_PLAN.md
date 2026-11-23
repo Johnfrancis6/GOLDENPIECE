@@ -66,7 +66,7 @@ criteria. "Account" refers to [SETUP.md](SETUP.md) §3.
 | Item | Content |
 |---|---|
 | Scope | monorepo skeleton (ARCHITECTURE §10.2), CI `ci.yml` + `deploy-dev.yml`, Supabase dev + demo projects, schemas + all tables of DATA_MODEL §2 as migrations, RLS + pgTAP, `api` schema skeleton, money library (TS/SQL/Python) + shared fixtures, `ref` seed (countries, categories, operators, fictitious banks, BINs), JSON Schemas of payloads, `health` function |
-| Before | region = eu-west-3 (RTT done); **Supabase account** (2 projects); GitHub secret scanning on |
+| Before | region = eu-west-1 (dev created 2026-11-23); **Supabase account** (2 projects); GitHub secret scanning on |
 | Franco | creates Supabase projects, adds `SUPABASE_ACCESS_TOKEN`, DB passwords as GitHub env secrets |
 | Done | CI green; `supabase db push` to dev works; pgTAP RLS tests pass; money fixtures pass in 3 languages |
 

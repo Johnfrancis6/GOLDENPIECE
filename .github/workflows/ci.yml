@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: python (money, schemas, generators)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install "pytest>=8" "jsonschema>=4.23"
+      - name: Fixtures are up to date
+        run: |
+          python3 shared/fixtures/gen_money.py
+          python3 shared/fixtures/gen_money_sql.py
+          git diff --exit-code -- shared/fixtures supabase/tests/money_fixtures.test.sql
+      - name: pytest
+        working-directory: batch
+        run: python3 -m pytest -q
+
+  deno:
+    name: deno (edge functions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: supabase/functions
+    steps:
+      - uses: actions/checkout@v5
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.9.6"
+      - run: deno fmt --check
+      - run: deno lint
+      - run: deno check */index.ts
+      - run: deno test --allow-read --allow-env
+
+  db:
+    name: db (migrations + pgTAP on local Supabase)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.3.0
+      - name: Start local stack (migrations applied)
+        run: supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,supavisor,storage-api,postgres-meta
+      - name: pgTAP
+        run: supabase test db
+      - if: always()
+        run: supabase stop --no-backup || true

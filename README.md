@@ -16,4 +16,12 @@ fictitious data only, no secrets.
 - [docs/DATA_MODEL.md](docs/DATA_MODEL.md): tables, RLS, size estimate, retention.
 - [docs/API.md](docs/API.md): RPC contracts per screen and event flows.
 - [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md): build sessions, order, deadline.
+- [docs/AUTORUN_BACKEND.md](docs/AUTORUN_BACKEND.md): autonomous backend chain B1-B5 (protocol).
+- [docs/CHAIN_LOG.md](docs/CHAIN_LOG.md): what each backend session did, measured, assumed; open defects.
 - [docs/BRIEF_03_DESIGN.md](docs/BRIEF_03_DESIGN.md): brief of Session 3 (design system, block by block, output in `design/`).
+
+## Code layout
+
+`supabase/` (migrations, Edge Functions, pgTAP tests), `batch/` (Python),
+`shared/` (fixtures, JSON Schemas, i18n), `app/` and `dashboard/` (from B6/B9),
+`scripts/sb_api.py` (Management-API helper for build sessions).
