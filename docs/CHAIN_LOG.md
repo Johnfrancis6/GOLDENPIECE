@@ -1,4 +1,4 @@
-# Chain log — autonomous backend chain (B1 → B5)
+# Chain log — autonomous build chain (B1 → B10)
 
 Protocol: [AUTORUN_BACKEND.md](AUTORUN_BACKEND.md). Each session appends
 one section (done / measured / assumed / defects / next). Newest last.
@@ -112,6 +112,11 @@ Supabase: only `goldenpiece-dev` (ref `ynabfjwcdmaxfnppjtla`, eu-west-1).
 ### Defects open
 
 - none known.
+
+Note: during B1 the parent session updated `docs/AUTORUN_BACKEND.md`
+(commit c4d2647 on `claude/brave-bardeen-g5ro94`): the chain now runs to
+B10 (B5 creates B6 directly) and `GROQ_API_KEY` is present on dev. That
+file is merged into this branch.
 
 ### Next: B2 — Fake bank and provider
 
