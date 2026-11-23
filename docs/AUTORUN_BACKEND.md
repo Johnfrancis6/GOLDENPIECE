@@ -8,14 +8,12 @@ chain starts — everything below in "Franco's checklist" is done first.
 
 ## Franco's checklist (before launch) — steps checked on the web 2026-11-23
 
-1. **Supabase project `goldenpiece-dev`** (Paris, eu-west-3). Status
-   2026-11-23: Franco says it is done, but the Supabase token this
-   environment uses lists only the older London project → either the project
-   is in another account/organisation, or the environment's token is scoped
-   to the old project. Fix: create a new **scoped** token for
-   `goldenpiece-dev` (supabase.com/dashboard/account/tokens → Generate new
-   token) and save it in this environment's network secrets for
-   api.supabase.com (the session asks for it with a secure form).
+1. **Supabase project `goldenpiece-dev`** — done 2026-11-23: ref
+   `ynabfjwcdmaxfnppjtla`, region **eu-west-1 (Ireland)** (not Paris;
+   accepted: Ireland measured 142 ms vs Paris 137 ms, within the 10 ms
+   tie-break of SETUP §1 — update ARCHITECTURE/SETUP mentions of eu-west-3).
+   The environment's Supabase token is scoped to this project. Never touch
+   project `ufdocijwbohedluvmrvj` (another app).
 2. **GitHub Actions secrets** — github.com/Johnfrancis6/GOLDENPIECE →
    Settings → (left menu) Secrets and variables → Actions → tab Secrets →
    New repository secret: `SUPABASE_ACCESS_TOKEN` (a second scoped Supabase
@@ -42,6 +40,8 @@ chain starts — everything below in "Franco's checklist" is done first.
    Integrations → Vault → Add new secret, name `github_dispatch_pat`).
 6. **Groq key** — console.groq.com/keys → Create API Key (shown once,
    starts with `gsk_`) → Supabase Edge Functions secret `GROQ_API_KEY`.
+
+Status 2026-11-23 (checked by API): Edge secrets TWELVEDATA/FINNHUB/COINGECKO/FRED present; Vault `github_dispatch_pat` present; **`GROQ_API_KEY` missing** (B5 categorise-llm blocked until added). GitHub secrets and secret scanning: Franco says done (not checkable from a session).
 
 Needed to start: 1-3. Steps 4-6 can come later (B3, B4, B5 mark
 themselves blocked and the chain continues).
