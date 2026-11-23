@@ -67,3 +67,23 @@ and the run logs of the design sessions (cost figures read from the last
 2. Start-up: NEXT_SESSION.md alone was enough; HANDOFF was only grepped for anchors, BRIEF_03 not needed. An index of section anchors beats full reads.
 3. Catchable by script: SVG rendered size vs its width/height attributes (the clipped ring), scrollWidth > clientWidth, overlapping boxes, contrast of graphic marks vs background (light-theme coins nearly invisible), stale local branch, stray untracked preview PNG.
 4. Automate first: render + layout lint before any preview is sent, validation bookkeeping, handover + session creation. Keep human: direction choices (brand, motion feel, variant), any use of a third-party reference, final validation of each item.
+
+## First test of the skills (2026-11-23): O15b consent screen
+
+Same prompt, two fresh subagents: with the skills (CLAUDE.md, design-build-item, design-auto-review, kit, lint)
+and without (old workflow: NEXT_SESSION + HANDOFF + README + BRIEF, hand-made checks).
+Grading: 7 assertions (.claude/skills/design-build-item/evals/o15b-consent); viewer: eval-o15b.html; numbers: eval-o15b-benchmark.md.
+
+| | With skills | Without |
+|---|---|---|
+| Assertions passed | 7 / 7 | 4 / 7 |
+| Lint errors (100 % + 200 %) | 0 at 100 %; 2 per theme at 200 % reported as by design | 4 (overlap + 3 clips in its 200 % frame, which its own check called clean) |
+| Type / grid warnings | 0 / 0 | 10 / 4 |
+| Tokens | 114 k | 129 k (−11 %) |
+| Time | 123 s | 149 s (−17 %) |
+
+Notes: a single item in a fresh context shows only part of the saving; the larger one (no 250-360k session context,
+no 220 KB start-up read, no rework found by Franco) shows over a whole section and is to be measured on the next real one.
+The run found two kit bugs (font path, spacing variable names), fixed the same day; lint now flags a fallback font.
+Both runs invented the A/B/C options because no question round happened: the build skill now says to take defaults
+only in "default" mode from PLAN.md.
