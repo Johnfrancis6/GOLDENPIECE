@@ -170,6 +170,9 @@ select is((select type from ops.push_log l join core.alerts a on a.id = l.alert_
 insert into core.alerts (id, user_id, kind, band, score, status, reasons, transaction_id, created_at)
 values ('00000000-0000-4000-b000-00000000a1e1', '00000000-0000-4000-b000-0000000000b5', 'anomaly', 'ask', 55,
         'awaiting_user', '[]', '00000000-0000-4000-b000-0000000a0004', now() - interval '20 minutes');
+-- the persona template exists on dev (generator) but not on an empty CI stack
+insert into sim.templates (id, kind, profile_id, description, generator_version, seed, timezone, country)
+values ('persona_dakar_salaried', 'persona', 'SN', 'test', 'test', 1, 'Africa/Dakar', 'SN') on conflict (id) do nothing;
 update core.profiles set demo_persona = 'persona_dakar_salaried' where user_id = '00000000-0000-4000-b000-0000000000b6';
 insert into core.alerts (id, user_id, kind, band, score, status, reasons, escalated_at, created_at)
 values ('00000000-0000-4000-b000-00000000a1e2', '00000000-0000-4000-b000-0000000000b6', 'anomaly', 'bank', 80,
