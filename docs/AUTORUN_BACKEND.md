@@ -1,4 +1,4 @@
-# Autonomous backend chain (B1 → B5) — launch brief
+# Autonomous build chain (B1 → B10) — launch brief
 
 Franco, 2026-11-23: the backend sessions run **on their own until the
 backend is done**, then hand over to the visual build. Each step runs in a
@@ -41,7 +41,7 @@ chain starts — everything below in "Franco's checklist" is done first.
 6. **Groq key** — console.groq.com/keys → Create API Key (shown once,
    starts with `gsk_`) → Supabase Edge Functions secret `GROQ_API_KEY`.
 
-Status 2026-11-23 (checked by API): Edge secrets TWELVEDATA/FINNHUB/COINGECKO/FRED present; Vault `github_dispatch_pat` present; **`GROQ_API_KEY` missing** (B5 categorise-llm blocked until added). GitHub secrets and secret scanning: Franco says done (not checkable from a session).
+Status 2026-11-23 (checked by API): Edge secrets TWELVEDATA/FINNHUB/COINGECKO/FRED present; Vault `github_dispatch_pat` present; `GROQ_API_KEY` present (added by Franco, verified 2026-11-23). GitHub secrets and secret scanning: Franco says done (not checkable from a session).
 
 Needed to start: 1-3. Steps 4-6 can come later (B3, B4, B5 mark
 themselves blocked and the chain continues).
@@ -75,11 +75,46 @@ tell the chain (it will mark the dependent step blocked and continue).
    the next session** (create_session on this repo, revision = this
    branch) with the prompt: "Read docs/AUTORUN_BACKEND.md on branch
    <this branch> and follow it exactly: you are session <next>." Then
-   stop. After B5, the last backend session writes the handover for the
-   visual build (B6) in `docs/CHAIN_LOG.md` and messages Franco instead
-   of starting B6 (B6 needs the Tecno specs, Expo, Brevo and Sentry).
+   stop. **Franco, 2026-11-23: the chain runs on its own to the final
+   product.** After B5 the backend hands over to the visual build
+   ("the designer"): B5 writes the handover in CHAIN_LOG and creates B6
+   directly — no stop.
 7. Write to Franco in French only when something needs him; files in
    English. Public repo: no secrets, no real personal data.
 
 Order: **B1 Foundations → B2 Fake bank and provider → B3 Market data →
-B4 Batch analytics → B5 Scoring, fraud, alerts.**
+B4 Batch analytics → B5 Scoring, fraud, alerts → B6 App shell,
+onboarding, sync → B9 Bank dashboard → B7 Accounts, spending, markets →
+B8 Wealth, risk, performance, alerts, push, card OCR → B10 Hardening and
+release** (BUILD_PLAN §2). B10 ends the chain: it writes the final report
+in CHAIN_LOG and messages Franco in French (release candidate ready to
+install on the Tecno, client test script).
+
+## Visual build sessions (B6 → B10) — extra rules
+
+- The design is **validated and final**: copy `design/` (tokens.json
+  v0.55.0+, foundations, components, blocks, screens, motion, icon) — never
+  invent a value; read design/HANDOFF.md "What build sessions do first".
+  Delegated items (S3 Accounts, B24 + T tour, D login/TOTP/Ops/legal/dark)
+  are composed from validated pieces; report each choice in one line.
+- If branch `claude/design-workflow-skills` has merged skills (design
+  auto-review etc.), use them for every screen: render on a 360 × 800
+  emulator/preview, check typography, spacing, overlap/clipping, contrast,
+  D11/D12, 200 % font, before committing.
+- Screenshots of each built screen go in the PR (scale 1, small PNG).
+
+## Franco's checklist for the visual build (do it while the backend runs)
+
+| Needed by | What |
+|---|---|
+| B6 | **Tecno Spark 50 specs** (SETUP §2 table: Android version, RAM, storage, processor, resolution, operator) — write them in docs/SETUP.md or tell any session |
+| B6 | **Expo** account (expo.dev, free) → Account settings → Access tokens → create `EXPO_TOKEN` → GitHub Actions secret `EXPO_TOKEN` |
+| B6 | **Brevo** (free) → verify a sender address → SMTP & API → SMTP key → put it in Supabase → goldenpiece-dev → Authentication → Emails → SMTP settings (host smtp-relay.brevo.com, port 587) |
+| B6 | **Sentry** (free) → create a React Native project → its DSN is public (no secret); create an auth token → GitHub secret `SENTRY_AUTH_TOKEN` |
+| B9 | Cloudflare: already connected to the sessions (Pages) — nothing to do |
+| B8 | **Firebase** (Spark, free) → project → Android app → service-account key (FCM v1) → upload it in expo.dev → project → Credentials → Android → FCM V1 |
+| B10 | **UptimeRobot** (free) account; Firebase **App Distribution** enabled; keep an offline copy of the Android upload keystore when B10 creates it |
+
+A session that reaches a step whose item is missing marks it blocked in
+CHAIN_LOG, does the rest, and messages Franco in French once.
+
