@@ -36,7 +36,7 @@ from datetime import date, timedelta
 from goldenpiece.generator import iban as ib
 
 SEED = int(os.environ.get("GOLDENPIECE_SEED", "2026"))
-GENERATOR_VERSION = "b2.1"
+GENERATOR_VERSION = "b2.2"
 A0 = date(2026, 1, 5)          # a Monday: virtual calendar of day 0
 PAST_DAYS = 365
 FUTURE_DAYS = 365
@@ -492,7 +492,9 @@ def median(xs: list[int], default: int) -> int:
 
 
 def typical(t: Template, acct: str, pred) -> int:
-    return median([e.entry["amountMinor"] for e in t.events if e.acct == acct and pred(e.entry)], 0)
+    """Median of the account's ordinary entries. Scenario entries are left out: an anomaly priced from earlier
+    anomalies compounded (trader bank: 6-10x per round, 1.49 billion XOF card payments, B6.5 fix)."""
+    return median([e.entry["amountMinor"] for e in t.events if e.acct == acct and e.tag is None and pred(e.entry)], 0)
 
 
 def round_major(g: Gen, acct: str, minor: int, step_major: int) -> int:
