@@ -471,7 +471,9 @@ parity ≤ 1e-9 ✔ · G7 targets met on dev ✔ · ingest → alert row ≤ 2 s
 
 ### Blocked / defects open
 
-- **GitHub PAT still refused** (`403 Resource not accessible by personal access token`, 18:40 and 18:45 today):
+- **Resolved 22:33 UTC** (Franco fixed the token's permissions): dispatch → GitHub 204, `batch-user` run #3 ok
+  (5 users, 20.8 s), queue empty, `ops.health_check()` ok. Kept below for history.
+- ~~GitHub PAT still refused~~ (`403 Resource not accessible by personal access token`, 18:40 and 18:45 today):
   `ops.dispatch_batch` cannot start `batch-user.yml`; health `dispatch_failed`; deploy-dev smoke test will be red
   again now that the flaky pass is fixed. Franco: give the fine-grained token `goldenpiece-batch` **Repository
   permissions → Actions: Read and write** on GOLDENPIECE (or regenerate and replace Vault `github_dispatch_pat`).
@@ -547,7 +549,7 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 
 ### Defects open
 
-- GitHub PAT still refused (`health.dispatch = failing`, unchanged from B5).
+- ~~GitHub PAT still refused~~ fixed by Franco (B5 note; `health.dispatch = ok` checked 2026-11-23 22:50).
 - Tecno Spark 50 specs still missing (SETUP §2) → needed only by B6.5.
 - API.md §2.11 / §6 rows for the 5 new RPCs not yet written (B6.2 step 1).
 
@@ -563,6 +565,14 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 ### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
 
 `create_session` was refused (lineage depth 8): Franco starts B6.2 by hand. PR #11 (draft) holds all B6 parts.
+Fix after B6.1 (CI): `scoring.test.sql` set `demo_persona = 'persona_dakar_salaried'`, a template that exists on dev
+(generator) but not on CI's empty local stack (templates load after pgTAP) → FK error, "planned 49 ran 46" on PRs #10
+and #11. The test now inserts the template row itself (`on conflict do nothing`); 49/49 on dev.
+Fix after B6.1 (deploy-dev): every `build/**` branch and `main` deploy to the one dev project. After B6.1 applied
+`20261129000100`, the push of the older B5 branch failed ("Remote migration versions not found in local migrations
+directory", run #19) — and merging PR #10 into `main` would fail the same way until #11 is merged. `deploy-dev.yml` now
+has a gate step: when dev holds migrations the commit lacks, the deploy is **skipped** (notice, job green) instead of
+failing or redeploying older Edge Functions over newer ones. Checked locally: B6 tree → deploy, B5 tree → skip.
 
 ---
 
@@ -606,7 +616,6 @@ Checks: `cd app && npx jest` → **50 passed** (5 new: badges, ring states, toke
 
 ### Defects open
 
-- GitHub PAT still refused (`health.dispatch = failing`, unchanged).
 - Tecno Spark 50 specs still missing (SETUP §2) → B6.5.
 - Brevo sign-up e-mail not yet tested (B6.3 step 4).
 

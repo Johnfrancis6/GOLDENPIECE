@@ -35,12 +35,34 @@ jobs:
         run: |
           test -n "$SUPABASE_ACCESS_TOKEN" || { echo "::error::secret SUPABASE_ACCESS_TOKEN missing"; exit 1; }
           test -n "$SUPABASE_DB_PASSWORD" || { echo "::error::secret SUPABASE_DB_PASSWORD_DEV missing"; exit 1; }
+      - name: Skip when dev is ahead of this commit
+        id: gate
+        # Chain branches and main all deploy to the one dev project. When dev
+        # already holds migrations this commit lacks (a later build/** branch
+        # deployed them), deploying would fail ("remote migration versions not
+        # found") and could overwrite newer Edge Functions: skip instead.
+        run: |
+          remote=$(curl -sf -X POST "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+            -d '{"query": "select version from supabase_migrations.schema_migrations order by 1"}' \
+            | python3 -c 'import json,sys; print("\n".join(r["version"] for r in json.load(sys.stdin)))')
+          local=$(ls supabase/migrations/*.sql | sed -E 's#.*/([0-9]+)_.*#\1#' | sort)
+          missing=$(comm -23 <(echo "$remote" | sort) <(echo "$local"))
+          if [ -n "$missing" ]; then
+            echo "::notice::dev is ahead of this commit (migrations $(echo $missing | tr '\n' ' ')): deploy skipped"
+            echo "ahead=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ahead=false" >> "$GITHUB_OUTPUT"
+          fi
       - run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --yes
+        if: steps.gate.outputs.ahead != 'true'
       - name: Migrations (dry run, then push)
+        if: steps.gate.outputs.ahead != 'true'
         run: |
           supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --dry-run --yes
           supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --yes
       - name: Project settings (PostgREST exposes only api; anonymous sign-ins for demo clones)
+        if: steps.gate.outputs.ahead != 'true'
         run: |
           curl -sf -X PATCH "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/postgrest" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
@@ -49,18 +71,23 @@ jobs:
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
             -d '{"external_anonymous_users_enabled":true}' > /dev/null
       - name: Edge Functions
+        if: steps.gate.outputs.ahead != 'true'
         run: supabase functions deploy --use-api --yes
       - name: Functions URL for pg_cron → provider-tick (not a secret)
+        if: steps.gate.outputs.ahead != 'true'
         run: |
           curl -sf -X POST "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/database/query" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
             -d "{\"query\": \"insert into ops.app_config (key, value) values ('functions', jsonb_build_object('url', 'https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1')) on conflict (key) do update set value = excluded.value\"}" > /dev/null
       - uses: actions/setup-python@v6
+        if: steps.gate.outputs.ahead != 'true'
         with:
           python-version: "3.12"
       - name: Simulated-bank templates (skipped when the generator version is unchanged)
+        if: steps.gate.outputs.ahead != 'true'
         run: python3 scripts/sb_api.py load-sim
       - name: Smoke test
+        if: steps.gate.outputs.ahead != 'true'
         run: |
           sleep 10
           curl -sf "https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/health" | tee /dev/stderr | grep -q '"ok":true'
