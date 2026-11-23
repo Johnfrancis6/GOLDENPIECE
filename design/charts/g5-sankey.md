@@ -1,6 +1,6 @@
 # G5 — Sankey: flows of the month
 
-**Validated by Franco on 2026-11-23** (choices A, A, A: three columns
+**Validated by Franco on 2026-11-23** (hub label removed in S5, same day) (choices A, A, A: three columns
 sources → "Revenus" → uses; flows in the destination category colour;
 top 6 categories + "Autres" + "Épargne"). Tokens:
 [../tokens.json](../tokens.json) (`chart.sankey`). Preview:
@@ -38,7 +38,7 @@ Plot (320 dp wide on 360 dp, no horizontal scroll):
 | Part | Rule |
 |---|---|
 | Columns | source nodes at x 104, hub at 160, use nodes at 216; nodes 8 dp wide, square ends |
-| Hub label | "Revenus" 12/16 Medium `text.secondary`, centred above the hub, 22 dp band at the top |
+| Hub label | **none** (Franco, 2026-11-23, S5: the word "Revenus" above the hub was removed; the frame value line already says "Revenus du mois"). 4 dp top padding. TalkBack still reads the hub "Revenus, {amount}" |
 | Heights | proportional to the amount (build: scale so the tallest column fits ≈ 340 dp); each node sits centred in a **label slot ≥ 34 dp**, gap 6 between slots |
 | Labels | outside the nodes: name 12/16 Regular + amount 12/16 SemiBold tabular ("520 000 F"); left labels right-aligned, max 98 dp, 2 lines max (copy ≤ 16 characters: "Mobile money", "Autres revenus"); right labels left-aligned |
 | Flows | cubic ribbons (control points at mid-x), widths = amounts, stacked top → bottom in node order; no stroke |

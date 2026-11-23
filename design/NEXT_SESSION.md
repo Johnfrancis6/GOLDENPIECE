@@ -1,4 +1,4 @@
-# GOLDENPIECE design system — Session 3 continuation: S5 Spending, then Alerts, Onboarding, Settings, N/W/X/D, M14
+# GOLDENPIECE design system — Session 3 continuation: Alerts (B14, B15 + G8, S6), then Onboarding, Settings, N/W/X/D, M14
 
 You continue the reference design system of the GOLDENPIECE app (Android personal-finance prototype, fictitious data; reference phone Tecno Spark 50, must stay smooth on low/mid-range hardware) with Franco. Repository Johnfrancis6/GOLDENPIECE, branch `claude/brave-bardeen-g5ro94` (commit and push only there; never merge into main — Franco merges through a pull request when he asks). Answer Franco in French.
 
@@ -8,6 +8,9 @@ Finish the design system so build sessions copy validated files instead of inven
 ## Franco's standing rule D11 (2026-11-23)
 **Clean, uncluttered screens.** Default thresholds (state them, he can change them): at 360 × 800 the first screen shows the hero + at most 3 blocks; one header action (the eye is the cross-tab amount control, accepted with "+" on Placements); a list row has at most 2 text lines per side; one chart per frame; anything secondary goes behind a tap ("?" → B12 sheet, C9 sheet, detail screen). When in doubt, remove. Check every preview against these thresholds before sending.
 
+## Franco's standing rule D12 (2026-11-23)
+**No overlapping text.** At every revision, adjust elements for legibility: no text may overlap another text, a mark or a preview annotation, at 100 % and 200 % font. Preview annotations (fold label, captions) sit under the phone, never on it.
+
 ## Read first, in this order
 1. design/HANDOFF.md — state, how Franco works, measured vs assumed, preview tooling, open points, self-critiques (Spending and Placements).
 2. docs/BRIEF_03_DESIGN.md — §2 global constraints, §3.6 Spending (D1-D4), §3.7 Alerts (L1-L5), and the sections of the later items when you reach them.
@@ -15,7 +18,7 @@ Finish the design system so build sessions copy validated files instead of inven
 4. The validated files each item reuses (listed per item below). Do not contradict validated files without Franco's agreement (challenges → docs/CHALLENGES.md "Session 3").
 
 ## Validated so far (2026-11-22/23)
-Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements** (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.37.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
+Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements**, **S5 Spending** (2026-11-23; Sankey hub label removed) (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.37.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
 
 ## Measured (do not re-measure unless a value changes)
 - Contrast of every F1 pair (colour.md §7); C21 category colours as bars ≥ 4.0:1 light / ≥ 8.0:1 dark (g3-bars.md); C15 yellow pair reused for the B10 warning tag (8.5:1 dark / 6.3:1 light) — node WCAG script, 2026-11-22/23.
@@ -25,9 +28,9 @@ Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22;
 Tecno Spark 50 screen type/density (assumed LCD); GPU cost of gradients/glow; widget sizes 2×1 / 2×2; G6 candles at 3M (≈ 3 dp bodies) on the phone; G5 Sankey at large font; risk-scale thresholds of B12 (defaults, not validated figure by figure). API gaps to raise: lender name in `get_portfolio.debts`, monthly 5Y candles, `spark_30d`/`change_30d` for Home quotes.
 
 ## Do first
-Greet Franco in French in 3 lines (Placements done; this session starts with the Spending tab then Alerts and the rest; D11 still applies). Then one question round (≤ 3 questions, options A/B/C, recommended default first) for **S5 Spending layout**. Proposal to put as A: section pills **Aperçu · Flux · Budgets** (as S4); Aperçu = month pill (B8) + B7 tiles + G3 in B8; Flux = G5 in B8; Budgets = B6 rows (D3) + "Créer un budget"; D4 Categories & rules (B22) reached from a "Catégories et règles" row at the end of Aperçu and from Settings; `uncategorised_count` as a C8 info banner "12 opérations à classer" (tap → A2 filtered). Then preview S5 like S4: dark phones 360 dp full length with a dashed line at the bottom of the first 800 dp screen, plus 200 % font phones; reuse `design/previews/s4-placements.html` and `s2-home.html` as sources.
+S5 Spending is validated (screens/s5-spending.md). If this is a new session: greet Franco in French in 3 lines (Spending done; this session continues with Alerts; D11 and D12 apply), then ask the question round for **B14 "Votre banque a été prévenue"** (≤ 3 questions, A recommended). If B14 questions were already asked in the previous session, ask Franco for his answers first.
 
-## Order after S5 (item by item)
+## Order (item by item)
 1. Alerts: **B14** "Votre banque a été prévenue" (reuse C22 timeline, B4, B13) → **B15 "Pourquoi ?" sheet + G8 score gauge** (40/70 marks; reuse C15, C9, B12 style) → **S6 Alerts** (D8: no Alertes tab; open-alert header icon, Home strip, past alerts in Settings).
 2. Onboarding: B19 step screen → B21 institution picker (fictitious banks/operators, monograms C21) → B24 single-screen pieces (card-scan viewfinder, persona card, questionnaire question, consent) → S1 → T guided tour (M11).
 3. Settings: B16 grouped list (chevrons allowed only here) → B23 device row → S7.

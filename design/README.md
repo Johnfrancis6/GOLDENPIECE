@@ -46,10 +46,11 @@ Files are in English; UI copy is French first, then English.
 | G6 Candlestick (line by default + Courbe · Bougies switch; green/red filled; ≤ ~60 candles: 3M daily, 1A weekly, 5A monthly) | [charts/g6-candlestick.md](charts/g6-candlestick.md) | 2026-11-23 |
 | G7 Positive/negative bars ("Ce qui a compté": centre zero axis, gains right in green, losses left in red, Par actif · Par classe) | [charts/g7-pos-neg-bars.md](charts/g7-pos-neg-bars.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | B18 Form (sub-page with x, kind chips, filled fields, live total, pinned Enregistrer, offline "En attente", sale > held refused) | [blocks/b18-form.md](blocks/b18-form.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
+| **S5 Spending** (pills Aperçu · Flux · Budgets; one shared month pill; Aperçu hero = G3 value; info banner "N opérations à classer"; Sankey without hub label) | [screens/s5-spending.md](screens/s5-spending.md) · [preview](previews/s5-spending.png) · [200 %](previews/s5-spending-200.png) | 2026-11-23 |
 | **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Placements done (S4 validated 2026-11-23).** Next: S5 Spending layout (ask Franco: do it or leave it to build sessions), then **Alerts B14, B15 + G8, S6**. Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Spending done (S5 validated 2026-11-23).** Next: **Alerts B14, B15 + G8, S6**, then Onboarding, Settings, N/W/X/D, M14 (last). Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -66,6 +67,7 @@ Next item: **Placements done (S4 validated 2026-11-23).** Next: S5 Spending layo
 | D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
 | D10 | **Accounts section (S3: B2, B3, B17, B20; B22 moves to Spending) is left to the build sessions** (Franco, 2026-11-23): they compose it from validated items (C6 rows, C21 badges, C14 tags, C15 badges, C2 search pill, C13 chips, C9 sheets, B20-style key-value lines from B13, C5 amounts) and report choices in one line (formats.md §7). Design goes on with **Spending (S5)**. |
 | D11 | **Clean, uncluttered screens** (Franco, 2026-11-23, for Placements and after): few elements per screen, one idea per block, details behind a tap ("?", sheet, detail screen) rather than shown at once; when in doubt, remove. |
+| D12 | **No overlapping text** (Franco, 2026-11-23, S5): at every revision, adjust elements for legibility; no text may overlap another text, mark or annotation (check 100 % and 200 % font; preview annotations sit outside the phone). |
 
 ---
 
