@@ -135,8 +135,8 @@ Size ≈ 2.5 KB; `not_modified` most opens.
 | Call | Request | Response | Size |
 |---|---|---|---|
 | `api.list_alerts(p_status 'open'|'all', p_cursor)` | | `items[{id, kind, band, score, status, reasons[{code, params}], tx{id, amount, cp_name, booking_ts}?, created_at, answered_at, decision{value, at}?}]` | 3 KB / 20 |
-| `api.get_alert(p_id)` | | + `score_breakdown{a_thr, a_if, f, m}` (for the "Pourquoi ?" sheet), `timeline[{status, at}]` | 1.5 KB |
-| `api.answer_alert` | `{p_client_id, p_alert_id, p_answer: 'me'|'not_me', p_device_id}` (after local sensitive-action gate) | `{status: confirmed_by_user|escalated, already_answered?: bool}` | 0.2 KB |
+| `api.get_alert(p_id)` | | + `score_breakdown{a_thr, a_if, f, m, learning, reasons[{code, params, s?, weight?}], bumps[{code, value}]}` (for the "Pourquoi ?" sheet), `timeline[{status, at}]` | 1.5 KB |
+| `api.answer_alert` | `{p_client_id, p_alert_id, p_answer: 'me'|'not_me', p_device_id}` (after local sensitive-action gate) | `{status: confirmed_by_user|escalated|<unchanged for the bank band>, already_answered: bool, answer?}` (idempotent by `p_client_id`; 10/min) | 0.2 KB |
 | Realtime | channel `alerts:user` (Postgres Changes on `core.alerts`, RLS) | insert/update rows (same shape as list item) | 0.5 KB/event |
 
 ### 2.10 Settings (§2.9)
@@ -412,6 +412,18 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | Edge `provider-tick` (cron secret, from `sim.cron_tick` via pg_net every minute) `{link_ids?}` → `{links, failed, inserted}` | B2 | — |
 | Edge `ingest` (cron secret; module `_shared/ingest.ts` in-process) `{user_id, account_id, entries: ProviderEntry[]}` → `{inserted, updated, categorised, uncategorised, scored, alerts, transaction_ids}` (scored/alerts = 0 until B5) | B2 | `ingest.json`, `provider_entry.json`, `provider_security_event.json` |
 | Service-role RPCs behind the adapter: `provider_link_get`, `provider_user_links`, `provider_accounts_upsert`, `provider_ingest`, `provider_ingest_security`, `provider_set_balances`, `provider_link_revoke`; simulated bank `sim_link_start`, `sim_link_complete`, `sim_list_entries` (newest first, cursor `<offset>:<seq>`), `sim_balances`, `sim_security_events`, `sim_revoke`, `sim_tick_collect`, `sim_tick_ack`; `demo_start`, `demo_reset`, `demo_cleanup`, `cron_secret_ok` | B2 | — |
+| `api.list_alerts(p_status 'open'\|'all', p_cursor)` → `{items[alert_item], next_cursor}` (20 per page, cursor `<created_at>\|<id>`) | B5 | `list_alerts.json` |
+| `api.get_alert(p_id)` → alert item + `score_breakdown` + `timeline` | B5 | `get_alert.json` |
+| `api.answer_alert(p_client_id, p_alert_id, p_answer 'me'\|'not_me', p_device_id?)` (§7.5: "me" adds the payee to `core.known_payees` and raises z0 by 0.10 for the category, bounded and logged) | B5 | `answer_alert.request.json`, `answer_alert.json` |
+| `api.analyst_queue(p_status 'pending'\|'decided'\|'all', p_cursor)` (#9; 50 per page) | B5 | `analyst_queue.json` |
+| `api.analyst_alert(p_alert_id)` (#10; opening an `escalated` alert sets `in_review`) | B5 | `analyst_alert.json` |
+| `api.analyst_decide(p_alert_id, p_decision 'legit'\|'fraud', p_comment?)` → `{status, param_changes[]}` (feedback tunes per-user/category params, bounded, `ops.param_changes`; notifies the user) | B5 | — |
+| `api.scoring_params()` → `{bands, params[], user_overrides, rules[] (with sources), changes[≤ 100]}`; `api.reset_params(p_scope 'global'\|'users'\|'all')` | B5 | — |
+| `api.ops_metrics()` → `{push_latency_ms_24h, ingest_to_alert_ms_24h, score_latency_ms_24h, alerts_24h, groq_backlog, groq_uncategorised_all, last_batch, quotas_today, model, model_eval, funnel_7d, as_of}` | B5 | — |
+| Edge `notify` (cron secret) `{push_id}` → reads `api.notify_get`, sends the N data message (Expo push **stubbed until B8**: status `stub`/`no_token`), `api.notify_done` | B5 | `notify_payload.json` |
+| Edge `categorise-llm` (cron secret, pg_cron `gp-categorise-llm` */5 → `ops.cron_llm`) → `{labels, updated}`; service-role RPCs `llm_backlog(p_limit ≤ 40)`, `llm_apply(p_items)`, `llm_job(...)`; pseudonymised labels (§9.4), consent `ai_categorisation` (demo personas count as consenting) | B5 | — |
+| Batch: `analytics.refresh_learning(user)`, `analytics.refresh_behaviour(user)` (nightly, `scoring_step.py`), Isolation Forest training (Sunday), G7 evaluation (nightly → `ops.model_eval`); pg_cron `gp-alerts` (every minute: reminders, escalation, simulated analyst, held notifications), `gp-rule-tuning` (Mon 04:17) | B5 | — |
+
 
 Notes (B2):
 - **Auth in user-facing functions**: `verify_jwt = false`; each function checks the bearer token itself with `GET /auth/v1/user` (works with legacy and new JWT keys). Errors use the §1 body, plus `UNAUTHORIZED` 401.
@@ -446,3 +458,23 @@ Notes (B4):
 - **Recompute**: inserts/updates/deletes on `core.trades`, `core.real_estate_valuations`, `core.debts`, `core.accounts`
   queue the user (`ops.recompute_queue`); `ops.dispatch_batch` sends ≤ 50 queued users to `batch-user.yml`, and its
   15-min `schedule` processes the queue too (backup).
+
+Notes (B5):
+- **Scoring runs in SQL** inside the ingest transaction (`core.score_transaction`, called by `core.ingest_entries` for
+  new booked debits of the last 30 min, both tick paths) — not in a TS module as planned (ARCHITECTURE §7). The
+  Isolation Forest is trained in Python (`batch/goldenpiece/ml/iforest.py`, Sunday) and exported to
+  `ops.iforest_trees`; `core.iforest_raw` evaluates it in SQL (parity with sklearn ≤ 1e-9, pgTAP `iforest_parity`).
+- **Reason codes** (`reasons[].code`, i18n keys in `design/copy`): `AMOUNT_VS_PAYEE`, `AMOUNT_VS_CATEGORY`,
+  `DAILY_OUTFLOW` (the three form one "amount" group — only the strongest is kept), `NEW_PAYEE`, `UNUSUAL_HOUR`,
+  `VELOCITY`, `UNUSUAL_COMBINATION` (Isolation Forest), `R1`-`R6` (fraud rules, `ref.fraud_rules`), and for
+  non-scoring alerts `concentration_breach`, `learning_done`. Bumps: `no_lock`, `weak_biometric`, `new_device`,
+  `amount_large`. Bands: `ask` ≥ 40, `bank` ≥ 70 (fixed; tuning moves only the parameters below them).
+- **Alert statuses**: `open` (info alerts), `awaiting_user` (ask band) → `confirmed_by_user` | `escalated` ("not me"; an
+  unanswered alert gets one reminder at +15 min and stays `awaiting_user`) → `in_review` (analyst opened it) → `decided_legit` | `decided_fraud`;
+  bank band starts `escalated`. Escalated demo-persona alerts are decided by the simulated analyst after 10 min
+  (`decided.simulated = true`).
+- **Notification types** (`ops.push_log.type`, payload `type`, design N): `confirm`, `alerted`, `legit`, `fraud`,
+  `conc`, `learning` (silent), `budget80`, `budget100`, `reminder` (the unanswered `confirm`, once). Channels `security` (never
+  limited), `markets`, `budgets` (switch in `profiles.notif_prefs`, 1/day, held 22:00-07:00 local, sent at 07:00).
+- **Groq**: model `GROQ_MODEL` (default `llama-3.1-8b-instant`); when Groq answers 404 (model retired) the function
+  lists `/models` and switches to the first available of a preference list (B5 part 2: the default had been retired).

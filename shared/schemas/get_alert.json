@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_alert.json",
+  "title": "api.get_alert response (API.md §2.9, \"Pourquoi ?\" sheet)",
+  "allOf": [
+    {
+      "$ref": "https://goldenpiece.invalid/schemas/list_alerts.json#/$defs/alert_item"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "score_breakdown",
+    "timeline"
+  ],
+  "properties": {
+    "score_breakdown": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "a_thr": {
+          "type": "number"
+        },
+        "a_if": {
+          "type": "number"
+        },
+        "f": {
+          "type": "number"
+        },
+        "m": {
+          "type": "number"
+        },
+        "learning": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "params"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "params": {
+                "type": "object"
+              },
+              "weight": {
+                "type": "number"
+              },
+              "s": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "bumps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "value"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "status",
+          "at"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+      "tx": {
+        "id": "727cc084-b8b8-454f-8728-57c8640bc603",
+        "amount": {
+          "c": "XOF",
+          "m": 115000
+        },
+        "cp_name": "Électro Plus Sandaga",
+        "op_type": "card",
+        "booking_ts": "2026-11-23T18:40:48+00:00",
+        "category_id": "housing.equipment"
+      },
+      "band": "ask",
+      "kind": "anomaly",
+      "score": 59,
+      "status": "awaiting_user",
+      "reasons": [
+        {
+          "code": "AMOUNT_VS_CATEGORY",
+          "params": {
+            "x": 7,
+            "category": "housing.equipment"
+          }
+        },
+        {
+          "code": "NEW_PAYEE",
+          "params": {}
+        }
+      ],
+      "decision": null,
+      "timeline": [
+        {
+          "at": "2026-11-23T18:41:02.536587+00:00",
+          "status": "created"
+        },
+        {
+          "at": "2026-11-23T18:41:03.183186+00:00",
+          "status": "notified"
+        }
+      ],
+      "created_at": "2026-11-23T18:41:02.536587+00:00",
+      "answered_at": null,
+      "row_version": 2,
+      "user_answer": null,
+      "score_breakdown": {
+        "f": 0,
+        "m": 1,
+        "a_if": 0,
+        "a_thr": 0.5929,
+        "bumps": [],
+        "reasons": [
+          {
+            "code": "AMOUNT_VS_CATEGORY",
+            "params": {
+              "x": 7,
+              "category": "housing.equipment"
+            },
+            "weight": 46
+          },
+          {
+            "code": "NEW_PAYEE",
+            "params": {},
+            "weight": 25
+          }
+        ],
+        "learning": false
+      }
+    }
+  ]
+}

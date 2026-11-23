@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/list_alerts.json",
+  "title": "api.list_alerts response (API.md §2.9)",
+  "type": "object",
+  "required": [
+    "items",
+    "next_cursor"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "band",
+          "score",
+          "status",
+          "reasons",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "enum": [
+              "anomaly",
+              "fraud",
+              "concentration",
+              "learning_done",
+              "budget"
+            ]
+          },
+          "band": {
+            "enum": [
+              "ask",
+              "bank",
+              "info",
+              null
+            ]
+          },
+          "score": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "awaiting_user",
+              "confirmed_by_user",
+              "escalated",
+              "in_review",
+              "decided_legit",
+              "decided_fraud",
+              "closed"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "params"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "params": {
+                  "type": "object"
+                },
+                "weight": {
+                  "type": "number"
+                },
+                "s": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "tx": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "id",
+              "amount"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "$ref": "https://goldenpiece.invalid/schemas/common.json#/$defs/money"
+              },
+              "cp_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "booking_ts": {
+                "type": "string"
+              },
+              "category_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "op_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "answered_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "user_answer": {
+            "enum": [
+              "me",
+              "not_me",
+              null
+            ]
+          },
+          "decision": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "value": {
+                "enum": [
+                  "legit",
+                  "fraud"
+                ]
+              },
+              "at": {
+                "type": "string"
+              }
+            }
+          },
+          "row_version": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "alert_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "band",
+        "score",
+        "status",
+        "reasons",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "enum": [
+            "anomaly",
+            "fraud",
+            "concentration",
+            "learning_done",
+            "budget"
+          ]
+        },
+        "band": {
+          "enum": [
+            "ask",
+            "bank",
+            "info",
+            null
+          ]
+        },
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "open",
+            "awaiting_user",
+            "confirmed_by_user",
+            "escalated",
+            "in_review",
+            "decided_legit",
+            "decided_fraud",
+            "closed"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "params"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "params": {
+                "type": "object"
+              },
+              "weight": {
+                "type": "number"
+              },
+              "s": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "tx": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "id",
+            "amount"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "amount": {
+              "$ref": "https://goldenpiece.invalid/schemas/common.json#/$defs/money"
+            },
+            "cp_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "booking_ts": {
+              "type": "string"
+            },
+            "category_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "op_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "answered_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "user_answer": {
+          "enum": [
+            "me",
+            "not_me",
+            null
+          ]
+        },
+        "decision": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "legit",
+                "fraud"
+              ]
+            },
+            "at": {
+              "type": "string"
+            }
+          }
+        },
+        "row_version": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "items": [
+        {
+          "id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+          "tx": {
+            "id": "727cc084-b8b8-454f-8728-57c8640bc603",
+            "amount": {
+              "c": "XOF",
+              "m": 115000
+            },
+            "cp_name": "Électro Plus Sandaga",
+            "op_type": "card",
+            "booking_ts": "2026-11-23T18:40:48+00:00",
+            "category_id": "housing.equipment"
+          },
+          "band": "ask",
+          "kind": "anomaly",
+          "score": 59,
+          "status": "awaiting_user",
+          "reasons": [
+            {
+              "code": "AMOUNT_VS_CATEGORY",
+              "params": {
+                "x": 7,
+                "category": "housing.equipment"
+              }
+            },
+            {
+              "code": "NEW_PAYEE",
+              "params": {}
+            }
+          ],
+          "decision": null,
+          "created_at": "2026-11-23T18:41:02.536587+00:00",
+          "answered_at": null,
+          "row_version": 2,
+          "user_answer": null
+        }
+      ],
+      "next_cursor": null
+    }
+  ]
+}

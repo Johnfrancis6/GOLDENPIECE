@@ -75,6 +75,10 @@ features with the largest |z|):
 | feature | f10 | le type d'opération | the type of operation |
 
 Context lines (B15 "Votre appareil") are in the B15 table in §5.
+Score bumps → B15 keys (added by backend B5, 2026-11-23): `new_device` → newDevice, `no_lock` → notLocked,
+`weak_biometric` → weakFace, `amount_large` → amountLarge (shown under "Ce qui a compté", not "Votre appareil").
+`UNUSUAL_COMBINATION` can name f1 and f2 together (both "le montant"): the app shows the short form then.
+Non-scoring alerts: `concentration_breach` → banner/`concentration.yours`, N `conc`; `learning_done` → N `learning`, B5 card.
 Bank dashboard (D) shows the same long sentences plus the code; where the user sentence says "vous" it uses the `.analyst` variant (only UNUSUAL_HOUR today).
 
 ## 2. "?" texts (B12)
@@ -370,6 +374,7 @@ Source: [blocks/b15-why-sheet.md](../blocks/b15-why-sheet.md)
 | newDevice | Opération faite depuis un nouvel appareil | Made from a new device |
 | notLocked | Téléphone non verrouillé par un code | Phone not locked with a code |
 | weakFace | Déverrouillage par le visage peu sûr sur ce modèle | Face unlock is weak on this model |
+| amountLarge | Montant d'au moins la moitié de votre solde | At least half of your balance |
 | method | Comment fonctionne le score ? | How does the score work? |
 
 ### B16 — Grouped settings list (Settings, O12)

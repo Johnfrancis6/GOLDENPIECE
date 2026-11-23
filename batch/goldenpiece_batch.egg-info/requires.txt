@@ -1,0 +1,10 @@
+numpy>=2
+
+[local]
+psycopg[binary]>=3.2
+
+[ml]
+scikit-learn==1.9.1
+
+[test]
+pytest>=8

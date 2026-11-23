@@ -42,3 +42,20 @@ def test_g7_metrics():
     assert m["false_prompts_per_user_month"] == 1.0              # 2 clean ≥ 40 over 2 months
     assert m["precision_bank"] == 0.5
     assert m["silent_learning"] == 1 and not m["targets_met"]
+
+
+def test_next_version_never_reuses():
+    from goldenpiece.ml.iforest import next_version
+
+    class Db:
+        def __init__(self, n):
+            self.n, self.sql = n, ""
+
+        def rows(self, sql):
+            self.sql = sql
+            return [{"n": self.n}]
+
+    assert next_version(Db(0), "2026-11-23") == "2026-11-23.1"
+    d = Db(2)
+    assert next_version(d, "2026-11-23") == "2026-11-23.3"
+    assert "2026-11-23" in d.sql

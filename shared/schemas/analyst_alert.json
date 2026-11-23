@@ -1,0 +1,499 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/analyst_alert.json",
+  "title": "api.analyst_alert response (API.md §2.12, BACKEND_NEEDS #10)",
+  "type": "object",
+  "required": [
+    "alert",
+    "score_breakdown",
+    "reasons",
+    "features",
+    "user_events",
+    "tx",
+    "history_90d",
+    "security_events_30d",
+    "devices",
+    "previous_decisions",
+    "timeline"
+  ],
+  "properties": {
+    "alert": {
+      "allOf": [
+        {
+          "$ref": "https://goldenpiece.invalid/schemas/list_alerts.json#/$defs/alert_item"
+        }
+      ],
+      "properties": {
+        "user_ref": {
+          "type": "string"
+        },
+        "bank_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "escalated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "score_breakdown": {
+      "type": "object",
+      "properties": {
+        "a_thr": {
+          "type": "number"
+        },
+        "a_if": {
+          "type": "number"
+        },
+        "f": {
+          "type": "number"
+        },
+        "m": {
+          "type": "number"
+        },
+        "learning": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "params"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "params": {
+                "type": "object"
+              },
+              "weight": {
+                "type": "number"
+              },
+              "s": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "bumps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "value"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "model_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rules_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "params_version": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "latency_ms": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "a_thr",
+        "a_if",
+        "f",
+        "m",
+        "rules",
+        "bumps"
+      ]
+    },
+    "reasons": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "params"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "s": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "features": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "user_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "at"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^(notification|answer)_"
+          },
+          "at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tx": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "history_90d": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "booking_ts",
+          "amount",
+          "dc"
+        ],
+        "properties": {
+          "booking_ts": {
+            "type": "string"
+          },
+          "amount": {
+            "$ref": "https://goldenpiece.invalid/schemas/common.json#/$defs/money"
+          },
+          "dc": {
+            "enum": [
+              "DBIT",
+              "CRDT"
+            ]
+          },
+          "cp_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "score": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "security_events_30d": {
+      "type": "array"
+    },
+    "devices": {
+      "type": "array"
+    },
+    "previous_decisions": {
+      "type": "array"
+    },
+    "user_answer": {
+      "enum": [
+        "me",
+        "not_me",
+        null
+      ]
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "status",
+          "at"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "tx": {
+        "id": "727cc084-b8b8-454f-8728-57c8640bc603",
+        "momo": null,
+        "tx_id": null,
+        "cp_bic": null,
+        "cp_key": "n:electro plus sandaga",
+        "status": "BOOK",
+        "cp_iban": null,
+        "cp_name": "Électro Plus Sandaga",
+        "currency": "XOF",
+        "cp_msisdn": null,
+        "account_id": "14fbb932-bd90-477e-8221-ffc342797e25",
+        "booking_ts": "2026-11-23T18:40:48+00:00",
+        "btc_domain": "PMNT",
+        "btc_family": "CCRD",
+        "updated_at": "2026-11-23T18:41:02.536587+00:00",
+        "value_date": "2026-11-23",
+        "category_id": "housing.equipment",
+        "cdt_dbt_ind": "DBIT",
+        "ingested_at": "2026-11-23T18:41:02.536587+00:00",
+        "row_version": 1,
+        "amount_minor": 115000,
+        "purpose_code": null,
+        "acct_svcr_ref": "SIMAC0696CB3B18",
+        "btc_subfamily": "POSD",
+        "charges_minor": null,
+        "end_to_end_id": null,
+        "category_source": "keyword",
+        "remittance_info": "PAIEMENT CB ÉLECTRO PLUS SANDAGA",
+        "category_version": 0,
+        "charges_currency": null,
+        "cp_merchant_code": "5732",
+        "provider_entry_id": "f0b15726-bank-X1000001"
+      },
+      "alert": {
+        "id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+        "tx": {
+          "id": "727cc084-b8b8-454f-8728-57c8640bc603",
+          "amount": {
+            "c": "XOF",
+            "m": 115000
+          },
+          "cp_name": "Électro Plus Sandaga",
+          "op_type": "card",
+          "booking_ts": "2026-11-23T18:40:48+00:00",
+          "category_id": "housing.equipment"
+        },
+        "band": "ask",
+        "kind": "anomaly",
+        "score": 59,
+        "status": "in_review",
+        "bank_id": "banque_baobab",
+        "reasons": [
+          {
+            "code": "AMOUNT_VS_CATEGORY",
+            "params": {
+              "x": 7,
+              "category": "housing.equipment"
+            }
+          },
+          {
+            "code": "NEW_PAYEE",
+            "params": {}
+          }
+        ],
+        "decision": null,
+        "user_ref": "9027cb07",
+        "created_at": "2026-11-23T18:41:02.536587+00:00",
+        "answered_at": "2026-11-23T18:42:44.178273+00:00",
+        "row_version": 5,
+        "user_answer": "not_me",
+        "escalated_at": "2026-11-23T18:42:44.178273+00:00"
+      },
+      "devices": [],
+      "reasons": [
+        {
+          "code": "AMOUNT_VS_CATEGORY",
+          "params": {
+            "x": 7,
+            "category": "housing.equipment"
+          },
+          "weight": 46
+        },
+        {
+          "code": "NEW_PAYEE",
+          "params": {},
+          "weight": 25
+        }
+      ],
+      "features": {
+        "c1": null,
+        "c2": null,
+        "c3": false,
+        "c4": null,
+        "f1": null,
+        "f2": 3.1415,
+        "f3": 1,
+        "f4": 0.8042,
+        "f5": 0.8042,
+        "f6": 0.5,
+        "f7": 0.8144,
+        "f8": 0.0459,
+        "f9": "bank",
+        "op": null,
+        "x1": null,
+        "x2": 6.61,
+        "f10": "card",
+        "f11": 0,
+        "f12": 8.8846,
+        "f13": false,
+        "f14": null,
+        "f15": false,
+        "n_1h": 1,
+        "r5_n": 1,
+        "unlock": null,
+        "category": "housing.equipment",
+        "f2_level": "op",
+        "learning": false,
+        "ops_count": 991,
+        "r5_rising": true,
+        "sec_types": [],
+        "amount_eur": 175.32,
+        "local_hour": 18,
+        "local_time": "18:40",
+        "first_op_at": "2025-11-24T08:35:45+00:00",
+        "p95_amount_eur": 102.14
+      },
+      "timeline": [
+        {
+          "at": "2026-11-23T18:41:02.536587+00:00",
+          "status": "created"
+        },
+        {
+          "at": "2026-11-23T18:41:03.183186+00:00",
+          "status": "notified"
+        },
+        {
+          "at": "2026-11-23T18:42:44.178273+00:00",
+          "status": "not_me"
+        },
+        {
+          "at": "2026-11-23T18:42:44.178273+00:00",
+          "status": "escalated"
+        }
+      ],
+      "history_90d": [
+        {
+          "dc": "DBIT",
+          "score": 59,
+          "amount": {
+            "c": "XOF",
+            "m": 115000
+          },
+          "cp_name": "Électro Plus Sandaga",
+          "booking_ts": "2026-11-23T18:40:48+00:00",
+          "category_id": "housing.equipment"
+        },
+        {
+          "dc": "DBIT",
+          "score": null,
+          "amount": {
+            "c": "XOF",
+            "m": 500
+          },
+          "cp_name": null,
+          "booking_ts": "2026-11-23T17:03:15+00:00",
+          "category_id": "bills.airtime"
+        }
+      ],
+      "user_answer": "not_me",
+      "user_events": [
+        {
+          "at": "2026-11-23T18:41:03.183186+00:00",
+          "type": "notification_confirm",
+          "status": "no_token"
+        },
+        {
+          "at": "2026-11-23T18:42:44.178273+00:00",
+          "type": "answer_not_me"
+        },
+        {
+          "at": "2026-11-23T18:42:44.629959+00:00",
+          "type": "notification_alerted",
+          "status": "no_token"
+        }
+      ],
+      "score_breakdown": {
+        "f": 0,
+        "m": 1,
+        "a_if": 0,
+        "a_thr": 0.5929,
+        "bumps": [],
+        "rules": [],
+        "learning": false,
+        "latency_ms": 46,
+        "model_version": "2026-11-23.1",
+        "rules_version": "R1.1,R2.1,R3.1,R4.1,R5.1,R6.1",
+        "params_version": 0
+      },
+      "previous_decisions": [],
+      "security_events_30d": []
+    }
+  ]
+}

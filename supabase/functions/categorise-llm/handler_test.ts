@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "@std/assert";
-import { type Backlog, buildMessages, makeHandler, parseAnswer } from "./handler.ts";
+import { type Backlog, buildMessages, groqChat, makeHandler, parseAnswer, pickModel } from "./handler.ts";
 import { buildMessages as pushMessages, makeHandler as notifyHandler } from "../notify/handler.ts";
 
 const backlog: Backlog = {
@@ -114,4 +114,34 @@ Deno.test("notify: stub records the outcome; data message per token; non-queued 
   assertEquals(m.length, 2);
   assertEquals(m[0].priority, "high");
   assertEquals(m[0].channelId, "security");
+});
+
+Deno.test("groqChat switches to an available model when the configured one is gone (404)", async () => {
+  const calls: string[] = [];
+  const fake = (url: string | URL | Request, init?: RequestInit): Promise<Response> => {
+    const u = String(url);
+    if (u.endsWith("/models")) {
+      calls.push("models");
+      return Promise.resolve(
+        Response.json({ data: [{ id: "whisper-large-v3" }, { id: "llama-3.3-70b-versatile" }] }),
+      );
+    }
+    const m = JSON.parse(String(init?.body)).model;
+    calls.push(m);
+    if (m === "llama-3.1-8b-instant") {
+      return Promise.resolve(new Response("model_not_found", { status: 404 }));
+    }
+    return Promise.resolve(Response.json({ choices: [{ message: { content: '{"c":[]}' } }] }));
+  };
+  const chat = groqChat("k", "llama-3.1-8b-instant", fake as typeof fetch);
+  assertEquals(await chat([]), '{"c":[]}');
+  assertEquals(calls, ["llama-3.1-8b-instant", "models", "llama-3.3-70b-versatile"]);
+  assertEquals(await chat([]), '{"c":[]}'); // remembered
+  assertEquals(calls.length, 4);
+});
+
+Deno.test("pickModel prefers the list, skips audio/guard models", () => {
+  assertEquals(pickModel(["openai/gpt-oss-20b", "llama-3.3-70b-versatile"]), "llama-3.3-70b-versatile");
+  assertEquals(pickModel(["whisper-large-v3", "llama-guard-4-12b", "qwen/qwen3-32b"]), "qwen/qwen3-32b");
+  assertEquals(pickModel([]), null);
 });

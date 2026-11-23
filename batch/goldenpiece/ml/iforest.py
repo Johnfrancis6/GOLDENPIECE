@@ -139,6 +139,13 @@ def training_matrix(db, users: list[str]) -> np.ndarray:
     return np.array(X, dtype=np.float64)
 
 
+def next_version(db, day: str) -> str:
+    """`<day>.<n>` with n one above the day's highest: never reuses (and so never deletes) an existing model."""
+    r = db.rows("select coalesce(max(split_part(version, '.', 2)::int), 0) n from ops.model_artifacts "
+                f"where kind = 'iforest' and version ~ '^{day}[.][0-9]+$'")
+    return f"{day}.{int(r[0]['n']) + 1}"
+
+
 def train(db, promote: bool = False, version: str | None = None) -> dict:
     from goldenpiece.eval import g7
     users = [r["user_id"] for r in db.rows(
@@ -146,7 +153,7 @@ def train(db, promote: bool = False, version: str | None = None) -> dict:
     X = training_matrix(db, users)
     if len(X) < 300:
         return {"status": "skipped", "reason": "too_few_rows", "rows": len(X)}
-    version = version or dt.date.today().isoformat() + ".1"
+    version = version or next_version(db, dt.date.today().isoformat())
     model = fit(X)
     exp = export(model, X, version)
     db.run(load_sql(exp))

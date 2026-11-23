@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/notify_payload.json",
+  "title": "Push data message built by ops.notify_payload, sent by Edge notify (design N, BACKEND_NEEDS #6)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "channel",
+    "alert_id",
+    "title_key",
+    "silent",
+    "args",
+    "sent_at"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "confirm",
+        "reminder",
+        "alerted",
+        "legit",
+        "fraud",
+        "conc",
+        "learning",
+        "budget80",
+        "budget100"
+      ]
+    },
+    "channel": {
+      "enum": [
+        "security",
+        "markets",
+        "budgets"
+      ]
+    },
+    "alert_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "title_key": {
+      "type": "string",
+      "pattern": "^N\\.[a-z0-9]+\\.title$"
+    },
+    "silent": {
+      "type": "boolean"
+    },
+    "sent_at": {
+      "type": "string"
+    },
+    "args": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "op_type": {
+          "type": "string"
+        },
+        "operator": {
+          "type": "string"
+        },
+        "payee_short": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "time": {
+          "type": "string",
+          "pattern": "^[0-2][0-9]:[0-5][0-9]$"
+        },
+        "bank": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "share": {
+          "type": "number"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "amount": {
+          "$ref": "https://goldenpiece.invalid/schemas/common.json#/$defs/money",
+          "description": "only when the user turned \"Montants visibles\" on; never for fraud/conc"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "args": {
+        "bank": "Banque Baobab",
+        "time": "18:40",
+        "op_type": "card",
+        "category": "housing.equipment",
+        "operator": "Banque Baobab",
+        "payee_short": "Électro Plus Sandaga"
+      },
+      "type": "alerted",
+      "silent": false,
+      "channel": "security",
+      "sent_at": "2026-11-23T18:42:44.178273+00:00",
+      "alert_id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+      "title_key": "N.alerted.title"
+    },
+    {
+      "args": {
+        "bank": "Banque Baobab",
+        "time": "18:40",
+        "op_type": "card",
+        "category": "housing.equipment",
+        "operator": "Banque Baobab",
+        "payee_short": "Électro Plus Sandaga"
+      },
+      "type": "confirm",
+      "silent": false,
+      "channel": "security",
+      "sent_at": "2026-11-23T18:41:02.536587+00:00",
+      "alert_id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+      "title_key": "N.confirm.title"
+    },
+    {
+      "args": {
+        "asset": "S&P 500",
+        "share": 70.1,
+        "threshold": 60
+      },
+      "type": "conc",
+      "silent": false,
+      "channel": "markets",
+      "sent_at": "2026-11-23T18:43:32.527872+00:00",
+      "alert_id": "e6f23e75-d0db-46e6-824d-69ebd0441285",
+      "title_key": "N.conc.title"
+    },
+    {
+      "args": {
+        "bank": "Banque Baobab",
+        "time": "18:40",
+        "op_type": "card",
+        "category": "housing.equipment",
+        "operator": "Banque Baobab",
+        "payee_short": "Électro Plus Sandaga",
+        "amount": {
+          "m": 115000,
+          "c": "XOF"
+        }
+      },
+      "type": "alerted",
+      "silent": false,
+      "channel": "security",
+      "sent_at": "2026-11-23T18:42:44.178273+00:00",
+      "alert_id": "b22629f7-2623-45f7-a7c6-dbcaa7ee0ed6",
+      "title_key": "N.alerted.title"
+    }
+  ]
+}

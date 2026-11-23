@@ -98,14 +98,47 @@ export function parseAnswer(
   });
 }
 
+/** Models tried, in order, when the configured one is gone (Groq retires models: 404 model_not_found). */
+export const MODEL_PREFERENCE = [
+  "llama-3.1-8b-instant",
+  "llama-3.3-70b-versatile",
+  "openai/gpt-oss-20b",
+  "openai/gpt-oss-120b",
+  "meta-llama/llama-4-scout-17b-16e-instruct",
+];
+
+/** Picks the first preferred model Groq lists, else the first chat-looking one (no audio/guard models). */
+export function pickModel(available: string[]): string | null {
+  for (const m of MODEL_PREFERENCE) if (available.includes(m)) return m;
+  return available.find((m) => !/whisper|tts|guard|orpheus|playai|compound/i.test(m)) ?? null;
+}
+
+const GROQ = "https://api.groq.com/openai/v1";
+
 export function groqChat(key: string, model: string, fetchFn = fetch): Chat {
-  return async (messages) => {
-    const res = await fetchFn("https://api.groq.com/openai/v1/chat/completions", {
+  let current = model;
+  const headers = { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+  const call = (m: string, messages: unknown) =>
+    fetchFn(`${GROQ}/chat/completions`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model, messages, temperature: 0, response_format: { type: "json_object" } }),
+      headers,
+      body: JSON.stringify({ model: m, messages, temperature: 0, response_format: { type: "json_object" } }),
     });
-    if (!res.ok) throw new ApiError("UNAVAILABLE", `groq.${res.status}`);
+  return async (messages) => {
+    let res = await call(current, messages);
+    if (res.status === 404) {
+      await res.body?.cancel();
+      const lr = await fetchFn(`${GROQ}/models`, { headers });
+      const ids: string[] = lr.ok ? ((await lr.json())?.data ?? []).map((x: { id: string }) => x.id) : [];
+      const next = pickModel(ids.filter((m) => m !== current));
+      if (!next) throw new ApiError("UNAVAILABLE", `groq.404 model ${current} gone, no replacement`);
+      current = next;
+      res = await call(current, messages);
+    }
+    if (!res.ok) {
+      const t = (await res.text()).slice(0, 160).replace(/gsk_[A-Za-z0-9]+/g, "gsk_…");
+      throw new ApiError("UNAVAILABLE", `groq.${res.status} ${current}: ${t}`);
+    }
     const j = await res.json();
     return j?.choices?.[0]?.message?.content ?? "";
   };
