@@ -94,6 +94,7 @@ alter table ops.model_artifacts add column if not exists meta jsonb;   -- q50, q
 grant select, insert, delete on ops.iforest_trees to batch_writer;
 grant delete on ops.model_artifacts to batch_writer;
 alter table ops.iforest_trees enable row level security;
+create policy batch_all on ops.iforest_trees for all to batch_writer using (true) with check (true);
 
 -- ── helpers ─────────────────────────────────────────────────────────────
 create function core.med(a float8[]) returns float8
@@ -415,12 +416,16 @@ begin
     into a_thr from jsonb_array_elements(checks) c;
 
   -- A_if (active model only)
-  select version, features, meta into v_model from ops.model_artifacts where kind = 'iforest' and status = 'active';
+  -- active model, or the candidate under evaluation (gp.model_version, batch eval only)
+  select version, features, meta into v_model from ops.model_artifacts
+  where kind = 'iforest' and case when coalesce(current_setting('gp.model_version', true), '') <> ''
+                                  then version = current_setting('gp.model_version', true) else status = 'active' end;
   if v_model.version is not null then
     v_vec := core.if_vector(f);
     v_raw := core.iforest_raw(v_model.version, v_vec);
-    a_if := core.clamp01((v_raw - (v_model.meta ->> 'q50')::float8)
-                         / ((v_model.meta ->> 'q999')::float8 - (v_model.meta ->> 'q50')::float8));
+    a_if := core.clamp01((v_raw - coalesce(v_model.meta ->> 'q_lo', v_model.meta ->> 'q50')::float8)
+                         / (coalesce(v_model.meta ->> 'q_hi', v_model.meta ->> 'q999')::float8
+                            - coalesce(v_model.meta ->> 'q_lo', v_model.meta ->> 'q50')::float8));
     if a_if > 0 then
       select jsonb_agg(k order by z desc) into v_top from (
         select 'f' || ((array[1,2,3,4,5,6,7,8,9,10,10,10,10,10])[i])::text k,
@@ -623,7 +628,7 @@ $$;
 create function core.score_replay(p_user uuid, p_from timestamptz default null, p_to timestamptz default null)
 returns table (transaction_id uuid, booking_ts timestamptz, total int, band text, learning boolean,
                rules jsonb, reasons jsonb, tag text, expected_band text, vec float8[])
-language sql stable set search_path = '' as $$
+language sql stable security definer set search_path = '' as $$
   select t.id, t.booking_ts, (r ->> 'total')::int, r ->> 'band', (r ->> 'learning')::boolean, r -> 'rules',
          r -> 'reasons', tr.tag, tr.band, core.if_vector(r -> 'features')
   from core.transactions t
@@ -637,7 +642,7 @@ $$;
 -- Training rows for the Isolation Forest (clean: injected scenarios excluded).
 create function core.training_rows(p_user uuid, p_days int default 180)
 returns table (transaction_id uuid, vec float8[], injected boolean)
-language sql stable set search_path = '' as $$
+language sql stable security definer set search_path = '' as $$
   select t.id, core.if_vector(f), tr.tag is not null
   from core.transactions t
   cross join lateral core.score_features(t.id) f
@@ -655,4 +660,6 @@ grant execute on function core.med(float8[]), core.robust(float8[]), core.clamp0
   core.score_replay(uuid, timestamptz, timestamptz), core.training_rows(uuid, int)
   to batch_writer, service_role;
 grant execute on function core.score_transaction(uuid) to service_role;
-grant select on ops.scoring_params, ref.fraud_rules, ops.param_changes, core.known_payees to batch_writer;
+grant select on ops.scoring_params, ref.fraud_rules, ops.param_changes, core.known_payees, ops.model_artifacts,
+  ops.iforest_trees to batch_writer;
+grant update (status) on ops.model_artifacts to batch_writer;
