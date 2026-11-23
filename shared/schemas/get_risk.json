@@ -1,0 +1,579 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_risk.json",
+  "title": "api.get_risk(p_etag): envelope; data below (API.md §2.7). VaR/CVaR/vol as positive fractions of the included value, max_drawdown ≤ 0",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/envelope"
+    }
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "as_of",
+        "status",
+        "figures",
+        "drawdown",
+        "concentration",
+        "excluded",
+        "minimums"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "pending"
+          ]
+        },
+        "figures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "metric",
+              "value",
+              "value_ref",
+              "n_obs",
+              "method_key",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "metric": {
+                "enum": [
+                  "vol_ann",
+                  "beta",
+                  "var95_1d",
+                  "cvar95_1d",
+                  "var95_1m",
+                  "cvar95_1m",
+                  "max_drawdown"
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "value_ref": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "n_obs": {
+                "type": "integer"
+              },
+              "method_key": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "ok",
+                  "insufficient"
+                ]
+              }
+            }
+          }
+        },
+        "var_details": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "var95_1m_hist",
+                "value_ref",
+                "n_windows"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "var95_1m_hist": {
+                  "type": "number"
+                },
+                "value_ref": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "n_windows": {
+                  "type": "integer"
+                }
+              }
+            }
+          ]
+        },
+        "betas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "instrument_id",
+              "beta",
+              "n_obs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "instrument_id": {
+                "type": "string"
+              },
+              "beta": {
+                "type": "number"
+              },
+              "n_obs": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "drawdown": {
+          "type": "array",
+          "maxItems": 261,
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "number",
+                "maximum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "exposures": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "class": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "currency": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "country": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "sector": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "concentration": {
+          "type": "object",
+          "required": [
+            "threshold_pct",
+            "breaches"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "threshold_pct": {
+              "type": "integer"
+            },
+            "breaches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "name",
+                  "share",
+                  "value_ref"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "share": {
+                    "type": "number"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "name",
+              "value_ref",
+              "reason"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value_ref": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "reason": {
+                "enum": [
+                  "real_estate",
+                  "monthly_price",
+                  "insufficient_history"
+                ]
+              }
+            }
+          }
+        },
+        "minimums": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "as_of": "2026-11-23",
+        "betas": [
+          {
+            "beta": 1.16735388,
+            "n_obs": 1106,
+            "instrument_id": "ETH"
+          },
+          {
+            "beta": 1.29008536,
+            "n_obs": 759,
+            "instrument_id": "QQQ"
+          },
+          {
+            "beta": 1.0,
+            "n_obs": 759,
+            "instrument_id": "SPY"
+          }
+        ],
+        "status": "ok",
+        "figures": [
+          {
+            "n_obs": 1106,
+            "value": 0.23163856,
+            "metric": "vol_ann",
+            "status": "ok",
+            "value_ref": null,
+            "method_key": "risk.method.vol_hist"
+          },
+          {
+            "n_obs": 759,
+            "value": 1.12993789,
+            "metric": "beta",
+            "status": "ok",
+            "value_ref": null,
+            "method_key": "risk.method.beta_own_benchmark"
+          },
+          {
+            "n_obs": 1106,
+            "value": 0.01783459,
+            "metric": "var95_1d",
+            "status": "ok",
+            "value_ref": 12459,
+            "method_key": "risk.method.var_hist"
+          },
+          {
+            "n_obs": 1106,
+            "value": 0.02865486,
+            "metric": "cvar95_1d",
+            "status": "ok",
+            "value_ref": 20018,
+            "method_key": "risk.method.cvar_hist"
+          },
+          {
+            "n_obs": 1106,
+            "value": 0.08172835,
+            "metric": "var95_1m",
+            "status": "ok",
+            "value_ref": 57095,
+            "method_key": "risk.method.var_sqrt21"
+          },
+          {
+            "n_obs": 1106,
+            "value": 0.13131304,
+            "metric": "cvar95_1m",
+            "status": "ok",
+            "value_ref": 91734,
+            "method_key": "risk.method.cvar_sqrt21"
+          },
+          {
+            "n_obs": 341,
+            "value": -0.1903173,
+            "metric": "max_drawdown",
+            "status": "ok",
+            "value_ref": null,
+            "method_key": "risk.method.drawdown_own"
+          }
+        ],
+        "drawdown": [
+          [
+            "2026-11-15",
+            -0.1076
+          ],
+          [
+            "2026-11-17",
+            -0.1261
+          ],
+          [
+            "2026-11-19",
+            -0.1472
+          ],
+          [
+            "2026-11-21",
+            -0.1847
+          ],
+          [
+            "2026-11-23",
+            -0.1344
+          ]
+        ],
+        "excluded": [
+          {
+            "key": "RE:2735d3a5-78c6-4b2e-93bf-3dadbd23f5b9",
+            "name": "Terrain à Saly",
+            "reason": "real_estate",
+            "value_ref": 1905613
+          }
+        ],
+        "minimums": {
+          "confidence": 0.95,
+          "month_days": 21,
+          "var_returns": 250,
+          "vol_returns": 60,
+          "beta_returns": 120,
+          "drawdown_days": 30,
+          "lookback_years": 3,
+          "var_overlap_returns": 500
+        },
+        "exposures": {
+          "class": [
+            {
+              "key": "real_estate",
+              "share": 0.4697,
+              "value_ref": 1905613
+            },
+            {
+              "key": "cash",
+              "share": 0.3441,
+              "value_ref": 1395700
+            },
+            {
+              "key": "etf",
+              "share": 0.1404,
+              "value_ref": 569757
+            },
+            {
+              "key": "crypto",
+              "share": 0.0318,
+              "value_ref": 128833
+            },
+            {
+              "key": "momo",
+              "share": 0.014,
+              "value_ref": 56767
+            }
+          ],
+          "sector": [
+            {
+              "key": "real_estate",
+              "share": 0.4697,
+              "value_ref": 1905613
+            },
+            {
+              "key": "cash",
+              "share": 0.358,
+              "value_ref": 1452467
+            },
+            {
+              "key": "broad",
+              "share": 0.0816,
+              "value_ref": 331163
+            },
+            {
+              "key": "tech",
+              "share": 0.0588,
+              "value_ref": 238594
+            },
+            {
+              "key": "crypto",
+              "share": 0.0318,
+              "value_ref": 128833
+            }
+          ],
+          "country": [
+            {
+              "key": "SN",
+              "share": 0.4697,
+              "value_ref": 1905613
+            },
+            {
+              "key": "FR",
+              "share": 0.358,
+              "value_ref": 1452467
+            },
+            {
+              "key": "US",
+              "share": 0.1404,
+              "value_ref": 569757
+            },
+            {
+              "key": "INTL",
+              "share": 0.0318,
+              "value_ref": 128833
+            }
+          ],
+          "currency": [
+            {
+              "key": "XOF",
+              "share": 0.4837,
+              "value_ref": 1962379
+            },
+            {
+              "key": "EUR",
+              "share": 0.3441,
+              "value_ref": 1395700
+            },
+            {
+              "key": "USD",
+              "share": 0.1722,
+              "value_ref": 698590
+            }
+          ]
+        },
+        "var_details": {
+          "n_windows": 1086,
+          "value_ref": 62468,
+          "var95_1m_hist": 0.08941964
+        },
+        "concentration": {
+          "breaches": [
+            {
+              "key": "RE:2735d3a5-78c6-4b2e-93bf-3dadbd23f5b9",
+              "name": "Terrain à Saly",
+              "share": 0.7322,
+              "value_ref": 1905613
+            }
+          ],
+          "threshold_pct": 25
+        }
+      },
+      "etag": "acf7cd205a889599a80fe7a516d7dfb6",
+      "as_of": "2026-11-23T00:00:00+00:00",
+      "not_modified": false
+    }
+  ]
+}

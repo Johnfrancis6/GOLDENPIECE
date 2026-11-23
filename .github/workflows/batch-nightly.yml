@@ -1,0 +1,48 @@
+name: batch-nightly
+
+# Nightly analytics (ARCHITECTURE §4.3, §10.4): series → net worth → risk →
+# exposures → performance → attribution → concentration alerts, all users.
+# Started by pg_cron (ops.dispatch_batch → workflow_dispatch, 02:00 UTC);
+# `schedule` is the backup (skipped when tonight's run already succeeded);
+# a push of the batch code to a build branch runs it once on dev.
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "as-of date YYYY-MM-DD (default today UTC)"
+        required: false
+  schedule:
+    - cron: "41 3 * * *"
+  push:
+    branches: ["build/**"]
+    paths: ["batch/goldenpiece/analytics/**", ".github/workflows/batch-*.yml"]
+
+concurrency:
+  group: batch-dev
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_PROJECT_REF: ynabfjwcdmaxfnppjtla   # goldenpiece-dev (not a secret)
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install "numpy>=2"
+      - name: Analytics (all users)
+        working-directory: batch
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo "::error::secret SUPABASE_ACCESS_TOKEN missing"; exit 1; }
+          args="--job batch-nightly"
+          if [ "${{ github.event_name }}" = "schedule" ]; then args="$args --skip-if-done"; fi
+          if [ -n "${{ inputs.date }}" ]; then args="$args --date ${{ inputs.date }}"; fi
+          python3 -m goldenpiece.analytics $args

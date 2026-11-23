@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - run: pip install "pytest>=8" "jsonschema>=4.23"
+      - run: pip install "pytest>=8" "jsonschema>=4.23" "numpy>=2"
       - name: Fixtures are up to date
         run: |
           python3 shared/fixtures/gen_money.py
@@ -80,5 +80,21 @@ jobs:
           export SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-$GP_SECRET_KEY}"
           test -n "$SUPABASE_URL" && test -n "$SUPABASE_SERVICE_ROLE_KEY"
           GP_CONTRACT=1 deno test --allow-read --allow-env --allow-net _shared/provider/live_contract_test.ts
+      - name: Analytics batch on the local stack (psycopg transport, role batch_writer)
+        working-directory: batch
+        env:
+          DB: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+        run: |
+          pip install "numpy>=2" "psycopg[binary]>=3.2"
+          psql -v ON_ERROR_STOP=1 -q "$DB" <<'SQL'
+          insert into auth.users (id, instance_id, aud, role, email, is_anonymous, created_at, updated_at)
+          values ('00000000-0000-4000-b000-0000000000c4', '00000000-0000-0000-0000-000000000000', 'authenticated',
+                  'authenticated', null, true, now(), now());
+          insert into mkt.fx_daily (d, quote, rate) values (current_date - 800, 'USD', 1.10);
+          select api.demo_start('00000000-0000-4000-b000-0000000000c4', 'diaspora_investor');
+          SQL
+          GP_DB_URL="$DB" python3 -m goldenpiece.analytics --job batch-nightly
+          test "$(psql -tA "$DB" -c "select count(*) from analytics.performance where status = 'ok'")" -ge 1
+          test "$(psql -tA "$DB" -c "select count(*) from ops.recompute_queue")" -eq 0
       - if: always()
         run: supabase stop --no-backup || true

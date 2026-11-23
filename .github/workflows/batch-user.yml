@@ -1,0 +1,44 @@
+name: batch-user
+
+# On-demand recompute for users flagged in ops.recompute_queue (new trade,
+# valuation, debt, linked account). Dispatched by pg_cron every 5 min
+# (ops.dispatch_batch, ≤ 50 users per run). ARCHITECTURE §5, §10.4.
+on:
+  workflow_dispatch:
+    inputs:
+      users:
+        description: "comma-separated user ids"
+        required: true
+  push:   # registers the workflow from a build branch (dispatch needs it); the job is skipped
+    branches: ["build/**"]
+    paths: [".github/workflows/batch-user.yml"]
+
+concurrency:
+  group: batch-user
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_PROJECT_REF: ynabfjwcdmaxfnppjtla   # goldenpiece-dev (not a secret)
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+jobs:
+  users:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install "numpy>=2"
+      - name: Analytics (listed users)
+        working-directory: batch
+        env:
+          USERS: ${{ inputs.users }}
+        run: |
+          echo "$USERS" | grep -Eq '^[0-9a-f-]{36}(,[0-9a-f-]{36})*$' || { echo "::error::bad users input"; exit 1; }
+          python3 -m goldenpiece.analytics --job batch-user --users "$USERS"
