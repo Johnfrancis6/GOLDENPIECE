@@ -471,7 +471,9 @@ parity ≤ 1e-9 ✔ · G7 targets met on dev ✔ · ingest → alert row ≤ 2 s
 
 ### Blocked / defects open
 
-- **GitHub PAT still refused** (`403 Resource not accessible by personal access token`, 18:40 and 18:45 today):
+- **Resolved 22:33 UTC** (Franco fixed the token's permissions): dispatch → GitHub 204, `batch-user` run #3 ok
+  (5 users, 20.8 s), queue empty, `ops.health_check()` ok. Kept below for history.
+- ~~GitHub PAT still refused~~ (`403 Resource not accessible by personal access token`, 18:40 and 18:45 today):
   `ops.dispatch_batch` cannot start `batch-user.yml`; health `dispatch_failed`; deploy-dev smoke test will be red
   again now that the flaky pass is fixed. Franco: give the fine-grained token `goldenpiece-batch` **Repository
   permissions → Actions: Read and write** on GOLDENPIECE (or regenerate and replace Vault `github_dispatch_pat`).
