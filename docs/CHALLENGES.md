@@ -425,3 +425,18 @@ Format: decision → problem → alternative → trade-off → recommendation �
 - **Recommendation:** keep the validated look for the prototype; switch
   to the 1 dp line if an accessibility review asks for it (one token,
   `component.input.restBorder`). Franco decides.
+
+## S3-2 — Home v2 replaces the validated Home v1
+
+- **Decision (Franco 2026-11-23):** "je préfère cette disposition" with
+  a mobile-bank reference → Home v2 (greeting, net-worth card carousel,
+  four round actions, two tiles, latest operations, floating pill bar
+  with labels). Validated "je valide".
+- **Consequences:** the G1 chart, period bar and B1 hero move to a
+  "Patrimoine" sub-page opened from the card; the Marchés section leaves
+  Home (B9 stays in Placements → Marchés); glow C "Halo haut" is no
+  longer used on Home (kept in tokens, unused); C12 bottom bar becomes a
+  floating pill with labels; M14's end frame is the new Home.
+- **Trade-off:** + clearer first screen (D11), faster Home (no chart),
+  brand carried by the card; − net-worth history is one tap further;
+  market quotes no longer on Home.
