@@ -37,6 +37,7 @@ when < 2 use the `.mild` variant (no number). `{heure}` F6 "03:10".
 | reason.long | NEW_PAYEE | `user-plus` | Premier envoi à ce bénéficiaire | First payment to this payee |
 | reason.short | NEW_PAYEE.short | idem | Nouveau bénéficiaire | New payee |
 | reason.long | UNUSUAL_HOUR | `moon` | Opération à {heure}, une heure où vous faites rarement des opérations | Made at {time}, a time when you rarely make payments |
+| reason.long | UNUSUAL_HOUR.analyst | idem | Opération à {heure}, une heure où l'utilisateur fait rarement des opérations | Made at {time}, a time when the user rarely makes payments |
 | reason.short | UNUSUAL_HOUR.short | idem | Heure inhabituelle | Unusual time |
 | reason.long | VELOCITY | `repeat` | {n} opérations en une heure, plus que d'habitude | {n} payments within an hour, more than usual |
 | reason.short | VELOCITY.short | idem | Opérations rapprochées | Many payments in a row |
@@ -74,7 +75,7 @@ features with the largest |z|):
 | feature | f10 | le type d'opération | the type of operation |
 
 Context lines (B15 "Votre appareil") are in the B15 table in §5.
-Bank dashboard (D) shows the same long sentences plus the code.
+Bank dashboard (D) shows the same long sentences plus the code; where the user sentence says "vous" it uses the `.analyst` variant (only UNUSUAL_HOUR today).
 
 ## 2. "?" texts (B12)
 
