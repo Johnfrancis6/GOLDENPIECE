@@ -49,11 +49,12 @@ Files are in English; UI copy is French first, then English.
 | B14 "Votre banque a été prévenue" (full screen; B4 compact + C22 timeline + one advice banner; Appeler ma banque / Fermer; validated without preview) | [blocks/b14-bank-notified.md](blocks/b14-bank-notified.md) | 2026-11-23 |
 | B15 "Pourquoi ?" sheet + G8 score gauge (bar with 40/70 marks and named zones, no number; ≤ 3 reasons with weight in words; "Votre appareil" only when relevant; validated without preview) | [blocks/b15-why-sheet.md](blocks/b15-why-sheet.md) · [charts/g8-score-gauge.md](charts/g8-score-gauge.md) | 2026-11-23 |
 | Entry motion: C17 rings (light overshoot, full rings pulse) and G5 Sankey (hub draws, then bands grow out and saturate) | [foundations/motion.md](foundations/motion.md) · [animated](previews/m-entry-rings-sankey.html) · [frames](previews/m-entry-rings-sankey.png) | 2026-11-23 |
+| **S6 Alerts** (header icon: 1 alert → that alert, ≥ 2 → L1; L1 = open alerts + "Historique des alertes"; history by month in compact rows; shield empty state; L5 once) | [screens/s6-alerts.md](screens/s6-alerts.md) · [preview](previews/s6-alerts.png) | 2026-11-23 |
 | **S5 Spending** (pills Aperçu · Flux · Budgets; one shared month pill; Aperçu hero = G3 value; info banner "N opérations à classer"; Sankey without hub label) | [screens/s5-spending.md](screens/s5-spending.md) · [preview](previews/s5-spending.png) · [200 %](previews/s5-spending-200.png) | 2026-11-23 |
 | **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Spending done (S5 validated 2026-11-23).** Next: **S6 Alerts** (B14, B15 + G8 validated), then Onboarding, Settings, N/W/X/D, M14 (last). Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Spending done (S5 validated 2026-11-23).** Alerts done (S6 validated 2026-11-23). Next: **Onboarding** (B19, B21, B24, S1, T — ask Franco first: design fully or delegate parts, as D10), then Onboarding, Settings, N/W/X/D, M14 (last). Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -66,7 +67,7 @@ Next item: **Spending done (S5 validated 2026-11-23).** Next: **S6 Alerts** (B14
 | D5 | Placements internal navigation: **section pills Portefeuille · Marchés · Risque · Performance** (Franco, 2026-11-23); allocation (P2) is a block of Portefeuille, a row opens P6, the one header action is "+" (add trade / property / debt). |
 | D6 | Bank cards get a **gold sheen** animation (M13): colour in [colour.md](foundations/colour.md) §6, motion in F5. |
 | D7 | Layout follows **Finary's principles** (F3): hero amount on the page (no card), fewer boxes, lists as one card, pills for buttons/chips, no shadows. The gold edge line is for highlighted cards only. |
-| D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
+| D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open (one alert → opens it directly, several → L1; S6 2026-11-23), plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
 | D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
 | D10 | **Accounts section (S3: B2, B3, B17, B20; B22 moves to Spending) is left to the build sessions** (Franco, 2026-11-23): they compose it from validated items (C6 rows, C21 badges, C14 tags, C15 badges, C2 search pill, C13 chips, C9 sheets, B20-style key-value lines from B13, C5 amounts) and report choices in one line (formats.md §7). Design goes on with **Spending (S5)**. |
 | D11 | **Clean, uncluttered screens** (Franco, 2026-11-23, for Placements and after): few elements per screen, one idea per block, details behind a tap ("?", sheet, detail screen) rather than shown at once; when in doubt, remove. |
@@ -231,7 +232,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 2. **Base components:** C1 ✓, C5 ✓, C14 + C15 ✓, C6 + C7 ✓, C12 ✓, C8 + C10 + C11 ✓, C9 ✓, C18 + C19 ✓, C13 + C16 + C17 ✓, C20 ✓, C21 ✓, C22 ✓ (C2-C4 ✓ with the Alerts step).
 3. **Chart base G0**, then G1 + G2 ✓.
 4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
-5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
+5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14 ✓, B15 + G8 ✓, S6 ✓. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
 7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
 8. **Placements:** B10 ✓, B11 ✓, G4 ✓, B12 ✓, G6 ✓, G7 ✓, B18 ✓, S4 ✓ (2026-11-23).

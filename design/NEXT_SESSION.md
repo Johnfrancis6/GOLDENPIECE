@@ -1,4 +1,4 @@
-# GOLDENPIECE design system — Session 3 continuation: Alerts (B14, B15 + G8, S6), then Onboarding, Settings, N/W/X/D, M14
+# GOLDENPIECE design system — Session 3 continuation: Onboarding, then Settings, N/W/X/D, M14
 
 You continue the reference design system of the GOLDENPIECE app (Android personal-finance prototype, fictitious data; reference phone Tecno Spark 50, must stay smooth on low/mid-range hardware) with Franco. Repository Johnfrancis6/GOLDENPIECE, branch `claude/brave-bardeen-g5ro94` (commit and push only there; never merge into main — Franco merges through a pull request when he asks). Answer Franco in French.
 
@@ -18,7 +18,7 @@ Finish the design system so build sessions copy validated files instead of inven
 4. The validated files each item reuses (listed per item below). Do not contradict validated files without Franco's agreement (challenges → docs/CHALLENGES.md "Session 3").
 
 ## Validated so far (2026-11-22/23)
-Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements**, **S5 Spending** (2026-11-23; Sankey hub label removed) (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.37.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
+Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22; screens S2 Home, **S4 Placements**, **S5 Spending** (Sankey hub label removed), **S6 Alerts** with B14, B15 + G8 (2026-11-23); entry motion of rings and Sankey (motion.md) (reference for a full tab: section pills, first-screen check, 200 % check). Tokens v0.37.0. Accounts (S3: B2, B3, B17, B20) is left to build sessions (D10).
 
 ## Measured (do not re-measure unless a value changes)
 - Contrast of every F1 pair (colour.md §7); C21 category colours as bars ≥ 4.0:1 light / ≥ 8.0:1 dark (g3-bars.md); C15 yellow pair reused for the B10 warning tag (8.5:1 dark / 6.3:1 light) — node WCAG script, 2026-11-22/23.
@@ -28,10 +28,10 @@ Foundations F1-F6; components C1-C22; charts G0-G7; blocks B1, B4-B13, B18, B22;
 Tecno Spark 50 screen type/density (assumed LCD); GPU cost of gradients/glow; widget sizes 2×1 / 2×2; G6 candles at 3M (≈ 3 dp bodies) on the phone; G5 Sankey at large font; risk-scale thresholds of B12 (defaults, not validated figure by figure). API gaps to raise: lender name in `get_portfolio.debts`, monthly 5Y candles, `spark_30d`/`change_30d` for Home quotes.
 
 ## Do first
-S5 Spending is validated (screens/s5-spending.md). If this is a new session: greet Franco in French in 3 lines (Spending done; this session continues with Alerts; D11 and D12 apply), then ask the question round for **S6 Alerts** (B14, B15 + G8 validated 2026-11-23 without preview). If S6 questions were already asked in the previous session, ask Franco for his answers first. Franco said "avance sur les autres tâches": keep rounds short; he may validate without preview.
+Spending and Alerts are complete (S5, S6, B14, B15 + G8 validated 2026-11-23). Greet Franco in French in 3 lines (Alerts done; this session is Onboarding, then Settings and the rest; D11 and D12 apply). Then ask **one question first**: design Onboarding fully, or delegate parts to build sessions (as D10 for Accounts) — options A/B/C with a recommended default (A recommended: design B19 step screen, B21 institution picker and S1 flow; delegate B24 single-screen pieces and the T guided tour to build sessions, composed from validated items). Then the first item's question round. Franco often answers "A, A, A" and validates without preview for blocks ("je valide sans preview"); screens still get a preview unless he says otherwise. Animated previews always have "Rejouer" and "Ralenti ×3" buttons.
 
 ## Order (item by item)
-1. Alerts: **B14** "Votre banque a été prévenue" (reuse C22 timeline, B4, B13) → **B15 "Pourquoi ?" sheet + G8 score gauge** (40/70 marks; reuse C15, C9, B12 style) → **S6 Alerts** (D8: no Alertes tab; open-alert header icon, Home strip, past alerts in Settings).
+1. ~~Alerts~~ done (B14, B15 + G8, S6). Was: **B14** "Votre banque a été prévenue" (reuse C22 timeline, B4, B13) → **B15 "Pourquoi ?" sheet + G8 score gauge** (40/70 marks; reuse C15, C9, B12 style) → **S6 Alerts** (D8: no Alertes tab; open-alert header icon, Home strip, past alerts in Settings).
 2. Onboarding: B19 step screen → B21 institution picker (fictitious banks/operators, monograms C21) → B24 single-screen pieces (card-scan viewfinder, persona card, questionnaire question, consent) → S1 → T guided tour (M11).
 3. Settings: B16 grouped list (chevrons allowed only here) → B23 device row → S7.
 4. N notifications (FR/EN, amounts hidden by default), W widgets, X copy FR/EN, D bank dashboard (web, 1280 px).
