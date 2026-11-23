@@ -6,6 +6,8 @@ Postgres port; CI uses `supabase db push` / `supabase test db` instead.
   scripts/sb_api.py query  "<sql>"            run SQL, print JSON result
   scripts/sb_api.py migrate [--dry-run]      apply supabase/migrations not yet recorded
   scripts/sb_api.py test [files...]          run pgTAP files (default supabase/tests/*.sql), rolled back
+  scripts/sb_api.py load-sim [--force]       (re)load simulated-bank templates from the generator (B2);
+                                             a template whose generator version is unchanged is skipped
 
 Project: SUPABASE_PROJECT_REF (default goldenpiece-dev = ynabfjwcdmaxfnppjtla).
 Token: SUPABASE_ACCESS_TOKEN (in build sessions the proxy injects it).
@@ -110,6 +112,27 @@ def tap(path: Path) -> tuple[int, int]:
     return ok, len(fails)
 
 
+def load_sim(force: bool) -> None:
+    sys.path.insert(0, str(ROOT / "batch"))
+    from goldenpiece.generator import sim_templates as st  # noqa: E402
+
+    by_tpl: dict[str, list[tuple[str, str]]] = {}
+    for tid, kind, stmt in st.sql_statements():
+        by_tpl.setdefault(tid, []).append((kind, stmt))
+    for tid, stmts in by_tpl.items():
+        if not force:
+            try:
+                query(stmts[0][1])
+            except RuntimeError as e:
+                if "gp_skip" in str(e):
+                    print(f"{tid}: unchanged")
+                    continue
+                raise
+        body = "\n".join(s for k, s in stmts if k != "check")
+        query("begin;\n" + body + "\ncommit;")
+        print(f"{tid}: loaded ({sum(1 for k, _ in stmts if k == 'entries')} chunks)", flush=True)
+
+
 def main() -> None:
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "query":
@@ -120,6 +143,8 @@ def main() -> None:
         files = [Path(p) for p in sys.argv[2:]] or sorted((ROOT / "supabase/tests").glob("*.sql"))
         bad = sum(tap(f)[1] for f in files)
         sys.exit(1 if bad else 0)
+    elif cmd == "load-sim":
+        load_sim("--force" in sys.argv)
     else:
         sys.exit(__doc__)
 
