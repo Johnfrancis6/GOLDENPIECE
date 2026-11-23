@@ -118,3 +118,16 @@ install on the Tecno, client test script).
 A session that reaches a step whose item is missing marks it blocked in
 CHAIN_LOG, does the rest, and messages Franco in French once.
 
+
+### Visual-build setup status (2026-11-23, Franco: "tout est en place")
+
+- Supabase SMTP (checked by API): host smtp-relay.brevo.com, port 465,
+  sender name GOLDENPIECE. **Check**: the sender e-mail field holds the
+  Brevo SMTP login, not a verified sender address — Brevo may reject it;
+  B6 tests one sign-up e-mail and tells Franco if it fails.
+- Expo token, Sentry token (GitHub secrets), Firebase project + Android
+  app `com.goldenpiece.app`, service-account JSON and
+  `google-services.json` kept by Franco offline (B6/B8 ask him to upload
+  them to Expo credentials / EAS secrets, never to the repo), UptimeRobot:
+  Franco says done (not checkable from a session).
+- **Missing: Tecno Spark 50 specs** (SETUP §2) — B6 asks Franco once.
