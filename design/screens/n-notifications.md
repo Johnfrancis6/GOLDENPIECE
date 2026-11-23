@@ -70,12 +70,12 @@ inserted as shown in the "amount on" column (F6 format, "180 000 F").
 |---|---|---|---|---|---|---|---|---|
 | 1 | Confirm it's you (40-70) | security | C'est bien vous ? | {op_type} {operator} vers {payee} à {time}. L'opération n'est pas bloquée. | {op_type} {operator} de {amount} vers {payee} à {time}. … | title same · "Une opération attend votre confirmation." | Oui, c'est moi · Non, pas moi | B13 |
 | 2 | Reminder (once, +15 min, only if unanswered) | security | Une réponse vous attend | {op_type} {operator} vers {payee} à {time}. C'est bien vous ? | idem with "de {amount}" | title same · "Une opération attend toujours votre réponse." | same as 1 | B13 |
-| 3 | Bank alerted (> 70, or after Non) | security | Votre banque a été prévenue | {op_type} {operator} vers {payee} à {time} signalé à {bank}. Suivez l'analyse dans l'app. | idem with "de {amount}" | "Alerte de sécurité" · "Ouvrez l'application pour suivre l'analyse." | Appeler ma banque | B14 |
+| 3 | Bank alerted (> 70, or after Non) | security | Votre banque a été prévenue | {op_type} {operator} vers {payee} à {time} signalé à {bank}. | idem with "de {amount}" | "Alerte de sécurité" · "Ouvrez l'application pour suivre l'analyse." | Appeler ma banque | B14 |
 | 4a | Bank decision — legitimate | security | Opération confirmée | {bank} a vérifié le {op_type_lower} de {time} : tout est en ordre. | idem with "de {amount}" | "Décision de votre banque" · "Ouvrez l'application pour la voir." | — | B14 (decided) |
 | 4b | Bank decision — fraud | security | Opération bloquée par la banque | {bank} va vous contacter. Ne communiquez jamais votre code. | (no amount) | same as 4a | Appeler ma banque | B14 (decided) |
 | 5a | Budget 80 % | budgets | {category} : 80 % du budget | Il reste 20 % du budget jusqu'au {last_day}. | Il reste {left} jusqu'au {last_day}. | "Budgets" · "Un budget approche de sa limite." | — | D3 category |
 | 5b | Budget 100 % | budgets | {category} : budget atteint | Vous avez utilisé tout le budget de {month}. | Vous avez utilisé les {budgeted} du budget de {month}. | "Budgets" · "Un budget est atteint." | — | D3 category |
-| 6 | Concentration | markets | {asset} : {share} % de vos placements | Au-dessus de votre seuil de {threshold} %. | (no amount) | "Placements" · "Un placement dépasse votre seuil." | — | P8 Concentration |
+| 6 | Concentration | markets | {asset} : {share} % du total | Au-dessus de votre seuil de {threshold} %. | (no amount) | "Placements" · "Un placement dépasse votre seuil." | — | P8 Concentration |
 | 7 | Learning finished | security (silent) | Les alertes d'anomalies sont actives | Une opération inhabituelle vous sera désormais signalée. | — | same (no personal data) | — | Home (B5 finished card) |
 
 Rules:
@@ -146,7 +146,7 @@ data messages (`type = cancel`, `alert_id`).
 | reminder.text | {op_type} {operator} vers {payee} à {time}. C'est bien vous ? | {op_type} {operator} to {payee} at {time}. Was this you? |
 | reminder.public | Une opération attend toujours votre réponse. | A payment is still waiting for your answer. |
 | alerted.title | Votre banque a été prévenue | Your bank has been notified |
-| alerted.text | {op_type} {operator} vers {payee} à {time} signalé à {bank}. Suivez l'analyse dans l'app. | {op_type} {operator} to {payee} at {time} reported to {bank}. Follow the review in the app. |
+| alerted.text | {op_type} {operator} vers {payee} à {time} signalé à {bank}. | {op_type} {operator} to {payee} at {time} reported to {bank}. |
 | alerted.public | Alerte de sécurité · Ouvrez l'application pour suivre l'analyse. | Security alert · Open the app to follow the review. |
 | action.call | Appeler ma banque | Call my bank |
 | legit.title / text | Opération confirmée / {bank} a vérifié le {op_type_lower} de {time} : tout est en ordre. | Payment confirmed / {bank} checked the {op_type_lower} at {time}: everything is fine. |
@@ -157,7 +157,7 @@ data messages (`type = cancel`, `alert_id`).
 | budget100.title / text | {category} : budget atteint / Vous avez utilisé tout le budget de {month}. | {category}: budget reached / You have used all of your {month} budget. |
 | budget100.amount | Vous avez utilisé les {budgeted} du budget de {month}. | You have used your {budgeted} {month} budget. |
 | budget.public80 / public100 | Un budget approche de sa limite. / Un budget est atteint. | A budget is close to its limit. / A budget has been reached. |
-| conc.title / text | {asset} : {share} % de vos placements / Au-dessus de votre seuil de {threshold} %. | {asset}: {share}% of your investments / Above your {threshold}% threshold. |
+| conc.title / text | {asset} : {share} % du total / Au-dessus de votre seuil de {threshold} %. | {asset}: {share}% of total / Above your {threshold}% threshold. |
 | conc.public | Placements · Un placement dépasse votre seuil. | Investments · An investment is above your threshold. |
 | learning.title / text | Les alertes d'anomalies sont actives / Une opération inhabituelle vous sera désormais signalée. | Anomaly alerts are on / We'll now tell you about any unusual payment. |
 | group.summary | {n} notifications | {n} notifications |
@@ -171,4 +171,4 @@ Server alert pipeline (L2/L3 events), budget job, concentration job,
 learning job; S7 Notifications group; B13, B14, D3, P8, B5 targets;
 guided tour (T) still image; widgets (W) refresh on push.
 
-Validation: 2026-11-23.
+Validation: 2026-11-23. Copy shortened by the X length check (2026-11-23): bank-alerted text without "Suivez l'analyse dans l'app." (≤ 90 characters), concentration title "{asset} : {share} % du total" (≤ 40 characters with the longest asset name).
