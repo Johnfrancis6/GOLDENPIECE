@@ -57,6 +57,7 @@ Files are in English; UI copy is French first, then English.
 | **N Notifications** (3 channels Sécurité · Budgets · Marchés; 7 types; lock screen = general text; Oui / Non → unlock → B13 pre-selected; Budgets/Marchés ≤ 1 per day, quiet 22:00-07:00; amounts hidden by default) | [screens/n-notifications.md](screens/n-notifications.md) · [preview](previews/n-notifications.png) | 2026-11-23 |
 | **W Widgets** (Patrimoine 2×2 with 30-day line, Patrimoine 2×1, Budget, Alertes; amounts "••• F" by default, config switch + unlock; follows system theme) | [screens/w-widgets.md](screens/w-widgets.md) · [preview](previews/w-widgets.png) | 2026-11-23 |
 | **X Copy FR/EN** (one file, wins over item tables; reason codes long + short, feature names, "?" texts for 20 figures, C8/C10/C11/C18/C19 state messages; 836 strings measured at 360 dp, 100 %/200 %, 0 over) | [copy/fr-en.md](copy/fr-en.md) · [length check](copy/check/) | 2026-11-23 |
+| **M14 App opening "Le plan"** (from Franco's Deel reference: dot draws coin + G over dashed guides, outline fills with the ember accent, GOLDENPIECE rises with a light bounce, 300 ms hold, mark → Home card, Home builds; 4.3 s, cold start only; warm start 320 ms fade; reduced motion 150 ms fade) | [foundations/motion.md §4b](foundations/motion.md) · [animated](previews/m14-app-opening-plan.html) · [key frames](previews/m14-app-opening-keyframes.png) | 2026-11-23 |
 | **D Bank dashboard** (1280 px, light default; queue 420 + detail master-detail, decision bar pinned, J/K/L/F/C shortcuts; Réglages du modèle table + change log; login/TOTP, Ops, /legal, dark delegated) | [screens/d-bank-dashboard.md](screens/d-bank-dashboard.md) · [preview](previews/d-bank-dashboard.png) | 2026-11-23 |
 | **S1 Onboarding** (flow map: 5 dotted steps Langue · Pays · Compte · Sécurité · Accords; demo branch via persona; O13-O15 offered later from Home; O3 country tap = next; O12 one consents list, controls right, service required; O18 biometric first, PIN fallback) | [screens/s1-onboarding.md](screens/s1-onboarding.md) · [preview](previews/s1-onboarding.png) | 2026-11-23 |
 | **S6 Alerts** (header icon: 1 alert → that alert, ≥ 2 → L1; L1 = open alerts + "Historique des alertes"; history by month in compact rows; shield empty state; L5 once) | [screens/s6-alerts.md](screens/s6-alerts.md) · [preview](previews/s6-alerts.png) | 2026-11-23 |
@@ -64,7 +65,7 @@ Files are in English; UI copy is French first, then English.
 | **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Onboarding and Settings complete** (B19, B21, S1; B16, B23, S7 — 2026-11-23; B24 and T delegated, D13). **N notifications, W widgets, X copy, D bank dashboard and Home v2 (S2, C12 pill bar) validated** (2026-11-23). Next: **M14 (Franco gathers references first) app opening (last)**. Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+**Design system complete (2026-11-23).** Every inventory item is validated; M14 app opening was the last (2026-11-23). Delegated to build sessions: S3 Accounts (D10), B24 Onboarding pieces and T guided tour (D13), D login/TOTP, Ops, /legal and dark theme. Rules D11 (clean screens) and D12 (no overlapping text) still apply to everything the build sessions compose.
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -190,7 +191,7 @@ are those of the brief §3.
 | M11 | Guided tour: spotlight + bubble | |
 | M12 | Status timeline advancing (L3) | |
 | M13 | **Gold sheen on bank cards** (D6): a gold light band sweeps once across the card | O13d (card confirmed), bank cards wherever shown (S3), tour |
-| M14 | **App opening** (Franco 2026-11-22): animation from splash to Home | to design **at the end** of the design system |
+| M14 | **App opening** (Franco 2026-11-22): animation from splash to Home | **validated 2026-11-23** → [foundations/motion.md §4b](foundations/motion.md) |
 
 Every animation has a reduced-motion variant and lasts ≤ 5 s.
 
@@ -250,4 +251,4 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
-12. M14 App opening (last, Franco 2026-11-22).
+12. M14 App opening (last, Franco 2026-11-22) — **validated 2026-11-23: design system complete.**
