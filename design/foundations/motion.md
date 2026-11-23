@@ -68,7 +68,7 @@ a dot draws the logo as construction lines, the outline fills with one
 coloured accent piece, a blank card fills, the screen builds around it).
 Source: [previews/m14-app-opening-plan.html](../previews/m14-app-opening-plan.html)
 (Web Animations API, "Rejouer" / "Ralenti ×3", dark with an open alert +
-light without). Mark updated to the app icon (direction A) on 2026-11-23 at Franco's request. Key frames: [previews/m14-app-opening-keyframes.png](../previews/m14-app-opening-keyframes.png).
+light without). Mark updated to the app icon (direction A) on 2026-11-23 at Franco's request — **validated** ("Oui, je valide"). Key frames: [previews/m14-app-opening-keyframes.png](../previews/m14-app-opening-keyframes.png).
 Token: `motion.appOpening`.
 
 | ms | Step | Easing | Skia note |

@@ -5,7 +5,7 @@ You continue the reference design system of the GOLDENPIECE app (Android persona
 ## State (2026-11-23)
 **The design system is complete.** M14 app opening "Le plan" was validated on 2026-11-23 (light bounce on the wordmark, 300 ms hold, 4.3 s; foundations/motion.md §4b, tokens v0.54.0, key frames previews/m14-app-opening-keyframes.png). The Home "Plus gros poste" ring was fixed the same day (C17 Mini 44 dp; it was clipped by flex shrink).
 
-**App icon chosen (2026-11-23):** direction A "Cœur doré" (8 translucent coins on a ring + gold sparkle; original, not the third-party logo Franco showed), foundations/icons.md §11, tokens `icon.app` (v0.55.0); M14 now draws this mark (dot draws the ring, second dot the sparkle, coins drop, sparkle turns gold). Nothing is open.
+**App icon chosen (2026-11-23):** direction A "Cœur doré" (8 translucent coins on a ring + gold sparkle; original, not the third-party logo Franco showed), foundations/icons.md §11, tokens `icon.app` (v0.55.0); M14 now draws this mark (dot draws the ring, second dot the sparkle, coins drop, sparkle turns gold). Nothing is open in design. M14 adapted to the mark: validated. Backend contract changes needed before the visual build: BACKEND_NEEDS.md.
 
 A new session here only answers Franco's design questions; app work belongs to build sessions (HANDOFF.md "What build sessions do first").
 

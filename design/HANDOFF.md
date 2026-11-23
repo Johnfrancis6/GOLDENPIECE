@@ -79,6 +79,8 @@ on a low/mid-range Android phone (Tecno Spark 50).
 
 **Design system complete (2026-11-23).** M14 was the last item. Nothing is left to design; what remains goes to build sessions (below).
 
+**Backend first:** [BACKEND_NEEDS.md](BACKEND_NEEDS.md) lists 10 API contract changes the validated screens need (get_home accounts/top mover/top category/uncategorised/to-confirm counts, N push payload, debt lender, 5Y monthly candles, dashboard fields). A backend session makes items 1-6 before the first visual build session.
+
 **What build sessions do first** (in this order):
 1. Copy `tokens.json` (v0.54.0) into the app theme as is; load Poppins GP from `fonts/`; never invent a value missing from it — raise it instead.
 2. Build the foundations and components (F1-F6, C1-C22, G0-G8) as a gallery screen and check it on the Tecno Spark 50: screen type/density, glow C banding, gradients' GPU cost, G6 candles at 3M, ≥ 45 fps charts, ≥ 55 fps M14.
