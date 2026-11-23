@@ -132,8 +132,8 @@ const fr = {
   'O18.title': 'Entrez votre code',
   'O18.sub': 'Pour ouvrir GOLDENPIECE',
   'O18.forgot': 'Code oublié ?',
-  'pin.wrong': 'Code incorrect. {n} essai(s) restant(s).',
-  'pin.locked': 'Trop d’essais. Réessayez dans {t}.',
+  'pin.wrong': 'Code incorrect. Il vous reste {n} essais.',
+  'pin.locked': 'Trop d’essais. Réessayez dans {t}',
   'pin.relogin': 'Trop d’essais. Reconnectez-vous avec votre e-mail.',
   // Tabs
   'tab.home': 'Accueil',
@@ -188,6 +188,22 @@ const fr = {
   'op.card': 'Carte',
   'op.transfer': 'Virement',
   'op.momo': 'Mobile money',
+  // UI kit (B6.2)
+  close: 'Fermer',
+  clear: 'Effacer',
+  'password.show': 'Afficher le mot de passe',
+  'password.hide': 'Masquer le mot de passe',
+  'key.delete': 'Effacer',
+  'key.fingerprint': 'Empreinte digitale',
+  'pin.a11y': 'Code, {n} chiffres sur {N} saisis',
+  'toast.undo': 'Annuler',
+  'toast.queued': 'En attente de connexion',
+  'toast.conflict': 'Modifié sur un autre appareil',
+  'state.loading': 'Chargement',
+  'failed.title': 'Connexion instable',
+  'failed.text': 'Impossible de charger {what} pour le moment. Vérifiez votre connexion, puis réessayez.',
+  'failed.retry': 'Réessayer',
+  'chart.empty': 'Données insuffisantes',
 };
 
 type Key = keyof typeof fr;
@@ -303,7 +319,7 @@ const en: Record<Key, string> = {
   'O18.title': 'Enter your code',
   'O18.sub': 'To open GOLDENPIECE',
   'O18.forgot': 'Forgot your code?',
-  'pin.wrong': 'Wrong code. {n} attempt(s) left.',
+  'pin.wrong': 'Wrong code. {n} attempts left.',
   'pin.locked': 'Too many attempts. Try again in {t}.',
   'pin.relogin': 'Too many attempts. Sign in again with your email.',
   'tab.home': 'Home',
@@ -357,6 +373,22 @@ const en: Record<Key, string> = {
   'op.card': 'Card',
   'op.transfer': 'Transfer',
   'op.momo': 'Mobile money',
+  // UI kit (B6.2)
+  close: 'Close',
+  clear: 'Clear',
+  'password.show': 'Show password',
+  'password.hide': 'Hide password',
+  'key.delete': 'Delete',
+  'key.fingerprint': 'Fingerprint',
+  'pin.a11y': 'Code, {n} of {N} digits entered',
+  'toast.undo': 'Undo',
+  'toast.queued': 'Waiting for connection',
+  'toast.conflict': 'Changed on another device',
+  'state.loading': 'Loading',
+  'failed.title': 'Unstable connection',
+  'failed.text': "We can't load {what} right now. Check your connection, then try again.",
+  'failed.retry': 'Try again',
+  'chart.empty': 'Not enough data',
 };
 
 export const STRINGS = { fr, en } as const;

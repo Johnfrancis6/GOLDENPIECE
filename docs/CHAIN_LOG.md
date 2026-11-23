@@ -563,3 +563,51 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 ### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
 
 `create_session` was refused (lineage depth 8): Franco starts B6.2 by hand. PR #11 (draft) holds all B6 parts.
+
+---
+
+## B6.2 — UI kit · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by Franco by hand (chain depth reset).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. API.md rows for the B6.1 RPCs (`sync_transactions`, `save_questionnaire`, `update_settings`, `record_security_event`, `apply_mutations` with its real `{results[…]}` shape, `bootstrap` additions); §2.10/§2.11 updated. CI job **`app`** (npm ci, jest, tsc, expo lint) | `docs/API.md`, `.github/workflows/ci.yml` | done |
+| 2. Root layout: Poppins GP via expo-font, ThemeContext (system), LangContext (device language), reduced motion, SafeArea, toasts, splash hold; `/` redirects to `/gallery` until B6.3. **Web preview works**: `npx expo export -p web` + Playwright at 360 × 800, scale 1, no console errors | `app/src/app/_layout.tsx`, `index.tsx` | done |
+| 3. `Txt` (F2 scale, tones, `fixed` for graphics, `maxFontSizeMultiplier`), `Icon` (Lucide map, one import per glyph, absolute stroke), `Button` C1 (5 variants, large/small, loading spinner + reduced-motion dots, press scale 0.97, 48 dp hit slop), `IconButton`, `TopBar` C12 sub-page, `StepDots` C17, `StepScreen` B19 (enter motion, 200 % = 64 dp circle + scroll under 40 dp fade, pinned buttons) | `app/src/ui/{base,icons,Button,TopBar,StepScreen}.tsx` | done, screenshots |
+| 4. `Card` C7 (plain / tappable / highlighted glow edge / list), `ListRow` C6 (value stacks under the title at ≥ 150 % font), `ListCard` (inset hairlines), `Switch` / `Checkbox` / `Radio` / `ChoiceList` / `SwitchRow` C16, `Input` C2 (field, password + strength word, search pill, error on blur by caller), `Banner` C8 (action wraps under the text at large font) | `app/src/ui/{Card,Choice,Input,Banner}.tsx` | done, screenshots |
+| 5. `PinDots` C3 (fill pop, shake −8/+7/−5/+3/0 over 360 ms, red dots, lock 40 %), `PinMessage` (18 dp reserved), `CodeBoxes` (e-mail code), `Keypad` C4 (pin / code / amount, long-press delete clears), `Sheet` C9 (short ≤ 60 % / tall 92 %, drag 1:1 down, 30 % or 1000 dp/s dismiss, snap back, scrim, back button, footer hairline when scrolled, reduced motion fade), `SheetOption`, `ToastProvider`/`useToast` C11 (unfold 0.12 → 1, 4 s / 8 s with TalkBack + action), `SkeletonBar`/`SkeletonIcon`/`SkeletonRow` C18 (shared 2.8 s wifi-arc clock), `EmptyState` C19 (piggy bank) + `FailedState` (wifi + "!"), `Ring` C17 (backOut 0.9 sweep, full-ring pulse), `InstitutionBadge`/`CategoryBadge`/`ProfileCircle` C21, `Sparkline` G2 | `app/src/ui/{Pin,Sheet,Toast,Loading,Data}.tsx` | done, screenshots |
+| 6. Dev gallery `/gallery` (+ `/gallery/step?v=O2\|O5\|O10strong\|O10weak\|O10secret\|O10none\|O17`), query `scheme`, `lang`, `scale` (simulated font scale on web), `reduced`, `open=sheet\|tallsheet\|toast` | `app/src/app/gallery/`, `app/src/dev/GalleryFrame.tsx` | done |
+| Screenshots (dark, light, 200 %, B19 steps, sheets, toast) | `docs/screens/b6/b6.2-*.png` | in PR #11 |
+
+Checks: `cd app && npx jest` → **50 passed** (5 new: badges, ring states, token refs used by the kit resolve to colours);
+`npx tsc --noEmit` clean; `npx expo lint` clean (React Compiler rules: Animated values held with `useState(() => …)[0]`).
+
+### Measured
+
+- Web export: entry bundle 1.1 MB (unminified-size report of Metro, all routes); gallery renders with no console error in Chromium.
+- 200 % font (simulated on web): rows stack the amount under the title, B19 shrinks its icon circle to 64 dp and scrolls
+  under the fade, buttons stay pinned and wrap, banners wrap their action; ring labels and keypad digits keep their size.
+- Not measured: fps / Tecno (no device yet — B6.5).
+
+### Decisions [B6.2] (one line each)
+
+- Routes live in **`app/src/app/`** (Expo Router's `src/app` convention, `app/AGENTS.md`), not `app/app/` as the B6 plan said.
+- RN `Animated` (+ react-native-svg for rings, sparklines, skeleton arcs, illustrations) instead of Reanimated/Skia: no new
+  native dependency in B6; B8 charts (G1, G3-G8) may add Skia/Victory Native when the dev build exists.
+- Sheet drag uses `PanResponder` (gesture-handler is not a direct dependency); revisit with Reanimated if the Tecno drops frames.
+- Lucide 1.x renamed `fingerprint` → `fingerprint-pattern`; the icon map keeps the design name `fingerprint`.
+- `pin.wrong` copy aligned with the design ("Code incorrect. Il vous reste {n} essais.").
+- Mini ring (44 dp / 6 / 11) is in components/chips-choice-progress.md §3.1 but not in tokens: taken from the doc.
+- Empty-state coin shapes (stack of 3, standing coin, flat coin) drawn from the C19 description; no SVG source exists in design/.
+- `/` redirects to the gallery until B6.3 builds the phase machine.
+
+### Defects open
+
+- GitHub PAT still refused (`health.dispatch = failing`, unchanged).
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5.
+- Brevo sign-up e-mail not yet tested (B6.3 step 4).
+
+### Next: B6.3 — Onboarding (same branch, plan above unchanged)

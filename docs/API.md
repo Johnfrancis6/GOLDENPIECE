@@ -143,7 +143,7 @@ Size ≈ 2.5 KB; `not_modified` most opens.
 
 | Call | Purpose |
 |---|---|
-| `api.update_settings({ref_currency, language, hide_amounts_in_push, data_saver, lock_delay_s, notif_prefs{security, budgets, markets}})` | settings |
+| `api.update_settings(p_client_id, {ref_currency, language, country, timezone, hide_amounts_in_push, data_saver, lock_delay_s, notif_prefs{security, budgets, markets}, first_name})` | settings (built B6, §6) |
 | `api.list_devices()` / Edge `account-revoke-device({device_id})` | devices list, remote sign-out |
 | `api.record_security_event({type, details})` | app-side events (whitelist: pin_failed, settings_changed, device_security_changed, sign_out) |
 | `api.register_push_token({device_id, token})` | push |
@@ -155,7 +155,7 @@ Size ≈ 2.5 KB; `not_modified` most opens.
 ### 2.11 Offline replay
 
 `api.apply_mutations(p_items jsonb)` — `[{client_id, rpc, args}]` (≤ 20;
-`rpc` ∈ set_category, upsert_rule, delete_rule, upsert_budget,
+`rpc` ∈ (built in B6: update_settings, upsert_debt, save_questionnaire; B7/B8 add) set_category, upsert_rule, delete_rule, upsert_budget,
 upsert_category, add_trade, upsert_real_estate, add_valuation,
 upsert_debt, update_settings) → `[{client_id, status:
 applied|duplicate|conflict|rejected, reason_key?, current?}]`.
@@ -423,6 +423,12 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | Edge `notify` (cron secret) `{push_id}` → reads `api.notify_get`, sends the N data message (Expo push **stubbed until B8**: status `stub`/`no_token`), `api.notify_done` | B5 | `notify_payload.json` |
 | Edge `categorise-llm` (cron secret, pg_cron `gp-categorise-llm` */5 → `ops.cron_llm`) → `{labels, updated}`; service-role RPCs `llm_backlog(p_limit ≤ 40)`, `llm_apply(p_items)`, `llm_job(...)`; pseudonymised labels (§9.4), consent `ai_categorisation` (demo personas count as consenting) | B5 | — |
 | Batch: `analytics.refresh_learning(user)`, `analytics.refresh_behaviour(user)` (nightly, `scoring_step.py`), Isolation Forest training (Sunday), G7 evaluation (nightly → `ops.model_eval`); pg_cron `gp-alerts` (every minute: reminders, escalation, simulated analyst, held notifications), `gp-rule-tuning` (Mon 04:17) | B5 | — |
+| `api.sync_transactions(p_cursor, p_limit ≤ 500, default 200)` → `{items[§2.3 row + account_id, row_version, updated_at, amount_ref, alert_id], next_cursor '<updated_at>\|<id>', has_more, ref_currency}` (keyset ascending by `(updated_at, id)` for first and incremental syncs; rows booked in the last 24 months; bad cursor → `INVALID sync.bad_cursor`) | B6 | — |
+| `api.save_questionnaire(p_section 'income'\|'goals'\|'risk'\|'habits', p_answers object ≤ 4 KB, p_version ≥ 1)` → `{ok, risk_profile?}` (risk: `r1..r5` each 1-5 → `profiles.risk_profile` = rounded mean; upsert per section) | B6 | `questionnaire.json` |
+| `api.update_settings(p_client_id, p_settings)` → `{status: applied, row_version}` (idempotent by client id; keys `ref_currency, language, country, timezone, hide_amounts_in_push, data_saver, lock_delay_s, notif_prefs` (merged), `first_name`; other key → `INVALID settings.invalid`; writes a `settings_changed` security event) | B6 | — |
+| `api.record_security_event(p_type, p_details ≤ 1 KB, p_device_id?)` → `{ok}` (whitelist `pin_failed, settings_changed, device_security_changed, sign_out`; 30/user/hour) | B6 | — |
+| `api.apply_mutations(p_items[≤ 20 {client_id, rpc, args}])` → `{results[{client_id, status: applied\|duplicate\|conflict\|rejected, result? (applied/duplicate), current? (conflict), reason_key? (rejected)}]}` (each item in its own sub-transaction; B6 rpcs: `update_settings {settings}`, `upsert_debt {id, name, …, base_version}`, `save_questionnaire {section, answers, version}`; B7/B8 add theirs) | B6 | — |
+| `api.bootstrap` additions (B6): `profile.first_name`, `notif_prefs`, `row_version`, `questionnaire{<section>: {version}}` | B6 | `bootstrap.json` |
 
 
 Notes (B2):
