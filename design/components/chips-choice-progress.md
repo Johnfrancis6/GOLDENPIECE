@@ -47,6 +47,7 @@ TalkBack: native switch/checkbox/radio roles with state.
 | Size | Ring | Stroke | Label | Where |
 |---|---|---|---|---|
 | Row | 52 dp | 6 | 11 | budget list (D3, B6) |
+| Mini | 44 dp | 6 | 11 | Home "Plus gros poste" tile, next to the amount (never shrinks: flex none) |
 | Tile | 64 dp | 7 | 13 | Home budget tiles, 2 per row (B6 compact) |
 | Learning | 56 dp | 7 | 12 | B5 card ("12/30") |
 
