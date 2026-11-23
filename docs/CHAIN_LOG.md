@@ -561,3 +561,5 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 | **B6.5 Device + close** | 1. Brand mark export (icon, adaptive, monochrome, splash, `ic_stat_gp`) + M14 opening (motion.md §4b, reduced motion). 2. Android dev build (EAS with `EXPO_TOKEN` or `expo prebuild` + Gradle in CI) installable APK. 3. Measurements: cold start p50 (needs Franco's Tecno — ask once in French if no device), airplane-mode test on Home, tour offline. 4. CHAIN_LOG B6 summary, PR ready, create **B9.1** (new branch `build/b9-bank-dashboard` from this one, plan B9 by block and step first). |
 
 ### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
+
+`create_session` was refused (lineage depth 8): Franco starts B6.2 by hand. PR #11 (draft) holds all B6 parts.

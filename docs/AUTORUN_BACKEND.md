@@ -120,6 +120,13 @@ automatiquement".
 5. Questions for Franco (French) are asked once, by the part that needs
    the answer; the part marks the step blocked and continues.
 
+6. **Chain depth limit**: a session started by another session can create
+   at most 8 generations; then `create_session` is refused ("lineage
+   depth 8"). The refused part then tells Franco in French to start the
+   next part himself from the Claude app (new session on this repository,
+   branch named, prompt given verbatim). A session Franco starts by hand
+   resets the count.
+
 ## Visual build sessions (B6 → B10) — extra rules
 
 - The design is **validated and final**: copy `design/` (tokens.json
