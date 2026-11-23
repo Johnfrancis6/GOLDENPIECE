@@ -549,7 +549,7 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 
 ### Defects open
 
-- GitHub PAT still refused (`health.dispatch = failing`, unchanged from B5).
+- ~~GitHub PAT still refused~~ fixed by Franco (B5 note; `health.dispatch = ok` checked 2026-11-23 22:50).
 - Tecno Spark 50 specs still missing (SETUP §2) → needed only by B6.5.
 - API.md §2.11 / §6 rows for the 5 new RPCs not yet written (B6.2 step 1).
 
@@ -565,3 +565,6 @@ Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
 ### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
 
 `create_session` was refused (lineage depth 8): Franco starts B6.2 by hand. PR #11 (draft) holds all B6 parts.
+Fix after B6.1 (CI): `scoring.test.sql` set `demo_persona = 'persona_dakar_salaried'`, a template that exists on dev
+(generator) but not on CI's empty local stack (templates load after pgTAP) → FK error, "planned 49 ran 46" on PRs #10
+and #11. The test now inserts the template row itself (`on conflict do nothing`); 49/49 on dev.
