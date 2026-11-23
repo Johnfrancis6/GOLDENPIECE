@@ -477,6 +477,13 @@ create table analytics.attribution (
 );
 ```
 
+As built in B4: `portfolio_daily.flow_local_minor` (local-currency flow, for the currency effect);
+`risk_metrics.metric` also takes `'excluded'` (one row per instrument / real estate left out of the figures:
+`scope` = instrument id or `RE:<uuid>`, `value_ref_minor` = its value, `method` = `risk.excluded.<reason>`);
+`portfolio_daily.instrument_id` = instrument id, `CASH:<ccy>` (bank + mobile money per currency) or `RE:<uuid>`;
+`ops.recompute_queue.dispatched_at`. Retention applied by the batch: portfolio/networth 2 years, others the
+latest 2 `as_of`.
+
 ### 2.8 Simulated bank (`sim`)
 
 ```sql

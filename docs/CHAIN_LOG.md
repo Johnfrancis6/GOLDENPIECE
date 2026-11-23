@@ -292,3 +292,81 @@ Start from branch `build/b3-market-data`. Market history is in `mkt.bars_daily` 
 excluded from risk via `in_risk=false`), FX history in `mkt.fx_daily` (base EUR, from 2020; XOF/XAF via the peg).
 Demo trades are now priced from real closes. First check the 3-day quotes criterion (above), then the PAT in Vault
 (`github_dispatch_pat`, present) for `dispatch-batch`. `batch_writer` needs LOGIN + password (B1 note).
+
+---
+
+## B4 — Batch analytics · 2026-11-23 · branch `build/b4-batch-analytics` · PR #9
+
+### Done
+
+| Item (BUILD_PLAN B4) | Where | State |
+|---|---|---|
+| Finance math: TWR (flows: buys at start of day, sells at end), IRR (Newton ≤ 50 → bisection, period rate under 1 year), vol, beta, historical VaR/CVaR 95 % 1d, 1-month = √21 (C5), overlapping 21-day check, drawdown, attribution + currency effect | `batch/goldenpiece/analytics/finance.py`; hand-checked cases `batch/tests/test_finance.py` (12) | done |
+| Pipeline: `portfolio_daily` (instruments, `CASH:<ccy>`, `RE:<id>`), `networth_daily` (+ `by_class`), risk (current holdings × 3 years of prices, ARCHITECTURE §14 minimums, excluded list), drawdown (own series), exposures (class/currency/country/sector over all assets), performance 1M/YTD/1Y/ITD, attribution (instrument + class), concentration alerts | `pipeline.py`; synthetic end-to-end tests `test_pipeline.py` (5) | done, live on dev |
+| DB transports: Management API (GitHub Actions + sessions; `set role batch_writer` on every call) and psycopg (`GP_DB_URL`, local CI) | `analytics/db.py` | done |
+| `batch-nightly.yml` (pg_cron dispatch + `schedule` 03:41 UTC backup with `--skip-if-done` + push on build branches), `batch-user.yml` (dispatch with user list; `schedule` every 15 min `--queue` backup) | `.github/workflows/` | done; nightly run #1 green in Actions |
+| Dispatch via pg_cron + PAT in Vault | `ops.dispatch_batch()` (pg_net → GitHub REST), cron `gp-batch` */5, `ops.app_config.batch` {repo, ref, …}; responses logged as `ops.job_runs` job `dispatch-batch` | built; **refused by GitHub (403), see Blocked** |
+| Recompute queue | triggers on `core.trades`, `real_estate_valuations`, `debts`, `accounts` | done (a demo clone queues itself) |
+| `api.get_risk`, `api.set_concentration_threshold`, `api.get_performance`, `api.get_performance_custom` (SQL, `core.performance_between`, `core.irr`) | migration `20261127000200` | done |
+| Also built (API.md §5 owners B3/B4): `api.get_portfolio`, `api.upsert_debt` (#7 lender), `api.get_home` (#1-#5), `core.positions_v` (B1 deferral), `core.networth_live`, money helpers `core.conv_minor/per_eur/ccy_exp` | same | done |
+| Tests | pgTAP `analytics.test.sql` (33); JSON Schemas `get_home/get_portfolio/get_risk/get_performance(_custom)/upsert_debt.request` with live examples; CI `db` job runs the batch on the local stack (psycopg) | green |
+
+### Fixes of earlier work
+
+- **`ops.health_check` crashed (22P02) as soon as any check failed** (B1/B3): `failing := failing || 'x'` parses `'x'`
+  as an array literal. Never seen because nothing had failed yet. Migration `20261127000400` (typed literals).
+
+### Measured (2026-11-23, dev, 3 demo clones: Dakar XOF, Abidjan XOF, diaspora EUR)
+
+- **Nightly run in GitHub Actions: 16.3 s end to end** (job 28 s; load of market data 11.5 s, ≈ 1.5-2 s per user,
+  16 API calls) → criterion "≤ 15 min" met with large margin (≈ 450 users at this rate [extrapolated]).
+- **Custom period in SQL: 4-33 ms server side** (≤ 1 year × ≤ 3 instruments; criterion ≤ 300 ms met); RPC round trip
+  from the session ≈ 460 ms (network). Parity batch (Python) vs SQL on 12 user × period cases: TWR/IRR |Δ| ≤ 2e-6
+  (minor-unit rounding of stored values), P/L ± 1 minor unit.
+- Payloads (gzip on the wire): `get_risk` 1.8 KB, `get_performance` 0.5 KB, `get_portfolio` 0.7 KB, `get_home` 1.5 KB,
+  custom 0.4 KB (API.md assumed 4 / 2.5 / 4 / 2.5 KB).
+- Diaspora persona (EUR): vol 23.2 %, β 1.13, VaR 1d 1.78 % (124.59 €), 1M √21 8.17 %, overlapping 1M 8.94 %
+  (1 086 windows), max drawdown −19.0 %; 1Y TWR 17.8 %, IRR 20.8 %, currency effect +7.4 pts (USD assets, EUR ref).
+- Demo clone 149-678 ms in the DB with the new triggers (unchanged vs B2/B3).
+- Storage: `portfolio_daily` 1.2 MB for 3 users (≈ 0.4 MB/user/2 years); DB 46 MB.
+- Tests: pgTAP on dev **462/462** (analytics 33 + 429 earlier); pytest 303 passed (+7 live skipped); CI #9 green
+  (python, deno, db incl. local batch).
+
+### Decisions / assumptions
+
+- Dispatch is SQL (pg_net) instead of an Edge `dispatch-batch` (PAT stays in the DB, one hop less) [mine].
+- Batch DB access through the **Management API** with the existing `SUPABASE_ACCESS_TOKEN` secret and
+  `set role batch_writer` per call — so `batch_writer` keeps NOLOGIN and no new password secret is needed (B1 note
+  superseded) [mine]. Each user's writes are one implicit transaction.
+- Performance and drawdown cover market instruments only; real estate counts in net worth, exposures and
+  concentration (copy `concentration.limits`); debts = current balance from their start date (no amortisation
+  history); cash history = current balance minus later booked movements [mine].
+- Risk calendar = union of the included instruments' trading days (forward-filled), observations/year measured on it;
+  beta = Σ w·β_i with β_i vs the instrument's benchmark (a benchmark itself → 1; none → SPY) [mine].
+- Concentration share = position ÷ (positions + real estate) (copy `concentration.method`); alert one per asset per 30 days.
+- `get_home.networth` is live (so a new clone has a figure before its first batch); history fields from the batch.
+- B3's 3-day quote criterion: **not observable yet** — B3's scheduler started 17:23 UTC the same day; `market_report(3)`
+  at 17:53 shows quotes max gap 15 min, crypto 10 min, quotas ≪ 50 %. Re-check later (B5 or B10) and log it here.
+
+### Blocked / not done
+
+- **GitHub PAT refused**: `ops.dispatch_batch` → GitHub `403 Resource not accessible by personal access token`
+  (twice, refs `main` and the build branch). The fine-grained token in Vault `github_dispatch_pat` lacks
+  **Repository permissions → Actions: Read and write** (or does not include this repository). Franco is asked to fix
+  it (no new token needed: edit the token's permissions on GitHub; if regenerated, replace the Vault secret).
+  Consequences until then: `health` reports `dispatch_failed` (503) and the `deploy-dev` smoke test fails (it requires
+  `ok: true`); a change to that test was refused as hiding a real signal. Once PR #9 is on `main`, the `schedule`
+  backups run the nightly (03:41 UTC) and the queue (every 15 min) without the PAT.
+- `ops.app_config.batch.ref` = `main`: dispatch works only once PR #9 is merged (workflows must be on the ref).
+- learning status / behaviour profiles in the nightly batch: B5 (scoring) — ARCHITECTURE §4.3 lists them in the batch.
+
+### Defects open
+
+- deploy-dev smoke test red while the PAT is refused (above).
+
+### Next: B5 — Scoring, fraud, alerts
+
+Start from branch `build/b4-batch-analytics`. Analytics run with `python -m goldenpiece.analytics` (`--users`,
+`--queue`, `--date`); add behaviour profiles + learning status as steps of `pipeline.run` (same transport, same
+`ops.job_runs`). Concentration alerts already exist (kind `concentration`, band `info`) — wire them into `notify`
+(#6) and the alert list. First check `select ops.health_check()`: if `dispatch` is ok, the PAT was fixed.

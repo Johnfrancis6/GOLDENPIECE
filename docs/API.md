@@ -392,6 +392,14 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | `api.get_markets(p_etag)` (authenticated) | B3 | `get_markets.json` |
 | `api.get_asset(p_instrument_id, p_range '3M'\|'1Y'\|'5Y', p_etag)` (authenticated; 5Y = monthly candles ≤ 60, #8; `my_position` = weighted-average cost from `core.trades`, splits from `core.corporate_actions`) | B3 | `get_asset.json` |
 | `api.search_instruments(p_q)` (authenticated; ≤ 20; FX/peg rows excluded) | B3 | `search_instruments.json` |
+| `api.get_home(p_etag)` (authenticated; §2.2 + BACKEND_NEEDS #1-#5; `networth` is **live** — balances, today's quotes and rates — while `spark_30d`, `change_day/month` come from `analytics.networth_daily`; `networth.series_as_of` = last batch day; `market_strip` = SPY, XAU, COCOA, BTC, EURXOF; `budget` null when no budget) | B4 | `get_home.json` |
+| `api.get_portfolio(p_etag)` (positions with weighted-average cost and today's price, real estate at last valuation, debts with `lender` #7, `allocation{class,currency,country}` over positions + real estate, `totals`) | B4 | `get_portfolio.json` |
+| `api.upsert_debt(p_client_id, p_id, p_name, p_currency, p_principal_minor, p_balance_minor, p_lender?, p_annual_rate_bp?, p_monthly_payment_minor?, p_start_date?, p_end_date?, p_base_version?)` → `{status: applied\|conflict, id, row_version}` (idempotent by client id; #7) | B4 | `upsert_debt.request.json` |
+| `api.get_risk(p_etag)` (§2.7 from the nightly batch; adds `status: ok\|pending`, `betas[]` per instrument; `drawdown` ≤ 260 points, evenly thinned; `concentration` computed live so a threshold change applies at once) | B4 | `get_risk.json` |
+| `api.set_concentration_threshold(p_pct 5..100)` → `{status, threshold_pct, concentration}` | B4 | — |
+| `api.get_performance(p_period '1M'\|'YTD'\|'1Y'\|'ITD', p_etag)` (§2.8; `status: ok\|insufficient\|pending`) | B4 | `get_performance.json` |
+| `api.get_performance_custom(p_from, p_to)` → `{as_of, data}` (same `data` shape, `period: 'custom'`; ≤ 731 days, `p_to` ≤ today, capped to the last batch day; 20/user/hour; computed in SQL by `core.performance_between`, parity with the batch ≤ 2e-6) | B4 | `get_performance_custom.json` |
+| `ops.dispatch_batch()` (pg_cron `gp-batch` every 5 min; GitHub `workflow_dispatch` with the Vault PAT; replaces the planned Edge `dispatch-batch`) | B4 | — |
 | Edge `market-refresh` (cron secret) `{kind: quotes\|crypto\|fx}` → `{kind, updated, errors}` | B3 | — |
 | Edge `market-eod` (cron secret) `{kind: bars\|fred\|ecb, limit?}` → `{kind, instruments?, rows, errors}` | B3 | — |
 | Service-role RPCs behind them: `market_targets(kind, limit)`, `market_quota_take(vendor, credits)`, `market_mark`, `market_vendor_error`, `market_upsert_quotes`, `market_upsert_bars`, `market_upsert_fx_daily`, `market_job_log`; reports `market_report(days)` (quota use, job gaps, quote ages, bar coverage) and `market_split_check(years, pct)` (G5) | B3 | — |
@@ -422,3 +430,19 @@ Notes (B3):
 - **Only complete daily bars are stored** (`d <= mkt.expected_bar_date(id)`): Twelve Data also returns the live bar.
 - Quote vendor vs history vendor: `mkt.instruments.vendor/vendor_symbol` (live) and `hist_vendor/hist_symbol` (daily
   bars). Crypto history comes from Twelve Data (CoinGecko Demo stops at 365 days).
+
+Notes (B4):
+- **Units**: risk figures are fractions (`0.0178` = 1.78 %); VaR/CVaR/vol positive = loss/volatility of the included
+  value; `max_drawdown` ≤ 0; `value_ref` = the figure in minor units of the reference currency (VaR × value of the
+  instruments included). `twr` is annualised only when `annualised` (period ≥ 365 days); `irr` is an annual rate when
+  `annualised`, else the period rate. Attribution: `contribution` = Σ_t w·r (arithmetic, sums to Σ_t r_portfolio,
+  not to the chained TWR); `currency_effect` = Σ_t w·(r_ref − r_local).
+- **Method keys** (`method_key`, i18n): `risk.method.vol_hist`, `risk.method.beta_own_benchmark`,
+  `risk.method.var_hist`, `risk.method.cvar_hist`, `risk.method.var_sqrt21`, `risk.method.cvar_sqrt21`,
+  `risk.method.var_overlap21`, `risk.method.drawdown_own`; excluded: `real_estate | monthly_price | insufficient_history`.
+- **Concentration alert** (nightly batch, `core.alerts` kind `concentration`, band `info`, status `open`, one per asset
+  per 30 days): `reasons = [{code: 'concentration_breach', params: {asset (display name), asset_key, share (%), threshold (%)}}]`
+  — copy `concentration.yours` / banner `concentration`. Push via `notify` is B5's (#6).
+- **Recompute**: inserts/updates/deletes on `core.trades`, `core.real_estate_valuations`, `core.debts`, `core.accounts`
+  queue the user (`ops.recompute_queue`); `ops.dispatch_batch` sends ≤ 50 queued users to `batch-user.yml`, and its
+  15-min `schedule` processes the queue too (backup).
