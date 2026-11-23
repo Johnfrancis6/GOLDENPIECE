@@ -19,6 +19,8 @@ def main() -> int:
     ap.add_argument("--job", default=None)
     ap.add_argument("--date", default=None)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--queue", action="store_true",
+                    help="process the users waiting in ops.recompute_queue (≤ 50); no-op when it is empty")
     ap.add_argument("--skip-if-done", action="store_true",
                     help="exit if a batch-nightly already succeeded today (schedule backup of the pg_cron dispatch)")
     a = ap.parse_args()
@@ -30,6 +32,12 @@ def main() -> int:
                                   "and started_at >= date_trunc('day', now() at time zone 'UTC') at time zone 'UTC'"):
         print("batch-nightly already done today")
         return 0
+    if a.queue:
+        users = [r["user_id"] for r in db.rows("select user_id from ops.recompute_queue order by requested_at limit 50")]
+        if not users:
+            print("recompute queue empty")
+            return 0
+        job = "batch-user"
     detail = run(db, users, today, job, a.dry_run)
     print(json.dumps(detail, indent=1))
     return 1 if detail["users"] and len(detail["failed"]) == detail["users"] else 0

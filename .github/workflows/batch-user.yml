@@ -3,12 +3,16 @@ name: batch-user
 # On-demand recompute for users flagged in ops.recompute_queue (new trade,
 # valuation, debt, linked account). Dispatched by pg_cron every 5 min
 # (ops.dispatch_batch, ≤ 50 users per run). ARCHITECTURE §5, §10.4.
+# Backup: every 15 min the schedule processes whatever is still queued
+# (exits in seconds when the queue is empty) — covers a failing dispatch PAT.
 on:
   workflow_dispatch:
     inputs:
       users:
-        description: "comma-separated user ids"
-        required: true
+        description: "comma-separated user ids (empty = the queue)"
+        required: false
+  schedule:
+    - cron: "7,22,37,52 * * * *"
   push:   # registers the workflow from a build branch (dispatch needs it); the job is skipped
     branches: ["build/**"]
     paths: [".github/workflows/batch-user.yml"]
@@ -26,7 +30,7 @@ env:
 
 jobs:
   users:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -40,5 +44,6 @@ jobs:
         env:
           USERS: ${{ inputs.users }}
         run: |
+          if [ -z "$USERS" ]; then python3 -m goldenpiece.analytics --queue; exit $?; fi
           echo "$USERS" | grep -Eq '^[0-9a-f-]{36}(,[0-9a-f-]{36})*$' || { echo "::error::bad users input"; exit 1; }
           python3 -m goldenpiece.analytics --job batch-user --users "$USERS"
