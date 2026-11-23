@@ -6,15 +6,45 @@ backend is done**, then hand over to the visual build. Each step runs in a
 is asked only for things only he can do (accounts, keys), **before** the
 chain starts — everything below in "Franco's checklist" is done first.
 
-## Franco's checklist (before launch)
+## Franco's checklist (before launch) — steps checked on the web 2026-11-23
 
-| # | What | Where | Needed by |
-|---|---|---|---|
-| 1 | Create Supabase project **`goldenpiece-dev`**, region **eu-west-3 (Paris)**, free plan; save its DB password in a password manager (never in a chat). The account already has one active project (another app, London): the free plan allows 2 active projects, so the `goldenpiece-demo` project is created later (B10) after pausing that other project. | supabase.com → New project | B1 |
-| 2 | GitHub repository secrets (Settings → Secrets and variables → Actions): `SUPABASE_ACCESS_TOKEN` (supabase.com → Account → Access tokens), `SUPABASE_DB_PASSWORD_DEV` (password of #1); turn on **secret scanning** (Settings → Code security). | github.com/Johnfrancis6/GOLDENPIECE | B1 CI |
-| 3 | Market data keys (free): Twelve Data, Finnhub, CoinGecko Demo, FRED → put each in the dev project's **Edge Function secrets** as `TWELVEDATA_API_KEY`, `FINNHUB_API_KEY`, `COINGECKO_API_KEY`, `FRED_API_KEY`. | Supabase → Project → Edge Functions → Secrets | B3 |
-| 4 | GitHub fine-grained PAT (this repo only, permission Actions: write, 1 year) → Supabase Vault as `github_dispatch_pat` (SQL editor: `select vault.create_secret('<token>', 'github_dispatch_pat');`). | github.com/settings/tokens → Supabase SQL editor | B4 |
-| 5 | Groq key → Edge Function secret `GROQ_API_KEY`. | console.groq.com → Supabase secrets | B5 |
+1. **Supabase project `goldenpiece-dev`** (Paris, eu-west-3). Status
+   2026-11-23: Franco says it is done, but the Supabase token this
+   environment uses lists only the older London project → either the project
+   is in another account/organisation, or the environment's token is scoped
+   to the old project. Fix: create a new **scoped** token for
+   `goldenpiece-dev` (supabase.com/dashboard/account/tokens → Generate new
+   token) and save it in this environment's network secrets for
+   api.supabase.com (the session asks for it with a secure form).
+2. **GitHub Actions secrets** — github.com/Johnfrancis6/GOLDENPIECE →
+   Settings → (left menu) Secrets and variables → Actions → tab Secrets →
+   New repository secret: `SUPABASE_ACCESS_TOKEN` (a second scoped Supabase
+   token, for CI) and `SUPABASE_DB_PASSWORD_DEV` (database password chosen
+   when the project was created; Supabase → Project Settings → Database →
+   Reset database password if lost).
+3. **Secret scanning** — same repository → Settings → (left menu, Security
+   section) Advanced Security → "Secret Protection": Enable, then "Push
+   protection": Enable (free for public repositories).
+4. **Market data keys** (free, no card): Twelve Data
+   (twelvedata.com/register → dashboard → API keys), Finnhub
+   (finnhub.io/register → finnhub.io/dashboard), CoinGecko Demo
+   (coingecko.com/en/api/pricing → Demo → Developer Dashboard → "+ Add New
+   Key"), FRED (fredaccount.stlouisfed.org → API Keys → Request API Key).
+   Each goes into Supabase → project goldenpiece-dev → Edge Functions →
+   Secrets → Add: `TWELVEDATA_API_KEY`, `FINNHUB_API_KEY`,
+   `COINGECKO_API_KEY`, `FRED_API_KEY` (names may not start with SUPABASE_).
+5. **GitHub fine-grained token** — profile photo → Settings → Developer
+   settings → Personal access tokens → Fine-grained tokens → Generate new
+   token: name `goldenpiece-batch`, expiration 1 year, Repository access
+   "Only select repositories" → GOLDENPIECE, Permissions → Repository →
+   Actions: Read and write → Generate token. Then Supabase → SQL Editor:
+   `select vault.create_secret('<token>', 'github_dispatch_pat');` (or
+   Integrations → Vault → Add new secret, name `github_dispatch_pat`).
+6. **Groq key** — console.groq.com/keys → Create API Key (shown once,
+   starts with `gsk_`) → Supabase Edge Functions secret `GROQ_API_KEY`.
+
+Needed to start: 1-3. Steps 4-6 can come later (B3, B4, B5 mark
+themselves blocked and the chain continues).
 
 Keys never go in a chat or in the repo. If a site asks for a card, stop and
 tell the chain (it will mark the dependent step blocked and continue).
