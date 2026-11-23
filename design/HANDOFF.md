@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -45,10 +45,11 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B4 Alert card (Home strip: one card + "Voir les N alertes"; > 70 gold edge; whole card tappable, Oui/Non only in L2; compact C6 variant) | validated 2026-11-22 | [blocks/b4-alert-card.md](blocks/b4-alert-card.md) |
 | B5 Learning card (two C17 orange rings, fraud-reassurance line, L5 finished state with grey OK) | validated 2026-11-22 | [blocks/b5-learning-card.md](blocks/b5-learning-card.md) |
 | B6 Budget ring (Home: two tiles "Ce mois" + worst category; D3: badge left, ring right) | validated 2026-11-22 | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) |
-| Tokens | v0.23.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing) | [tokens.json](tokens.json) |
+| B9 Quote row (one card, freshness line under it, 1-month period; **G2 sparklines get a light fading area**, Franco 2026-11-23) | validated 2026-11-23 | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) |
+| Tokens | v0.24.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **B9 Quote row (G2)**, B8 Chart
-frame → **S2 Home layout** (first full screen: check glow C light alphas
+**Next items, in order** (README "Build order"): **B8 Chart
+frame** → **S2 Home layout** (first full screen: check glow C light alphas
 there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
@@ -141,6 +142,7 @@ yet merged into `main`; Franco merges through a pull request).
 
 - Fraud rules (R1-R6) stay active during the learning phase (B5
   reassurance line; brief only says anomaly alerts are off).
+- API adds `spark_30d` and `change_30d` per Home quote (B9).
 - Tecno Spark 50 has an **LCD** screen and low pixel density (its specs
   are still to be read on the phone, SETUP.md; Franco's pending answer).
 - Widget sizes 2×1 and 2×2 cells (brief §3.11).
