@@ -1,0 +1,12 @@
+{
+  "error": {
+    "auth.required": "Sign in to continue.",
+    "device.other_user": "This device is linked to another account.",
+    "device.revoked": "This device was signed out. Sign in again.",
+    "device.invalid": "Unrecognised device.",
+    "consents.invalid": "Invalid consent.",
+    "profile.missing": "Profile not found.",
+    "fx.usd_missing": "Dollar rate unavailable for now.",
+    "generic": "Something went wrong. Try again."
+  }
+}

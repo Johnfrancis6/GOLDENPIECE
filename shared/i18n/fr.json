@@ -1,0 +1,12 @@
+{
+  "error": {
+    "auth.required": "Connectez-vous pour continuer.",
+    "device.other_user": "Cet appareil est lié à un autre compte.",
+    "device.revoked": "Cet appareil a été déconnecté. Reconnectez-vous.",
+    "device.invalid": "Appareil non reconnu.",
+    "consents.invalid": "Accord non valide.",
+    "profile.missing": "Profil introuvable.",
+    "fx.usd_missing": "Taux du dollar indisponible pour le moment.",
+    "generic": "Une erreur est survenue. Réessayez."
+  }
+}

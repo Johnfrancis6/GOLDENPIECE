@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_entry.json",
+  "title": "ProviderEntry (ARCHITECTURE §3.1): camt.053 Ntry/TxDtls flattened. Money as integers in JSON (bigint in TS).",
+  "type": "object",
+  "required": ["providerEntryId", "accountId", "status", "creditDebit", "amountMinor", "currency", "bookingTs", "valueDate", "bankTxCode"],
+  "properties": {
+    "providerEntryId": { "type": "string", "minLength": 1 },
+    "accountId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["BOOK", "PDNG", "RJCT"] },
+    "creditDebit": { "enum": ["CRDT", "DBIT"] },
+    "amountMinor": { "type": "integer", "minimum": 0 },
+    "currency": { "$ref": "common.json#/$defs/currency" },
+    "bookingTs": { "$ref": "common.json#/$defs/timestamp" },
+    "valueDate": { "$ref": "common.json#/$defs/date" },
+    "bankTxCode": {
+      "type": "object",
+      "required": ["domain", "family", "subFamily"],
+      "properties": { "domain": { "type": "string" }, "family": { "type": "string" }, "subFamily": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "endToEndId": { "type": "string" },
+    "txId": { "type": "string" },
+    "acctSvcrRef": { "type": "string" },
+    "counterparty": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }, "iban": { "type": "string" }, "msisdn": { "type": "string" },
+        "bic": { "type": "string" }, "merchantCode": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "remittanceInfo": { "type": "string" },
+    "purposeCode": { "type": "string" },
+    "charges": {
+      "type": "object",
+      "required": ["amountMinor", "currency"],
+      "properties": { "amountMinor": { "type": "integer", "minimum": 0 }, "currency": { "$ref": "common.json#/$defs/currency" } },
+      "additionalProperties": false
+    },
+    "momo": {
+      "type": "object",
+      "required": ["operator", "opType", "operatorRef"],
+      "properties": {
+        "operator": { "type": "string", "description": "ref.operators id (fictitious operators, design B21)" },
+        "opType": { "enum": ["cash_in", "cash_out", "p2p_in", "p2p_out", "merchant", "bill", "airtime", "bank_in", "bank_out", "fee", "reversal"] },
+        "agentId": { "type": "string" },
+        "balanceAfterMinor": { "type": "integer" },
+        "operatorRef": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [{
+    "providerEntryId": "sim:persona_dakar_salaried:momo1:42", "accountId": "momo1", "status": "BOOK", "creditDebit": "DBIT",
+    "amountMinor": 2500, "currency": "XOF", "bookingTs": "2026-11-23T10:15:00Z", "valueDate": "2026-11-23",
+    "bankTxCode": { "domain": "PMNT", "family": "MCOP", "subFamily": "OTHR" },
+    "counterparty": { "name": "Boutique Ndiaye", "merchantCode": "5411" },
+    "momo": { "operator": "kola_money", "opType": "merchant", "operatorRef": "KM123456" }
+  }]
+}

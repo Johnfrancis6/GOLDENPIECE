@@ -1,0 +1,53 @@
+name: deploy-dev
+
+# Migrations + functions -> goldenpiece-dev (ARCHITECTURE §10.3).
+# Also runs on the autonomous chain's build/** branches: the chain does not
+# wait for merges and every session builds on the previous one's dev state.
+on:
+  push:
+    branches: [main, "build/**"]
+    paths: ["supabase/**", ".github/workflows/deploy-dev.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_PROJECT_REF: ynabfjwcdmaxfnppjtla   # goldenpiece-dev (not a secret)
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD_DEV }}
+  SUPABASE_YES: "1"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.3.0
+      - name: Check secrets
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo "::error::secret SUPABASE_ACCESS_TOKEN missing"; exit 1; }
+          test -n "$SUPABASE_DB_PASSWORD" || { echo "::error::secret SUPABASE_DB_PASSWORD_DEV missing"; exit 1; }
+      - run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --yes
+      - name: Migrations (dry run, then push)
+        run: |
+          supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --dry-run --yes
+          supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --yes
+      - name: PostgREST exposes only the api schema
+        run: |
+          curl -sf -X PATCH "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/postgrest" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+            -d '{"db_schema":"api","db_extra_search_path":"extensions"}' > /dev/null
+      - name: Edge Functions
+        run: supabase functions deploy --use-api --yes
+      - name: Smoke test
+        run: |
+          sleep 10
+          curl -sf "https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/health" | tee /dev/stderr | grep -q '"ok":true'

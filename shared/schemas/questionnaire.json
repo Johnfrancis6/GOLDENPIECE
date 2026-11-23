@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/questionnaire.json",
+  "title": "core.questionnaire.answers per section (B6 fills the question list; v1 skeleton)",
+  "type": "object",
+  "required": ["section", "version", "answers"],
+  "properties": {
+    "section": { "enum": ["income", "goals", "risk", "habits"] },
+    "version": { "type": "integer", "minimum": 1 },
+    "answers": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "array", "null"] } }
+  },
+  "additionalProperties": false,
+  "examples": [{ "section": "risk", "version": 1, "answers": { "horizon_years": 5, "loss_reaction": "hold" } }]
+}

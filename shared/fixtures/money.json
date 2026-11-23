@@ -1,0 +1,2113 @@
+{
+ "version": 1,
+ "peg_per_eur": "655.957",
+ "exponents": {
+  "XOF": 0,
+  "XAF": 0,
+  "EUR": 2,
+  "USD": 2
+ },
+ "rounding": "half-even, at the last step only",
+ "cases": [
+  {
+   "op": "exponent",
+   "args": {
+    "currency": "XOF"
+   },
+   "expect": 0
+  },
+  {
+   "op": "exponent",
+   "args": {
+    "currency": "XAF"
+   },
+   "expect": 0
+  },
+  {
+   "op": "exponent",
+   "args": {
+    "currency": "EUR"
+   },
+   "expect": 2
+  },
+  {
+   "op": "exponent",
+   "args": {
+    "currency": "USD"
+   },
+   "expect": 2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "5",
+    "d": "2"
+   },
+   "expect": 2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "7",
+    "d": "2"
+   },
+   "expect": 4
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-5",
+    "d": "2"
+   },
+   "expect": -2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-7",
+    "d": "2"
+   },
+   "expect": -4
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "1",
+    "d": "3"
+   },
+   "expect": 0
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "2",
+    "d": "3"
+   },
+   "expect": 1
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-1",
+    "d": "3"
+   },
+   "expect": 0
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "15",
+    "d": "10"
+   },
+   "expect": 2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "25",
+    "d": "10"
+   },
+   "expect": 2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-25",
+    "d": "10"
+   },
+   "expect": -2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "0",
+    "d": "7"
+   },
+   "expect": 0
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "999999999999",
+    "d": "2"
+   },
+   "expect": 500000000000
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "10",
+    "d": "4"
+   },
+   "expect": 2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-10",
+    "d": "4"
+   },
+   "expect": -2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "3",
+    "d": "-2"
+   },
+   "expect": -2
+  },
+  {
+   "op": "div_round",
+   "args": {
+    "n": "-3",
+    "d": "-2"
+   },
+   "expect": 2
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "1234.565",
+    "currency": "EUR"
+   },
+   "expect": 123456
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "1234.575",
+    "currency": "EUR"
+   },
+   "expect": 123458
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "0.005",
+    "currency": "EUR"
+   },
+   "expect": 0
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "0.015",
+    "currency": "EUR"
+   },
+   "expect": 2
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-0.005",
+    "currency": "EUR"
+   },
+   "expect": 0
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "2500.5",
+    "currency": "XOF"
+   },
+   "expect": 2500
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "2501.5",
+    "currency": "XOF"
+   },
+   "expect": 2502
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-2500.5",
+    "currency": "XOF"
+   },
+   "expect": -2500
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "0",
+    "currency": "USD"
+   },
+   "expect": 0
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "12",
+    "currency": "USD"
+   },
+   "expect": 1200
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "12.3",
+    "currency": "USD"
+   },
+   "expect": 1230
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "1000000",
+    "currency": "XAF"
+   },
+   "expect": 1000000
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "0.5",
+    "currency": "XAF"
+   },
+   "expect": 0
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "99.995",
+    "currency": "USD"
+   },
+   "expect": 10000
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-99.985",
+    "currency": "USD"
+   },
+   "expect": -9998
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-8430815.974",
+    "currency": "XOF"
+   },
+   "expect": -8430816
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "9337510.430",
+    "currency": "XOF"
+   },
+   "expect": 9337510
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-4025425.002",
+    "currency": "USD"
+   },
+   "expect": -402542500
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "4819091.836",
+    "currency": "XOF"
+   },
+   "expect": 4819092
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-192750.834",
+    "currency": "XOF"
+   },
+   "expect": -192751
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-3526984.406",
+    "currency": "USD"
+   },
+   "expect": -352698441
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-5983360.824",
+    "currency": "EUR"
+   },
+   "expect": -598336082
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "5710873.091",
+    "currency": "USD"
+   },
+   "expect": 571087309
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-7674700.144",
+    "currency": "EUR"
+   },
+   "expect": -767470014
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "6188185.372",
+    "currency": "EUR"
+   },
+   "expect": 618818537
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-1521428.408",
+    "currency": "USD"
+   },
+   "expect": -152142841
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "7137754.518",
+    "currency": "USD"
+   },
+   "expect": 713775452
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-8802211.264",
+    "currency": "USD"
+   },
+   "expect": -880221126
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-8605863.530",
+    "currency": "USD"
+   },
+   "expect": -860586353
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "2164241.837",
+    "currency": "XOF"
+   },
+   "expect": 2164242
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "7204296.481",
+    "currency": "XOF"
+   },
+   "expect": 7204296
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-3840762.870",
+    "currency": "XAF"
+   },
+   "expect": -3840763
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-7875326.731",
+    "currency": "XOF"
+   },
+   "expect": -7875327
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-5161129.561",
+    "currency": "EUR"
+   },
+   "expect": -516112956
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-7265655.207",
+    "currency": "USD"
+   },
+   "expect": -726565521
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-155640.033",
+    "currency": "EUR"
+   },
+   "expect": -15564003
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-8772618.949",
+    "currency": "XAF"
+   },
+   "expect": -8772619
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-3352718.266",
+    "currency": "USD"
+   },
+   "expect": -335271827
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-8577633.785",
+    "currency": "USD"
+   },
+   "expect": -857763378
+  },
+  {
+   "op": "parse",
+   "args": {
+    "amount": "-9358968.679",
+    "currency": "USD"
+   },
+   "expect": -935896868
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 0,
+    "currency": "EUR"
+   },
+   "expect": "0.00"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 5,
+    "currency": "EUR"
+   },
+   "expect": "0.05"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -5,
+    "currency": "EUR"
+   },
+   "expect": "-0.05"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 123456,
+    "currency": "EUR"
+   },
+   "expect": "1234.56"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -123456,
+    "currency": "USD"
+   },
+   "expect": "-1234.56"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 250000,
+    "currency": "XOF"
+   },
+   "expect": "250000"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -1,
+    "currency": "XAF"
+   },
+   "expect": "-1"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 100,
+    "currency": "USD"
+   },
+   "expect": "1.00"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -360773991816,
+    "currency": "XOF"
+   },
+   "expect": "-360773991816"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -781764545692,
+    "currency": "EUR"
+   },
+   "expect": "-7817645456.92"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 574918693595,
+    "currency": "USD"
+   },
+   "expect": "5749186935.95"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -596422246091,
+    "currency": "EUR"
+   },
+   "expect": "-5964222460.91"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 601346085384,
+    "currency": "USD"
+   },
+   "expect": "6013460853.84"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -858523185474,
+    "currency": "USD"
+   },
+   "expect": "-8585231854.74"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 99096148458,
+    "currency": "EUR"
+   },
+   "expect": "990961484.58"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -574383075212,
+    "currency": "EUR"
+   },
+   "expect": "-5743830752.12"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -11528916188,
+    "currency": "USD"
+   },
+   "expect": "-115289161.88"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": -999604138746,
+    "currency": "XOF"
+   },
+   "expect": "-999604138746"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 200789705372,
+    "currency": "USD"
+   },
+   "expect": "2007897053.72"
+  },
+  {
+   "op": "format",
+   "args": {
+    "minor": 746377226544,
+    "currency": "XOF"
+   },
+   "expect": "746377226544"
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 655957,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 100000
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 100000,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 655957
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 1,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 7
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 1,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 0
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 327978,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 50000
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 327979,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 50000
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 250000,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 250000
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -250000,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -250000
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 0,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "1.0832"
+   },
+   "expect": 0
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 100,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.25"
+   },
+   "expect": 80
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 125,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.1"
+   },
+   "expect": 138
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 5,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.5"
+   },
+   "expect": 8
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 15,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.5"
+   },
+   "expect": 22
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -15,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.5"
+   },
+   "expect": -22
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 1000000,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "1.0832"
+   },
+   "expect": 165133
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12345,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "1.0832"
+   },
+   "expect": 74758
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12345,
+    "from": "USD",
+    "to": "XAF",
+    "usd_per_eur": "1.0832"
+   },
+   "expect": 74758
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 999999999999,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 152449017237
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 999999999999,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 6559569999993
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -44005961,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -44005961
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -7930429,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -7930429
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -32388450,
+    "from": "USD",
+    "to": "XAF",
+    "usd_per_eur": "1.1229"
+   },
+   "expect": -189201447
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -28508855,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -187005830
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 2399581,
+    "from": "XAF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 365814
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -35754944,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -35754944
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -2567079,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "0.8757"
+   },
+   "expect": -19229113
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -6008791,
+    "from": "XOF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -6008791
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12623684,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.0130"
+   },
+   "expect": 12787792
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -22218857,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -22218857
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 45413058,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.0794"
+   },
+   "expect": 42072501
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -26731490,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "0.8671"
+   },
+   "expect": -3533597
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 36013797,
+    "from": "XOF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 36013797
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 76648310243,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "1.2055"
+   },
+   "expect": 14086218761
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -25034802,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -25034802
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -39442593,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.0627"
+   },
+   "expect": -37115454
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12265651,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "0.9436"
+   },
+   "expect": 12998782
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 19703978,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "0.9938"
+   },
+   "expect": 19703978
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -13246802,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "0.9101"
+   },
+   "expect": -13246802
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -37501700,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -37501700
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 39979425,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.0540"
+   },
+   "expect": 37931143
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -28960147,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -28960147
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 46101576,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 302406515
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 25541950,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 167544209
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -14605078,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -95803031
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -2184482,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "0.9356"
+   },
+   "expect": -311576
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -12850403,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -12850403
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -30587354706,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -4663012165
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -15500403,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -101675979
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -8403420,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "0.8787"
+   },
+   "expect": -62732243
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 27373976,
+    "from": "XOF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 27373976
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 31504394,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 31504394
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12098495,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "1.0080"
+   },
+   "expect": 1859159
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -27313124418,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "1.1932"
+   },
+   "expect": -150152825627
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 48701961,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.3235"
+   },
+   "expect": 36797855
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 47593285,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "0.9907"
+   },
+   "expect": 315122120
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -7200313,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -1097681
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -42464326,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -6473645
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -34124331,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -34124331
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 30121624,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 30121624
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -33048595,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -216784572
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 6503709,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.0421"
+   },
+   "expect": 6777515
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -46185919,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -46185919
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -47772550,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.2433"
+   },
+   "expect": -38423993
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 61605779901,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.0589"
+   },
+   "expect": 65234360337
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 37270142,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 37270142
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 49736139,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 49736139
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -48468666,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -317933607
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 18265854,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "0.8791"
+   },
+   "expect": 2447952
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -18792671,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "1.2036"
+   },
+   "expect": -3448223
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -3901281336,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -3901281336
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 40382673,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "1.1244"
+   },
+   "expect": 40382673
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 5101507,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 33463692
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 45320476387,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "1.2969"
+   },
+   "expect": 8960362619
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 35545,
+    "from": "USD",
+    "to": "XOF",
+    "usd_per_eur": "1.1696"
+   },
+   "expect": 199350
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -36477357,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -239275777
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 61901370198,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 61901370198
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 47663474727,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 312651898915
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 48324676,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 48324676
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 48962761,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.1237"
+   },
+   "expect": 43572805
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 47297156875,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 47297156875
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 2158604,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 2158604
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 31631222224,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 31631222224
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 50310155287,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.2561"
+   },
+   "expect": 40052667214
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 22356296,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 22356296
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -34337131,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -34337131
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -9379168,
+    "from": "XOF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -1429845
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -16693190,
+    "from": "XAF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -16693190
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -72149006267,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -72149006267
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -34222844,
+    "from": "XOF",
+    "to": "USD",
+    "usd_per_eur": "0.9813"
+   },
+   "expect": -5119677
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 19651800,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.3047"
+   },
+   "expect": 25639703
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 11194403,
+    "from": "XAF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 1706576
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -38206706,
+    "from": "EUR",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": -250619562
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -27405584,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "0.9827"
+   },
+   "expect": -27888047
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 47153310,
+    "from": "EUR",
+    "to": "USD",
+    "usd_per_eur": "1.1031"
+   },
+   "expect": 52014816
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 12143747,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "1.0068"
+   },
+   "expect": 12143747
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -3009779,
+    "from": "XAF",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -458838
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 26043714,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "0.9564"
+   },
+   "expect": 26043714
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -25611018014,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "0.9838"
+   },
+   "expect": -3841123659
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -18553740,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "0.9227"
+   },
+   "expect": -20108096
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -33459517,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": -219480044
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 34985580,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": 34985580
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 40478439,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "0.8609"
+   },
+   "expect": 40478439
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 16395419,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "0.8975"
+   },
+   "expect": 18267876
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 3655345,
+    "from": "XAF",
+    "to": "USD",
+    "usd_per_eur": "1.0261"
+   },
+   "expect": 571798
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 44179500,
+    "from": "XAF",
+    "to": "XOF",
+    "usd_per_eur": null
+   },
+   "expect": 44179500
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 36485433,
+    "from": "EUR",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 239328752
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -48422403,
+    "from": "USD",
+    "to": "USD",
+    "usd_per_eur": "1.2757"
+   },
+   "expect": -48422403
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 38674504,
+    "from": "XOF",
+    "to": "XAF",
+    "usd_per_eur": null
+   },
+   "expect": 38674504
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": -21918401,
+    "from": "EUR",
+    "to": "EUR",
+    "usd_per_eur": null
+   },
+   "expect": -21918401
+  },
+  {
+   "op": "convert",
+   "args": {
+    "minor": 24593523,
+    "from": "USD",
+    "to": "EUR",
+    "usd_per_eur": "1.1614"
+   },
+   "expect": 21175756
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 100,
+    "weights": [
+     1,
+     1,
+     1
+    ]
+   },
+   "expect": [
+    34,
+    33,
+    33
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 101,
+    "weights": [
+     1,
+     1
+    ]
+   },
+   "expect": [
+    51,
+    50
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 5,
+    "weights": [
+     3,
+     3,
+     3,
+     3
+    ]
+   },
+   "expect": [
+    2,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 0,
+    "weights": [
+     1,
+     2
+    ]
+   },
+   "expect": [
+    0,
+    0
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 250000,
+    "weights": [
+     70,
+     20,
+     10
+    ]
+   },
+   "expect": [
+    175000,
+    50000,
+    25000
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 7,
+    "weights": [
+     1,
+     0,
+     1
+    ]
+   },
+   "expect": [
+    4,
+    0,
+    3
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 1,
+    "weights": [
+     1,
+     1,
+     1
+    ]
+   },
+   "expect": [
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 1603776,
+    "weights": [
+     68,
+     98,
+     1
+    ]
+   },
+   "expect": [
+    653035,
+    941138,
+    9603
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 3462329,
+    "weights": [
+     42,
+     28,
+     59
+    ]
+   },
+   "expect": [
+    1127270,
+    751513,
+    1583546
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 6996754,
+    "weights": [
+     86,
+     21,
+     90,
+     39,
+     10,
+     72
+    ]
+   },
+   "expect": [
+    1892204,
+    462050,
+    1980213,
+    858092,
+    220024,
+    1584171
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 4544522,
+    "weights": [
+     87,
+     75,
+     71,
+     17,
+     13,
+     3
+    ]
+   },
+   "expect": [
+    1486366,
+    1281350,
+    1213012,
+    290439,
+    222101,
+    51254
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 3881475,
+    "weights": [
+     5,
+     23,
+     70,
+     93,
+     65
+    ]
+   },
+   "expect": [
+    75810,
+    348726,
+    1061341,
+    1410067,
+    985531
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 5332106,
+    "weights": [
+     84,
+     84,
+     43,
+     43,
+     44
+    ]
+   },
+   "expect": [
+    1503010,
+    1503009,
+    769398,
+    769398,
+    787291
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 8220915,
+    "weights": [
+     61,
+     32,
+     62,
+     41,
+     32,
+     4
+    ]
+   },
+   "expect": [
+    2161534,
+    1133919,
+    2196969,
+    1452834,
+    1133919,
+    141740
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 4258943,
+    "weights": [
+     2,
+     61,
+     46
+    ]
+   },
+   "expect": [
+    78146,
+    2383445,
+    1797352
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 6709644,
+    "weights": [
+     25,
+     47,
+     35,
+     65,
+     93
+    ]
+   },
+   "expect": [
+    632985,
+    1190012,
+    886180,
+    1645762,
+    2354705
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 1083041,
+    "weights": [
+     27,
+     74,
+     6,
+     52
+    ]
+   },
+   "expect": [
+    183913,
+    504057,
+    40869,
+    354202
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 1522000,
+    "weights": [
+     87,
+     68,
+     98,
+     38,
+     61,
+     78
+    ]
+   },
+   "expect": [
+    307940,
+    240688,
+    346874,
+    134502,
+    215912,
+    276084
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 5697697,
+    "weights": [
+     66,
+     76,
+     41,
+     62,
+     40,
+     84
+    ]
+   },
+   "expect": [
+    1019100,
+    1173509,
+    633077,
+    957337,
+    617637,
+    1297037
+   ]
+  },
+  {
+   "op": "allocate",
+   "args": {
+    "minor": 4319967,
+    "weights": [
+     23,
+     9,
+     71,
+     22
+    ]
+   },
+   "expect": [
+    794874,
+    311038,
+    2453741,
+    760314
+   ]
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/legal_texts.json",
+  "title": "api.legal_texts(p_lang) response (anon): latest version per kind",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["kind", "version", "body_md"],
+    "properties": { "kind": { "type": "string" }, "version": { "type": "string" }, "body_md": { "type": "string" } },
+    "additionalProperties": false
+  },
+  "examples": [[{ "kind": "terms", "version": "0.1-draft", "body_md": "# Terms" }]]
+}

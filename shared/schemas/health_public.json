@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/health_public.json",
+  "title": "api.health_public() response (anon)",
+  "type": "object",
+  "required": ["status", "min_version", "maintenance"],
+  "properties": {
+    "status": { "const": "ok" },
+    "min_version": { "type": "object", "properties": { "android": { "type": "string" } }, "required": ["android"] },
+    "maintenance": { "type": "boolean" }
+  },
+  "additionalProperties": false,
+  "examples": [{ "status": "ok", "min_version": { "android": "0.0.0" }, "maintenance": false }]
+}
