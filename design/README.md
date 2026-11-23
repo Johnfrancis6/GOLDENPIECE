@@ -42,9 +42,10 @@ Files are in English; UI copy is French first, then English.
 | B22 Categories & rules (one list card → category screen; rules as sentences; "Appliquer aux N" short sheet with preview, pre-checked rule box) | [blocks/b22-categories-rules.md](blocks/b22-categories-rules.md) · [preview](previews/b22-categories-rules.png) | 2026-11-23 |
 | B10 Position, real-estate and debt rows (one card per group with subtotal and a light Lucide icon by the heading; value + unrealised tag; "À réévaluer" warning tag; debts not red) | [blocks/b10-holding-rows.md](blocks/b10-holding-rows.md) · [preview](previews/b10-holding-rows.png) | 2026-11-23 |
 | B11 Allocation list + G4 Donut (thin ring, total in the centre, tap highlights a slice; Classe · Devise · Pays chips; gross assets incl. real estate) | [blocks/b11-allocation-list.md](blocks/b11-allocation-list.md) · [charts/g4-donut.md](charts/g4-donut.md) · [preview](previews/b11-g4-allocation.png) | 2026-11-23 |
+| B12 "?" sheet (definition + your figure + how to read it; neutral Faible · Moyen · Élevé scale for risk figures; method sheet with folded "Formule") | [blocks/b12-help-sheet.md](blocks/b12-help-sheet.md) · [preview](previews/b12-help-sheet.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Placements (S4): B10 ✓, B11 + G4 ✓, then B12, G6, G7, B18, then S4** — Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Placements (S4): B10 ✓, B11 + G4 ✓, B12 ✓, then G6, G7, B18, then S4** — Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -224,7 +225,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
 7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
-8. **Placements (in progress):** B10 ✓, B11 ✓, G4 ✓, B12, G6, G7, B18, then S4.
+8. **Placements (in progress):** B10 ✓, B11 ✓, G4 ✓, B12 ✓, G6, G7, B18, then S4.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
