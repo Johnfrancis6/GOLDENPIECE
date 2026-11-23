@@ -30,7 +30,7 @@ Result table (Franco fills in):
 | 2 | | | | | | | |
 | 3 | | | | | | | |
 
-**Decision (Session 2, 2026-11-22): eu-west-3 (Paris)** — London leads
+**Update 2026-11-23: dev project created in eu-west-1 (Ireland)**, within the 10 ms tie-break (142 vs 137 ms); accepted. Original decision (Session 2, 2026-11-22): eu-west-3 (Paris) — London leads
 by 6 ms only (< 10 ms tie-break). Runs 2-3 are optional; they change the
 choice only if London leads the median by > 10 ms, and only before B1
 creates the projects.
@@ -65,7 +65,7 @@ session].
 | # | Service | What for | Sign-in tip | When |
 |---|---|---|---|---|
 | 1 | GitHub — **new public repository** | code, CI, batch jobs | your existing GitHub account; name to agree with the architecture session | architecture |
-| 2 | Supabase | database, auth, realtime, functions | "Sign in with GitHub"; region **eu-west-3 (Paris)**; 2 projects: `goldenpiece-dev`, `goldenpiece-demo` | B1 |
+| 2 | Supabase | database, auth, realtime, functions | "Sign in with GitHub"; region **eu-west-1 (Ireland)** (dev, done 2026-11-23); 2 projects: `goldenpiece-dev`, `goldenpiece-demo` | B1 |
 | 3 | Expo (expo.dev) | Android builds, push service | email | first build session |
 | 4 | Firebase (Google) | FCM credentials for Android push | Google account; Spark (free) plan | when push is built |
 | 5 | Cloudflare | bank dashboard hosting (Pages) | email | when the dashboard is built |

@@ -18,7 +18,7 @@ types, written in build session B1).
 | Money in payloads | `{ "m": 250000, "c": "XOF" }` (minor units + currency). Each screen payload also returns `ref` values already converted to the user's reference currency (`"r": 250000`) so the phone does no FX for server-computed totals; the phone converts only for display switches (peg + `fx` block) |
 | Dates | ISO 8601 UTC; local dates as `YYYY-MM-DD` in the user's zone |
 | Reason codes | alerts and scores return `{code, params}`; texts live in `shared/i18n` (FR/EN), so the server never sends prose |
-| Errors | `{ "error": { "code": "CONFLICT|REJECTED|RATE_LIMITED|NOT_FOUND|FORBIDDEN|MIN_VERSION|INVALID", "message_key": "…", "retry_after_s": 30 } }` |
+| Errors | **As built in B1** (`core.api_error`, PostgREST custom error): HTTP status per code (INVALID 400, FORBIDDEN 403, NOT_FOUND 404, CONFLICT 409, REJECTED 422, MIN_VERSION 426, RATE_LIMITED 429 + `Retry-After`), body `{ "code": "CONFLICT|REJECTED|RATE_LIMITED|NOT_FOUND|FORBIDDEN|MIN_VERSION|INVALID", "message": "<message_key>", "details": null, "hint": "<retry_after_s>|null" }`; `message_key` texts in `shared/i18n`. Schema: `shared/schemas/common.json#/$defs/error` |
 | Pagination | keyset: `p_cursor` (opaque) → `next_cursor` or null |
 | Idempotency | every mutation carries `p_client_id` (UUID v7); a repeat returns the stored result |
 | Timeouts (app) | 15 s, 2 retries with backoff (TECH_ANALYSIS §6) |
@@ -59,6 +59,12 @@ types, written in build session B1).
 | `market_strip` | 5 × `{instrument_id, name, price, change_pct, as_of, delayed: true, proxy_of}` |
 | `learning` | `{active, days, ops}` (drives the learning card) |
 | `fx` | `{EUR: 655.957, USD: x, XAF: 1}` per 1 unit vs XOF for display switches |
+| `accounts` | **(design, BACKEND_NEEDS #1)** `[{id, kind, display_name, institution, balance_ref}]` (≤ 8, card carousel) |
+| `counts` | **(#1)** `{accounts, positions}` |
+| `top_mover` | **(#2)** `{instrument_id, name, change_30d_pct, spark_30d[30]}` or null when no position |
+| `top_category` | **(#3)** `{category_id, spent_ref, share}` — biggest spending category this month |
+| `uncategorised_count` | **(#4)** number of month rows with `category_source='none'` |
+| `alerts.to_confirm_count` | **(#5)** alerts with status `awaiting_user` (inside `alerts`) |
 
 Size ≈ 2.5 KB; `not_modified` most opens.
 
@@ -78,12 +84,12 @@ Size ≈ 2.5 KB; `not_modified` most opens.
 
 | Screen | Call | Request | Response | Size |
 |---|---|---|---|---|
-| Positions + allocation | `api.get_portfolio(p_etag)` | | `positions[{instrument_id, name, class, currency, qty, avg_cost, last_price, price_as_of, freshness: 'delayed'|'monthly'|'manual', value, value_ref, unrealised, unrealised_pct, realised, proxy_of}]`, `real_estate[{id, name, value_ref, valued_on, stale: bool}]`, `debts[{id, name, balance_ref, rate_bp, monthly_payment}]`, `allocation{class[], currency[], country[]}` (`{key, value_ref, share}`), `totals` | 4 KB |
+| Positions + allocation | `api.get_portfolio(p_etag)` | | `positions[{instrument_id, name, class, currency, qty, avg_cost, last_price, price_as_of, freshness: 'delayed'|'monthly'|'manual', value, value_ref, unrealised, unrealised_pct, realised, proxy_of}]`, `real_estate[{id, name, value_ref, valued_on, stale: bool}]`, `debts[{id, name, lender, balance_ref, rate_bp, monthly_payment}]` (**lender: BACKEND_NEEDS #7**), `allocation{class[], currency[], country[]}` (`{key, value_ref, share}`), `totals` | 4 KB |
 | Add trade | `api.add_trade` | `{p_client_id, instrument_id, side, trade_date, quantity, price, currency, fees}` | `{status: applied|rejected, reason_key?, position}`; enqueues recompute | 0.3 KB |
 | Instrument search | `api.search_instruments(p_q)` | | `[{id, name, class, currency, proxy_of}]` ≤ 20 | 1 KB |
 | Real estate | `api.upsert_real_estate`, `api.add_valuation` | `{p_client_id, id, name, country, currency}` / `{p_client_id, real_estate_id, value, valued_on}` | `{status}` | 0.1 KB |
-| Debts | `api.upsert_debt` | debt fields | `{status}` | 0.1 KB |
-| Asset detail | `api.get_asset(p_instrument_id, p_range '3M'|'1Y'|'5Y', p_etag)` | | `candles[[d,o,h,l,c]]` (≤ 260, LTTB/weekly for 5Y), `stats{last, change_1d, change_1y, vol_ann, beta, benchmark}`, `my_position?`, `attribution_text_key` | 6 KB |
+| Debts | `api.upsert_debt` | debt fields incl. `lender` (#7) | `{status}` | 0.1 KB |
+| Asset detail | `api.get_asset(p_instrument_id, p_range '3M'|'1Y'|'5Y', p_etag)` | | `candles[[d,o,h,l,c]]` (≤ 260 for 3M/1Y; **5Y = monthly candles, ≤ 60 — BACKEND_NEEDS #8**), `stats{last, change_1d, change_1y, vol_ann, beta, benchmark}`, `my_position?`, `attribution_text_key` | 6 KB |
 
 ### 2.5 Markets (§2.4)
 
@@ -158,8 +164,8 @@ applied|duplicate|conflict|rejected, reason_key?, current?}]`.
 
 | Call | Response | Size |
 |---|---|---|
-| `api.analyst_queue(p_status, p_cursor)` | `items[{alert_id, created_at, score, kind, reasons[], user_ref (short hash), country, bank_id, status, age_min}]` | 4 KB / 50 |
-| `api.analyst_alert(p_alert_id)` | `alert`, `score_breakdown`, `features`, `tx` (full ISO fields), `history_90d[{booking_ts, amount, cp_name, category_id, score}]`, `security_events_30d[]`, `devices[{label, security_level, created_at}]`, `previous_decisions[]`, `user_answer` | 15 KB |
+| `api.analyst_queue(p_status, p_cursor)` | `items[{alert_id, created_at, score, band, kind, reasons[], user_ref (short hash), country, bank_id, status, age_min, tx{amount, op_type, cp_name}, decided{by, at, simulated}?}]` (**band, tx, decided: BACKEND_NEEDS #9**) | 4 KB / 50 |
+| `api.analyst_alert(p_alert_id)` | `alert`, `score_breakdown{a_thr, a_if, f, m, rules[{code, weight}], bumps[{code, value}]}` with `reasons[{code, params, weight}]` and `user_events[{type, at}]` (notification sent, answer) (**BACKEND_NEEDS #10**), `features`, `tx` (full ISO fields), `history_90d[{booking_ts, amount, cp_name, category_id, score}]`, `security_events_30d[]`, `devices[{label, security_level, created_at}]`, `previous_decisions[]`, `user_answer` | 15 KB |
 | `api.analyst_decide({p_alert_id, p_decision, p_comment})` | `{status, param_changes[]}` → push to user | 0.3 KB |
 | `api.ops_metrics()` | push latency p50/p95 24 h, score latency, Groq backlog, last batch, quotas used, model eval, funnel counts | 3 KB |
 | `api.scoring_params()` / `api.reset_params(scope)` | params + change log | 5 KB |
@@ -185,7 +191,7 @@ country list, fonts and tour data are in the APK).
 | `categorise-llm` | pg_cron every 5 min if backlog | batch ≤ 40, Groq JSON mode, writes `category_source='ai'` |
 | `market-refresh` | pg_cron (*/10 crypto, */15 quotes, hourly FX) | `{kind}` → upserts `mkt.*`, bumps `mkt.version` |
 | `market-eod` | pg_cron 22:30 UTC Mon-Fri; FRED 14:00 UTC daily | daily bars, Frankfurter, FRED |
-| `notify` | pg_net from `api.analyst_decide`, reminders, budget alerts | `{user_id, alert_id, kind}` → Expo push (amount hidden unless setting) |
+| `notify` | pg_net from `api.analyst_decide`, reminders, budget alerts, **concentration breach (nightly batch), learning finished** (BACKEND_NEEDS #6) | `{user_id, alert_id, kind}` → Expo push **data message** `{type, channel, alert_id?, title_key, args{op_type, operator, payee_short, time, bank, category, asset, share, threshold, amount?}, sent_at}`; payee shortened server-side ("Awa K."); `amount` only when the user turned "Montants visibles" on (BACKEND_NEEDS #6) |
 | `dispatch-batch` | pg_cron 02:00 UTC + every 5 min if `ops.recompute_queue` not empty | GitHub `POST /repos/Johnfrancis6/GOLDENPIECE/actions/workflows/<file>/dispatches` |
 | `simulated-analyst` | pg_cron every 2 min (S2-4, accepted) | decides escalated alerts of persona-based users older than 10 min from ground truth, `simulated=true` |
 | `account-cleanup` | pg_cron 03:00 UTC | deletes expired demo clones, exports, old rows (DATA_MODEL §5) |
@@ -355,3 +361,31 @@ sequenceDiagram
   Note over DB: first-session guarantee: a 40-70 entry at +3 min, a > 70 next day 10:00 local
   Note over APP: "Créer mon compte" later = upgrade the anonymous user (link e-mail + password, same user_id) — demo data is KEPT (Franco); is_anonymous=false, so the 7-day cleanup no longer applies
 ```
+
+---
+
+## 5. Contract changes from the validated design (2026-11-23)
+
+[../design/BACKEND_NEEDS.md](../design/BACKEND_NEEDS.md) lists 10 changes;
+they are now part of the contracts above (marked **#n**). Session that
+implements each: #1-#5 `get_home` → B4/B5 (whichever builds `get_home`);
+#6 `notify` payload + triggers → B5; #7 `debts.lender` (column exists since
+B1) + `upsert_debt` and #8 5Y monthly candles → B3/B4; #9-#10 analyst
+fields → B5. Institutions shown by the app are **fictitious** (design B21:
+Kola Money, Savane Pay, Teranga Mobile, Lagune Cash, Sanaga Pay, Ogooué
+Money; Banque Baobab, Banque du Fleuve, Banque Lagune, Caisse Sahel, Caisse
+Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
+`ref.banks`; the `momo.operator` of a `ProviderEntry` is a `ref.operators` id.
+
+## 6. Built so far
+
+| RPC / function | Since | Schema |
+|---|---|---|
+| `api.health_public()` (anon) | B1 | `shared/schemas/health_public.json` |
+| `api.countries(p_lang)` (anon) | B1 | `countries.json` |
+| `api.legal_texts(p_lang)` (anon, draft texts until B10) | B1 | `legal_texts.json` |
+| `api.bootstrap(p_etag)` | B1 | `bootstrap.json` |
+| `api.register_device(p_device_id, p_platform, p_app_version, p_security_level, p_unlock_method, p_label?, p_os_version?)` | B1 | `register_device.request.json` |
+| `api.record_consents(p_items)` | B1 | `record_consents.request.json` |
+| `api.fx_rate(p_from, p_to)` (display rate; XOF/XAF peg exact, USD from `mkt.fx_latest`) | B1 | — |
+| `api.health_internal()` (service role) + Edge `health` (GET, no JWT) | B1 | `health.json` |

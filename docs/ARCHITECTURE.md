@@ -17,7 +17,7 @@ S2-10, replaced by a free provider without a domain (see CHALLENGES.md).
 check in the build session named; **[decision]** = validated by Franco;
 **[mine]** = architecture decision taken here (Franco may overrule).
 
-**Region:** **eu-west-3 (Paris)**. Franco's first RTT run (2026-11-22):
+**Region:** **eu-west-1 (Ireland)** — project `goldenpiece-dev` was created there on 2026-11-23 (Ireland 142 ms vs Paris 137 ms: within the 10 ms tie-break, accepted by Franco; see AUTORUN_BACKEND.md). Original plan was eu-west-3 (Paris). Franco's first RTT run (2026-11-22):
 London 131 ms, Paris 137 ms, Ireland 142 ms, Frankfurt 143 ms. London
 and Paris are within 10 ms → Paris by the SETUP §1 tie-break. Two more
 runs (other hours) can still change it only if London leads by > 10 ms
@@ -832,5 +832,5 @@ from secure-store); IF parity drift (CI gate); region RTT unknown
 | Minimum data for risk figures | Risk uses **current holdings × historical prices** (S2-12), so it does not wait for the user's own history. Per instrument: vol ≥ 60 daily returns; beta ≥ 120 returns overlapping its benchmark; VaR/CVaR 1-day historical ≥ 250 portfolio returns (≥ 12 tail points at 95 %); 1-month = 1-day × √21 (C5) with overlapping 21-day historical as "détails" if ≥ 500 returns; drawdown from the user's **own** value series ≥ 30 days. Instruments below thresholds are listed "historique insuffisant" and excluded from the figure (with their weight shown). |
 | Frequency of replayed scenarios | §7.8. |
 | Analyst-feedback bounds | §7.5. |
-| Supabase region | **eu-west-3 (Paris)** (RTT run 1, tie-break rule). |
+| Supabase region | **eu-west-1 (Ireland)** (dev project created there 2026-11-23, within the 10 ms tie-break; was eu-west-3). |
 | Reference phone specs | Pending SETUP §2; budgets unchanged until then. |

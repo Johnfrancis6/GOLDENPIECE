@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: supabase/setup-cli@v1
         with:
           version: 3.3.0
@@ -40,11 +40,14 @@ jobs:
         run: |
           supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --dry-run --yes
           supabase db push --remote --password "$SUPABASE_DB_PASSWORD" --yes
-      - name: PostgREST exposes only the api schema
+      - name: Project settings (PostgREST exposes only api; anonymous sign-ins for demo clones)
         run: |
           curl -sf -X PATCH "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/postgrest" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
             -d '{"db_schema":"api","db_extra_search_path":"extensions"}' > /dev/null
+          curl -sf -X PATCH "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/config/auth" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+            -d '{"external_anonymous_users_enabled":true}' > /dev/null
       - name: Edge Functions
         run: supabase functions deploy --use-api --yes
       - name: Smoke test
