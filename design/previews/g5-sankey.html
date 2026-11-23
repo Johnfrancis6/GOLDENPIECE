@@ -1,0 +1,56 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><title>G5</title><style>
+@font-face{font-family:P;font-weight:400;src:url(../fonts/PoppinsGP-Regular.ttf)}@font-face{font-family:P;font-weight:500;src:url(../fonts/PoppinsGP-Medium.ttf)}@font-face{font-family:P;font-weight:600;src:url(../fonts/PoppinsGP-SemiBold.ttf)}
+body{margin:0;background:#2a2a2a;font:15px/22px P}.w{display:flex;gap:16px;padding:16px;width:max-content;align-items:flex-start}
+.ph{width:360px;box-sizing:border-box;padding:8px 20px 24px;background:var(--bg);color:var(--tp)}
+.dark{--bg:#060606;--s1:#111111;--s3:#222222;--tp:#F5F5F5;--ts:#A3A3A3;--gain:#3DD68C;--loss:#FF6B7A;--br:#FF7A2F;--hl:rgba(255,255,255,.07)}
+.light{--bg:#F4F4F4;--s1:#FFFFFF;--s3:#E5E5E5;--tp:#0A0A0A;--ts:#5C5C5C;--gain:#0E7A43;--loss:#C8283C;--br:#B4410F;--hl:rgba(0,0,0,.07)}
+.lbl{font:500 11px/14px P;color:var(--ts);opacity:.7;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.4px}
+.t{font:600 18px/26px P}.sum{font:400 13px/18px P;color:var(--ts);margin-top:2px}.val{font:600 22px/28px P;font-variant-numeric:tabular-nums;margin-top:12px}.val .u{font-size:13px;color:var(--ts)}
+.chg{font:400 13px/18px P;color:var(--ts);margin-top:2px}
+.pill{margin-top:16px;height:40px;border-radius:999px;background:var(--s3);display:inline-flex;align-items:center;gap:6px;padding:0 16px;font:500 13px/18px P}
+.sk{margin-top:16px;position:relative}.sk svg{display:block;overflow:visible}
+.nl{position:absolute;font:400 12px/16px P;white-space:nowrap}.nl b{display:block;font:600 12px/16px P;font-variant-numeric:tabular-nums}.nl.l{text-align:right;white-space:normal;max-width:98px}.nl.dim{opacity:.4}
+.hubl{position:absolute;font:500 12px/16px P;color:var(--ts);text-align:center;white-space:nowrap;transform:translateX(-50%)}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:16px}.ib{width:40px;height:40px;border-radius:50%;background:var(--s3);display:grid;place-items:center}.tb{margin-left:auto;font:600 15px/22px P;color:var(--br)}
+.fr{font:400 12px/16px P;color:var(--ts);margin-top:8px}
+.big{font-size:26px}.big .t{font-size:36px;line-height:52px}.big .sum{font-size:26px;line-height:36px}
+.lc{background:var(--s1);border-radius:12px;margin-top:12px}.row{display:flex;gap:12px;padding:16px;align-items:center;flex-wrap:wrap}.row+.row{border-top:1px solid var(--hl)}
+.big .row span{font:400 26px/36px P}.big .row b{font:600 26px/36px P;margin-left:auto}.sw{width:24px;height:24px;border-radius:50%;flex:none}
+.st2{font:600 30px/40px P;margin-top:24px}
+</style><body><div class="w" id="w"></div>
+<script>
+const CL=ic=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="${ic}"/></svg>`;
+const C={dark:{inc:'#4CD68F',sav:'#5FD0E8',draw:'#F2C94C',Logement:'#A99BFF',Courses:'#FF9A5C',Factures:'#9DB0C7',Transport:'#6AA8FF',Restaurant:'#FFC940',Loisirs:'#F08ACB',Autres:'#A3A3A3',a:.34},
+ light:{inc:'#16894F',sav:'#0B6F8F',draw:'#8A6200',Logement:'#5B47D1',Courses:'#B8500F',Factures:'#4A5D75',Transport:'#1F5FBF',Restaurant:'#8A6200',Loisirs:'#B0307E',Autres:'#5C5C5C',a:.26}};
+const f=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+function sankey(theme,src,uses,sel){
+ const W=320,NW=8,xL=104,xH=160,xR=216,k=.36,G=6,MIN=34;
+ const tot=src.reduce((a,b)=>a+b.v,0);
+ function col(arr){let y=0;return arr.map(n=>{const h=n.v/1000*k,s=Math.max(h,MIN);const o={...n,h,y0:y+(s-h)/2,slot:[y,s]};y+=s+G;return o}).concat([{end:y-G}])}
+ const L=col(src),R=col(uses);const Hl=L.pop().end,Hr=R.pop().end,HH=tot/1000*k;const H=Math.max(Hl,Hr,HH)+30;
+ const T=22,hub0=T+Math.max(0,(Math.min(Hl,Hr)-HH)/2);L.forEach(n=>n.y0+=T);R.forEach(n=>n.y0+=T);
+ const c=C[theme];let p='',lab='';
+ const rib=(x0,y0a,y0b,x1,y1a,y1b,col,op)=>{const m=(x0+x1)/2;return `<path d="M${x0} ${y0a}C${m} ${y0a} ${m} ${y1a} ${x1} ${y1a}L${x1} ${y1b}C${m} ${y1b} ${m} ${y0b} ${x0} ${y0b}Z" fill="${col}" fill-opacity="${op}"/>`};
+ let hy=hub0;L.forEach(n=>{const on=!sel||sel===n.name;p+=rib(xL+NW,n.y0,n.y0+n.h,xH,hy,hy+n.h,n.col?c[n.col]:c.inc,on?c.a:c.a*.35);hy+=n.h});
+ hy=hub0;R.forEach(n=>{const on=!sel||sel===n.name;p+=rib(xH+NW,hy,hy+n.h,xR,n.y0,n.y0+n.h,c[n.col||n.name],on?c.a:c.a*.35);hy+=n.h});
+ L.forEach(n=>{const on=!sel||sel===n.name;p+=`<rect x="${xL}" y="${n.y0}" width="${NW}" height="${Math.max(n.h,2)}" fill="${n.col?c[n.col]:c.inc}" opacity="${on?1:.4}"/>`;lab+=`<div class="nl l${on?'':' dim'}" style="right:${W-xL+6}px;top:${n.y0+n.h/2-16}px">${n.name}<b>${n.hide?'•••':f(n.v)} F</b></div>`});
+ R.forEach(n=>{const on=!sel||sel===n.name;p+=`<rect x="${xR}" y="${n.y0}" width="${NW}" height="${Math.max(n.h,2)}" fill="${c[n.col||n.name]}" opacity="${on?1:.4}"/>`;lab+=`<div class="nl${on?'':' dim'}" style="left:${xR+NW+6}px;top:${n.y0+n.h/2-16}px">${n.name}<b>${f(n.v)} F</b></div>`});
+ p+=`<rect x="${xH}" y="${hub0}" width="${NW}" height="${HH}" fill="${c.inc}" opacity="${sel?.4:1}"/>`;
+ lab+=`<div class="hubl" style="left:${xH+NW/2}px;top:0px">Revenus</div>`;
+ return `<div class="sk" style="height:${H}px"><svg width="${W}" height="${H}">${p}</svg>${lab}</div>`;
+}
+const chev='M15 18l-6-6 6-6',chevR='M9 18l6-6-6-6',cd='M6 9l6 6 6-6';
+const SRC=[{name:'Salaire',v:520000},{name:'Mobile money',v:95000},{name:'Autres revenus',v:35000}];
+const USE=[{name:'Logement',v:180000},{name:'Courses',v:118000},{name:'Factures',v:72000},{name:'Transport',v:54000},{name:'Restaurant',v:52000},{name:'Loisirs',v:31000},{name:'Autres',v:51000},{name:'Épargne',v:92000,col:'sav'}];
+function frame(theme,sel,src,use,sum,val,chg){return `<div class="t">Flux du mois</div><div class="sum">${sum}</div><div class="val">${val} <span class="u">F</span></div><div class="chg">${chg}</div><div class="pill">Mois Novembre <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="${cd}"/></svg></div>${sankey(theme,src,use,sel)}<div class="ctl"><span class="ib">${CL(chev)}</span><span class="ib">${CL(chevR)}</span><span class="tb">Voir en tableau</span></div><div class="fr">Mis à jour le 23 nov., 08:10</div>`}
+const S1='Sur 650 000 F reçus, vous avez dépensé 558 000 F et mis 92 000 F de côté.';
+let h=`<div class="ph dark"><div class="lbl">Cadre B8 · novembre</div>${frame('dark',null,SRC,USE,S1,'650 000','Revenus du mois')}</div>`;
+h+=`<div class="ph light"><div class="lbl">Doigt sur « Courses »</div>${frame('light','Courses',SRC,USE,S1,'118 000','Courses · 18 % de vos revenus')}</div>`;
+const SRC2=[{name:'Salaire',v:410000},{name:'Mobile money',v:60000},{name:'Tontine',v:30000},{name:'Ventes',v:12000},{name:'Autres revenus',v:8000},{name:'Épargne',v:48000,col:'draw'}];
+const USE2=[{name:'Logement',v:180000},{name:'Courses',v:131000},{name:'Factures',v:78000},{name:'Transport',v:59000},{name:'Restaurant',v:47000},{name:'Loisirs',v:28000},{name:'Autres',v:45000}];
+h+=`<div class="ph dark"><div class="lbl">Cas chargé · dépenses &gt; revenus</div>${frame('dark',null,SRC2,USE2,'Vous avez dépensé 48 000 F de plus que vos revenus ; la différence vient de votre épargne.','568 000','Dépenses du mois')}</div>`;
+const row=(c,n,v)=>`<div class="row"><span class="sw" style="background:${c}"></span><span>${n}</span><b>${f(v)} F</b></div>`;
+const c=C.dark;
+h+=`<div class="ph dark big"><div class="lbl">Police 200 % · liste à la place du schéma</div><div class="t">Flux du mois</div><div class="sum">${S1}</div><div class="st2">D'où vient l'argent</div><div class="lc">${SRC.map(s=>row(c.inc,s.name,s.v)).join('')}</div><div class="st2">Où il part</div><div class="lc">${USE.slice(0,4).map(s=>row(c[s.col||s.name],s.name,s.v)).join('')}<div class="row"><span style="color:var(--ts)">… 4 de plus</span></div></div><div class="tb" style="margin-top:16px;font-size:26px;line-height:36px">Voir le schéma</div></div>`;
+document.getElementById('w').innerHTML=h;
+</script>
