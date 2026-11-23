@@ -1,0 +1,495 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_home.json",
+  "title": "api.get_home(p_etag): envelope; data below (API.md §2.2 + BACKEND_NEEDS #1-#5). networth is live (today's balances, quotes and rates); spark/changes from analytics.networth_daily",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/envelope"
+    }
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "ref_currency",
+        "networth",
+        "spark_30d",
+        "alerts",
+        "budget",
+        "market_strip",
+        "learning",
+        "fx",
+        "accounts",
+        "counts",
+        "top_mover",
+        "top_category",
+        "uncategorised_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ref_currency": {
+          "type": "string"
+        },
+        "networth": {
+          "type": "object",
+          "required": [
+            "net",
+            "assets",
+            "liabilities",
+            "change_day",
+            "change_month",
+            "series_as_of"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "net": {
+              "type": "integer"
+            },
+            "assets": {
+              "type": "integer"
+            },
+            "liabilities": {
+              "type": "integer"
+            },
+            "change_day": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "change_month": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "series_as_of": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date"
+            }
+          }
+        },
+        "spark_30d": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "alerts": {
+          "type": "object",
+          "required": [
+            "open_count",
+            "to_confirm_count",
+            "top"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "open_count": {
+              "type": "integer"
+            },
+            "to_confirm_count": {
+              "type": "integer"
+            },
+            "top": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "budget": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "market_strip": {
+          "type": "array",
+          "maxItems": 5
+        },
+        "learning": {
+          "type": "object"
+        },
+        "fx": {
+          "type": "object"
+        },
+        "accounts": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "display_name",
+              "institution",
+              "balance",
+              "balance_ref"
+            ]
+          }
+        },
+        "counts": {
+          "type": "object",
+          "required": [
+            "accounts",
+            "positions"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "accounts": {
+              "type": "integer"
+            },
+            "positions": {
+              "type": "integer"
+            }
+          }
+        },
+        "top_mover": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "top_category": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "uncategorised_count": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "fx": {
+          "EUR": 655.957,
+          "USD": 602.3591,
+          "XAF": 1,
+          "XOF": 1
+        },
+        "alerts": {
+          "top": {
+            "id": "d04dbb7e-a005-4567-af15-b86ce9842f5c",
+            "band": "info",
+            "kind": "concentration",
+            "score": null,
+            "reason": {
+              "code": "concentration_breach",
+              "params": {
+                "asset": "SPY",
+                "share": 70.0,
+                "asset_key": "SPY",
+                "threshold": 25
+              }
+            },
+            "status": "open",
+            "created_at": "2026-11-23T17:47:57.828606+00:00"
+          },
+          "open_count": 2,
+          "to_confirm_count": 0
+        },
+        "budget": null,
+        "counts": {
+          "accounts": 3,
+          "positions": 2
+        },
+        "accounts": [
+          {
+            "id": "0b55c883-fff7-444a-b993-c54feffd326d",
+            "kind": "momo",
+            "balance": {
+              "c": "XOF",
+              "m": 45787
+            },
+            "currency": "XOF",
+            "balance_ref": 45787,
+            "institution": "kola_money",
+            "display_name": "Kola Money"
+          },
+          {
+            "id": "8ae84c0f-2545-4996-952e-c73d271633c0",
+            "kind": "momo",
+            "balance": {
+              "c": "XOF",
+              "m": 102200
+            },
+            "currency": "XOF",
+            "balance_ref": 102200,
+            "institution": "teranga_mobile",
+            "display_name": "Teranga Mobile"
+          },
+          {
+            "id": "f013b71e-65e3-4859-87c9-654a4176bbf9",
+            "kind": "bank",
+            "balance": {
+              "c": "XOF",
+              "m": 2388300
+            },
+            "currency": "XOF",
+            "balance_ref": 2388300,
+            "institution": "banque_baobab",
+            "display_name": "Compte courant"
+          }
+        ],
+        "learning": {
+          "ops": 991,
+          "days": 364,
+          "active": true
+        },
+        "networth": {
+          "net": 1475081,
+          "assets": 3775081,
+          "change_day": {
+            "abs": -550463,
+            "pct": -27.18
+          },
+          "liabilities": 2300000,
+          "change_month": {
+            "abs": -654631,
+            "pct": -30.74
+          },
+          "series_as_of": "2026-11-23"
+        },
+        "spark_30d": [
+          [
+            "2026-10-25",
+            2111210
+          ],
+          [
+            "2026-10-26",
+            2113929
+          ],
+          [
+            "2026-10-27",
+            2126803
+          ],
+          [
+            "2026-10-28",
+            2096891
+          ],
+          [
+            "2026-10-29",
+            2071436
+          ],
+          [
+            "2026-10-30",
+            2054622
+          ],
+          [
+            "2026-10-31",
+            2034775
+          ],
+          [
+            "2026-11-01",
+            1980070
+          ],
+          [
+            "2026-11-02",
+            1938455
+          ],
+          [
+            "2026-11-03",
+            1835737
+          ],
+          [
+            "2026-11-04",
+            1853339
+          ],
+          [
+            "2026-11-05",
+            1790828
+          ],
+          [
+            "2026-11-06",
+            1804363
+          ],
+          [
+            "2026-11-07",
+            1788401
+          ],
+          [
+            "2026-11-08",
+            1778231
+          ],
+          [
+            "2026-11-09",
+            1770494
+          ],
+          [
+            "2026-11-10",
+            1749177
+          ],
+          [
+            "2026-11-11",
+            1772364
+          ],
+          [
+            "2026-11-12",
+            1760683
+          ],
+          [
+            "2026-11-13",
+            2392209
+          ],
+          [
+            "2026-11-14",
+            2335395
+          ],
+          [
+            "2026-11-15",
+            2348023
+          ],
+          [
+            "2026-11-16",
+            2329187
+          ],
+          [
+            "2026-11-17",
+            2321590
+          ],
+          [
+            "2026-11-18",
+            2307889
+          ],
+          [
+            "2026-11-19",
+            2272301
+          ],
+          [
+            "2026-11-20",
+            2051399
+          ],
+          [
+            "2026-11-21",
+            2027745
+          ],
+          [
+            "2026-11-22",
+            2025544
+          ],
+          [
+            "2026-11-23",
+            1991815
+          ]
+        ],
+        "top_mover": {
+          "name": "Bitcoin",
+          "spark_30d": [
+            80888.16,
+            80154.09,
+            80150.56,
+            80909.77,
+            81343.5,
+            77991.89,
+            77368.77,
+            77582.02,
+            78354.0,
+            76816.0,
+            77453.86,
+            80504.01,
+            76088.01,
+            75844.0,
+            75867.59,
+            74851.44,
+            75368.41,
+            73796.06,
+            74015.19,
+            71460.0,
+            68314.0,
+            64150.0,
+            65351.05,
+            64882.87,
+            64947.35,
+            63068.22,
+            61986.73,
+            58951.51,
+            60215.77,
+            61271.08
+          ],
+          "instrument_id": "BTC",
+          "change_30d_pct": -24.25
+        },
+        "market_strip": [
+          {
+            "name": "S&P 500",
+            "as_of": "2026-11-23T17:44:52+00:00",
+            "price": 721.26,
+            "delayed": true,
+            "proxy_of": "S&P 500",
+            "freshness": "delayed",
+            "change_pct": 4.5592,
+            "instrument_id": "SPY"
+          },
+          {
+            "name": "Or",
+            "as_of": "2026-11-23T17:24:00+00:00",
+            "price": 3663.40337,
+            "delayed": true,
+            "proxy_of": null,
+            "freshness": "delayed",
+            "change_pct": 3.6961,
+            "instrument_id": "XAU"
+          },
+          {
+            "name": "Cacao",
+            "as_of": "2026-09-01T00:00:00+00:00",
+            "price": 5918.98142798,
+            "delayed": true,
+            "proxy_of": null,
+            "freshness": "monthly",
+            "change_pct": -1.1938,
+            "instrument_id": "COCOA"
+          },
+          {
+            "name": "Bitcoin",
+            "as_of": "2026-11-23T17:49:56+00:00",
+            "price": 61405.0,
+            "delayed": true,
+            "proxy_of": null,
+            "freshness": "delayed",
+            "change_pct": 1.0413,
+            "instrument_id": "BTC"
+          },
+          {
+            "name": "Euro / F CFA",
+            "as_of": "2026-11-23T17:24:00+00:00",
+            "price": 655.957,
+            "delayed": true,
+            "proxy_of": null,
+            "freshness": "peg",
+            "change_pct": 0.0,
+            "instrument_id": "EURXOF"
+          }
+        ],
+        "ref_currency": "XOF",
+        "top_category": {
+          "share": 0.6591,
+          "spent_ref": 380000,
+          "category_id": "housing"
+        },
+        "uncategorised_count": 4
+      },
+      "etag": "db238bf4fd47cfbd97f20bf66fd25f50",
+      "as_of": "2026-11-23T17:51:52.360613+00:00",
+      "not_modified": false
+    }
+  ]
+}

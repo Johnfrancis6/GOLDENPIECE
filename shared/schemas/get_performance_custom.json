@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_performance_custom.json",
+  "title": "api.get_performance_custom(p_from, p_to): {as_of (last batch day), data} — computed live in SQL (API.md §2.8)",
+  "type": "object",
+  "required": [
+    "as_of",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "period",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "period": {
+          "enum": [
+            "1M",
+            "YTD",
+            "1Y",
+            "ITD",
+            "custom"
+          ]
+        },
+        "start": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "end": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "ref_currency": {
+          "enum": [
+            "XOF",
+            "XAF",
+            "EUR",
+            "USD"
+          ]
+        },
+        "twr": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "irr": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "annualised": {
+          "type": "boolean"
+        },
+        "pnl_ref": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "insufficient",
+            "pending"
+          ]
+        },
+        "contributions": {
+          "type": "object",
+          "required": [
+            "instrument",
+            "class"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "instrument": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "name",
+                  "avg_weight",
+                  "return_local",
+                  "return_ref",
+                  "contribution",
+                  "currency_effect"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avg_weight": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "return_local": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "return_ref": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "contribution": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "currency_effect": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "class": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "name",
+                  "avg_weight",
+                  "return_local",
+                  "return_ref",
+                  "contribution",
+                  "currency_effect"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avg_weight": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "return_local": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "return_ref": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "contribution": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "currency_effect": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "currency_effect_total": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "end": "2026-11-20",
+        "irr": 0.09403578,
+        "twr": 0.09380691,
+        "start": "2026-03-01",
+        "period": "custom",
+        "status": "ok",
+        "pnl_ref": 56971,
+        "annualised": false,
+        "ref_currency": "EUR",
+        "contributions": {
+          "class": [
+            {
+              "key": "etf",
+              "name": "etf",
+              "avg_weight": 0.891014,
+              "return_ref": 0.075325,
+              "contribution": 0.096795,
+              "return_local": 0.001087,
+              "currency_effect": 0.063321
+            },
+            {
+              "key": "crypto",
+              "name": "crypto",
+              "avg_weight": 0.108986,
+              "return_ref": 0.066528,
+              "contribution": 0.00711,
+              "return_local": 0.028076,
+              "currency_effect": 0.008279
+            }
+          ],
+          "instrument": [
+            {
+              "key": "SPY",
+              "name": "S&P 500",
+              "avg_weight": 0.544173,
+              "return_ref": 0.080138,
+              "contribution": 0.058368,
+              "return_local": 0.005569,
+              "currency_effect": 0.038117
+            },
+            {
+              "key": "QQQ",
+              "name": "Nasdaq 100",
+              "avg_weight": 0.346841,
+              "return_ref": 0.07621,
+              "contribution": 0.038427,
+              "return_local": 0.00191,
+              "currency_effect": 0.025205
+            },
+            {
+              "key": "ETH",
+              "name": "Ethereum",
+              "avg_weight": 0.108986,
+              "return_ref": 0.066528,
+              "contribution": 0.00711,
+              "return_local": 0.028076,
+              "currency_effect": 0.008279
+            }
+          ]
+        },
+        "currency_effect_total": 0.0716
+      },
+      "as_of": "2026-11-23"
+    }
+  ]
+}

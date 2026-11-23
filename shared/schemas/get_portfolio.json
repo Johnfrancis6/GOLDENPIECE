@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_portfolio.json",
+  "title": "api.get_portfolio(p_etag): envelope; data below (API.md §2.4, BACKEND_NEEDS #7 lender)",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/envelope"
+    }
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "ref_currency",
+        "positions",
+        "real_estate",
+        "debts",
+        "allocation",
+        "totals"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ref_currency": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "instrument_id",
+              "name",
+              "class",
+              "currency",
+              "qty",
+              "avg_cost",
+              "last_price",
+              "price_as_of",
+              "freshness",
+              "value",
+              "value_ref",
+              "unrealised",
+              "unrealised_pct",
+              "realised",
+              "proxy_of"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "instrument_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "class": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "qty": {
+                "type": "number"
+              },
+              "avg_cost": {
+                "$ref": "common.json#/$defs/money"
+              },
+              "last_price": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "price_as_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "freshness": {
+                "enum": [
+                  "delayed",
+                  "daily",
+                  "monthly",
+                  "peg",
+                  "manual"
+                ]
+              },
+              "value": {
+                "$ref": "common.json#/$defs/money"
+              },
+              "value_ref": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "unrealised": {
+                "$ref": "common.json#/$defs/money"
+              },
+              "unrealised_pct": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "realised": {
+                "$ref": "common.json#/$defs/money"
+              },
+              "proxy_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "real_estate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "value_ref",
+              "valued_on",
+              "stale"
+            ]
+          }
+        },
+        "debts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "lender",
+              "balance",
+              "balance_ref",
+              "rate_bp",
+              "monthly_payment",
+              "row_version"
+            ]
+          }
+        },
+        "allocation": {
+          "type": "object",
+          "required": [
+            "class",
+            "currency",
+            "country"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "class": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "currency": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "country": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "value_ref",
+                  "share"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value_ref": {
+                    "type": "integer"
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "totals": {
+          "type": "object",
+          "required": [
+            "positions_ref",
+            "real_estate_ref",
+            "debts_ref",
+            "investments_ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "positions_ref": {
+              "type": "integer"
+            },
+            "real_estate_ref": {
+              "type": "integer"
+            },
+            "debts_ref": {
+              "type": "integer"
+            },
+            "investments_ref": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "debts": [],
+        "totals": {
+          "debts_ref": 0,
+          "positions_ref": 697098,
+          "investments_ref": 2602711,
+          "real_estate_ref": 1905613
+        },
+        "positions": [
+          {
+            "qty": 5.0,
+            "name": "S&P 500",
+            "class": "etf",
+            "value": {
+              "c": "USD",
+              "m": 360630,
+              "r": 331163
+            },
+            "avg_cost": {
+              "c": "USD",
+              "m": 67647
+            },
+            "currency": "USD",
+            "proxy_of": "S&P 500",
+            "realised": {
+              "c": "USD",
+              "m": 9313,
+              "r": 8552
+            },
+            "freshness": "delayed",
+            "value_ref": 331163,
+            "last_price": 721.26,
+            "unrealised": {
+              "c": "USD",
+              "m": 22395,
+              "r": 20565
+            },
+            "price_as_of": "2026-11-23T17:44:52+00:00",
+            "instrument_id": "SPY",
+            "unrealised_pct": 6.62
+          },
+          {
+            "qty": 4.0,
+            "name": "Nasdaq 100",
+            "class": "etf",
+            "value": {
+              "c": "USD",
+              "m": 259824,
+              "r": 238594
+            },
+            "avg_cost": {
+              "c": "USD",
+              "m": 60192
+            },
+            "currency": "USD",
+            "proxy_of": "Nasdaq 100",
+            "realised": {
+              "c": "USD",
+              "m": 0,
+              "r": 0
+            },
+            "freshness": "delayed",
+            "value_ref": 238594,
+            "last_price": 649.56,
+            "unrealised": {
+              "c": "USD",
+              "m": 19056,
+              "r": 17499
+            },
+            "price_as_of": "2026-11-23T17:44:52+00:00",
+            "instrument_id": "QQQ",
+            "unrealised_pct": 7.91
+          },
+          {
+            "qty": 0.8,
+            "name": "Ethereum",
+            "class": "crypto",
+            "value": {
+              "c": "USD",
+              "m": 138672,
+              "r": 127341
+            },
+            "avg_cost": {
+              "c": "USD",
+              "m": 157876
+            },
+            "currency": "USD",
+            "proxy_of": null,
+            "realised": {
+              "c": "USD",
+              "m": 0,
+              "r": 0
+            },
+            "freshness": "delayed",
+            "value_ref": 127341,
+            "last_price": 1733.4,
+            "unrealised": {
+              "c": "USD",
+              "m": 12371,
+              "r": 11360
+            },
+            "price_as_of": "2026-11-23T17:49:56+00:00",
+            "instrument_id": "ETH",
+            "unrealised_pct": 9.79
+          }
+        ],
+        "allocation": {
+          "class": [
+            {
+              "key": "real_estate",
+              "share": 0.7322,
+              "value_ref": 1905613
+            },
+            {
+              "key": "etf",
+              "share": 0.2189,
+              "value_ref": 569757
+            },
+            {
+              "key": "crypto",
+              "share": 0.0489,
+              "value_ref": 127341
+            }
+          ],
+          "country": [
+            {
+              "key": "SN",
+              "share": 0.7322,
+              "value_ref": 1905613
+            },
+            {
+              "key": "US",
+              "share": 0.2189,
+              "value_ref": 569757
+            },
+            {
+              "key": "INTL",
+              "share": 0.0489,
+              "value_ref": 127341
+            }
+          ],
+          "currency": [
+            {
+              "key": "XOF",
+              "share": 0.7322,
+              "value_ref": 1905613
+            },
+            {
+              "key": "USD",
+              "share": 0.2678,
+              "value_ref": 697098
+            }
+          ]
+        },
+        "real_estate": [
+          {
+            "id": "2735d3a5-78c6-4b2e-93bf-3dadbd23f5b9",
+            "name": "Terrain à Saly",
+            "stale": false,
+            "value": {
+              "c": "XOF",
+              "m": 12500000,
+              "r": 1905613
+            },
+            "country": "SN",
+            "currency": "XOF",
+            "value_ref": 1905613,
+            "valued_on": "2026-09-24",
+            "row_version": 1
+          }
+        ],
+        "ref_currency": "EUR"
+      },
+      "etag": "3ad252f46cdddd8b432e8eecc058a7f8",
+      "as_of": "2026-11-23T17:51:51.884805+00:00",
+      "not_modified": false
+    }
+  ]
+}

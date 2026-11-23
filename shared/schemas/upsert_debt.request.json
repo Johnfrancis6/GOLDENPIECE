@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/upsert_debt.request.json",
+  "title": "api.upsert_debt arguments (API.md §2.4, #7)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "p_client_id",
+    "p_id",
+    "p_name",
+    "p_currency",
+    "p_principal_minor",
+    "p_balance_minor"
+  ],
+  "properties": {
+    "p_client_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "p_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "p_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "p_currency": {
+      "enum": [
+        "XOF",
+        "XAF",
+        "EUR",
+        "USD"
+      ]
+    },
+    "p_principal_minor": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "p_balance_minor": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "p_lender": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "p_annual_rate_bp": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "p_monthly_payment_minor": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "p_start_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "p_end_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "p_base_version": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "p_client_id": "0193e0a4-0000-7000-8000-000000000001",
+      "p_id": "0193e0a4-0000-7000-8000-000000000002",
+      "p_name": "Prêt auto",
+      "p_currency": "XOF",
+      "p_principal_minor": 3000000,
+      "p_balance_minor": 1900000,
+      "p_lender": "Banque Baobab",
+      "p_annual_rate_bp": 950,
+      "p_monthly_payment_minor": 95000
+    }
+  ]
+}
