@@ -9,7 +9,7 @@ The loop that worked in 10 sessions, minus the waste they measured (rebuilt prev
 bookkeeping, bugs Franco found by eye, a context that grew to 360k tokens).
 
 ## 0. Context (small on purpose)
-Read `design/RULES.md` (always), the item's row in `design/PLAN.md`, and only the validated files it reuses —
+Read `design/RULES.md` (always), the item's row in `design/PLAN.md` (no PLAN.md yet: run `design-plan`, or for a single item take its row from the README inventory), and only the validated files it reuses —
 by section, via `design/INDEX.md` (`sed -n 'A,Bp'`). Query tokens by path with python, never `cat tokens.json`.
 
 ## 1. Questions or defaults

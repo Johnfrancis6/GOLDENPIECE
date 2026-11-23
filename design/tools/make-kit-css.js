@@ -20,10 +20,10 @@ function vars(obj, prefix, out = []) {
 const kebab = s => s.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
 const fam = t.typography.family.files;
 let css = `/* Generated from tokens.json v${t.version} by make-kit-css.js — do not edit by hand. */\n`;
-for (const [w, f] of Object.entries(fam)) css += `@font-face{font-family:P;font-weight:${w};src:url(../fonts/${f}.ttf)}\n`;
+for (const [w, f] of Object.entries(fam)) css += `@font-face{font-family:P;font-weight:${w};src:url(../../fonts/${f}.ttf)}\n`;
 css += `*{box-sizing:border-box}body{margin:0;background:#2a2a2a;font:400 15px/22px P;-webkit-font-smoothing:antialiased}\n`;
 css += `.dark{${vars(t.colour.dark, '--c').join(';')}}\n.light{${vars(t.colour.light, '--c').join(';')}}\n`;
-css += `:root{${vars(t.spacing, '--s').filter(v => !v.includes('unit')).join(';')};${vars(t.radius, '--r').join(';')};--margin:${t.layout.screenMargin}px}\n`;
+css += `:root{${Object.entries(t.spacing).filter(([k]) => k !== 'unit').map(([k, v]) => `--${k}:${v}px`).join(';')};${Object.entries(t.radius).map(([k, v]) => `--r-${kebab(k)}:${v}px`).join(';')};--margin:${t.layout.screenMargin}px}\n`;
 for (const [k, v] of Object.entries(t.typography.scale))
   css += `.t-${kebab(k)}{font:${v.weight} ${v.size}px/${v.lineHeight}px P${v.letterSpacing ? `;letter-spacing:${v.letterSpacing}px` : ''}${v.tabular ? ';font-variant-numeric:tabular-nums' : ''}}\n`;
 css += `/* Preview frame: one phone at the reference size. Annotations go in .cap under the phone (D12). */

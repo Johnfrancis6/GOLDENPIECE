@@ -9,7 +9,7 @@ You build one preview for the GOLDENPIECE design system. Files in English; you d
 1. Read design/RULES.md and only the file ranges you were given. Query tokens by path with python; do not read
    tokens.json whole.
 2. Start from design/tools/kit/template.html (copy to design/previews/<id>-<slug>.html). Colours `var(--c-…)`,
-   type `.t-…`, spacing `var(--s…)`; icons from `node design/tools/icon.js <name> <size>`. Mark D11 structure with
+   type `.t-…`, spacing `var(--s1…--s16), radii var(--r-…)`; icons from `node design/tools/icon.js <name> <size>`. Mark D11 structure with
    data-block / data-action / data-row / data-side. Show what decides the item, dark and light; nothing else.
 3. Review: `node design/tools/lint-preview.js <html>` and `--font2x`. Fix every ERROR and re-run until 0 at 100 %;
    at 200 % fix what is a real defect and list what is by design. Fix type/colour warnings.

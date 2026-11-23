@@ -61,7 +61,9 @@ async function lintFile(browser, file) {
     });
   }
   const res = await page.evaluate(({sel, scale, minSize, tokenColours, font2x}) => {
-    const out = {contrEst: [], strip: [], type: [], grid: [], contr: [], overlap: [], clip: [], colour: [], d11: [], tap: [], annot: [], info: []};
+    const out = {font: [], contrEst: [], strip: [], type: [], grid: [], contr: [], overlap: [], clip: [], colour: [], d11: [], tap: [], annot: [], info: []};
+    const loaded = [...document.fonts].filter(f => f.status === 'loaded' && /P|Poppins/.test(f.family)).length;
+    if (!loaded) out.font.push({k: 'font', msg: 'Poppins GP did not load (fallback font): check the @font-face path (kit/tokens.css → ../../fonts)', n: 1});
     const phones = [...document.querySelectorAll(sel)];
     const frames = phones.length ? phones : [document.body];
     if (!phones.length) out.info.push(`no "${sel}" frame: whole page checked`);
@@ -238,7 +240,7 @@ async function lintFile(browser, file) {
   return res;
 }
 
-const SEV = {contrEst: 'warn', strip: 'warn', overlap: 'error', clip: 'error', contr: 'error', annot: 'error', d11: 'error', type: 'warn', grid: 'warn', colour: 'warn', tap: 'warn'};
+const SEV = {font: 'error', contrEst: 'warn', strip: 'warn', overlap: 'error', clip: 'error', contr: 'error', annot: 'error', d11: 'error', type: 'warn', grid: 'warn', colour: 'warn', tap: 'warn'};
 (async () => {
   const browser = await chromium.launch();
   let errors = 0; const report = {};
