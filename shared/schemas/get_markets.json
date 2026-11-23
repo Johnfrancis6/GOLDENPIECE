@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_markets.json",
+  "title": "api.get_markets(p_etag) response: envelope whose data is below (API.md §2.5, design B9)",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/envelope"
+    }
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "groups",
+        "attributions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "items"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "enum": [
+                  "indices",
+                  "metals",
+                  "energy",
+                  "agri",
+                  "crypto",
+                  "fx"
+                ]
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/item"
+                }
+              }
+            }
+          }
+        },
+        "attributions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^attr\\.[a-z]+$"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instrument_id",
+        "name",
+        "class",
+        "currency",
+        "unit",
+        "price",
+        "change_pct",
+        "change_30d_pct",
+        "spark_30d",
+        "as_of",
+        "freshness",
+        "proxy_of"
+      ],
+      "properties": {
+        "instrument_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "class": {
+          "enum": [
+            "equity",
+            "etf",
+            "crypto",
+            "commodity",
+            "fx",
+            "index_proxy"
+          ]
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "ISO 4217 (quote currency; may be outside the money set)"
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "price unit after the currency: oz, bbl, t, lb (null = currency only)"
+        },
+        "price": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "change_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "day change % (monthly series: vs previous month)"
+        },
+        "change_30d_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "change over 1 month (B9); monthly series: vs ≈ 2 months back"
+        },
+        "spark_30d": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "number"
+          },
+          "description": "≤ 30 daily closes, oldest first (monthly series: ≤ 13 monthly points)"
+        },
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "delayed",
+            "daily",
+            "monthly",
+            "peg"
+          ]
+        },
+        "proxy_of": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "groups": [
+          {
+            "key": "indices",
+            "items": [
+              {
+                "name": "S&P 500",
+                "unit": null,
+                "as_of": "2026-11-23T17:29:43+00:00",
+                "class": "etf",
+                "price": 722.6,
+                "currency": "USD",
+                "proxy_of": "S&P 500",
+                "freshness": "delayed",
+                "spark_30d": [
+                  739.95,
+                  732.44,
+                  730.2,
+                  715.87,
+                  689.81
+                ],
+                "change_pct": 4.7535,
+                "instrument_id": "SPY",
+                "change_30d_pct": -4.92
+              },
+              {
+                "name": "Nasdaq 100",
+                "unit": null,
+                "as_of": "2026-11-23T17:29:42+00:00",
+                "class": "etf",
+                "price": 651.28,
+                "currency": "USD",
+                "proxy_of": "Nasdaq 100",
+                "freshness": "delayed",
+                "spark_30d": [
+                  661.75,
+                  656.95,
+                  659.51,
+                  645.04,
+                  608.45
+                ],
+                "change_pct": 7.0392,
+                "instrument_id": "QQQ",
+                "change_30d_pct": -7.54
+              }
+            ]
+          },
+          {
+            "key": "agri",
+            "items": [
+              {
+                "name": "Cacao",
+                "unit": "t",
+                "as_of": "2026-09-01T00:00:00+00:00",
+                "class": "commodity",
+                "price": 5918.98,
+                "currency": "USD",
+                "proxy_of": null,
+                "freshness": "monthly",
+                "spark_30d": [
+                  4142.97,
+                  4395.46,
+                  5619.19,
+                  5990.5,
+                  5918.98
+                ],
+                "change_pct": -1.1938,
+                "instrument_id": "COCOA",
+                "change_30d_pct": -1.19
+              },
+              {
+                "name": "Café arabica",
+                "unit": "lb",
+                "as_of": "2026-09-01T00:00:00+00:00",
+                "class": "commodity",
+                "price": 3.30122,
+                "currency": "USD",
+                "proxy_of": null,
+                "freshness": "monthly",
+                "spark_30d": [
+                  3.1506,
+                  3.07826,
+                  3.59162,
+                  3.60632,
+                  3.30122
+                ],
+                "change_pct": -8.4601,
+                "instrument_id": "COFFEE",
+                "change_30d_pct": -8.46
+              }
+            ]
+          },
+          {
+            "key": "fx",
+            "items": [
+              {
+                "name": "Euro / F CFA",
+                "unit": null,
+                "as_of": "2026-11-23T17:24:00+00:00",
+                "class": "fx",
+                "price": 655.957,
+                "currency": "XOF",
+                "proxy_of": null,
+                "freshness": "peg",
+                "spark_30d": [
+                  655.957,
+                  655.957,
+                  655.957,
+                  655.957,
+                  655.957
+                ],
+                "change_pct": 0,
+                "instrument_id": "EURXOF",
+                "change_30d_pct": 0
+              },
+              {
+                "name": "Dollar / F CFA",
+                "unit": null,
+                "as_of": "2026-11-23T17:24:00+00:00",
+                "class": "fx",
+                "price": 602.359,
+                "currency": "XOF",
+                "proxy_of": null,
+                "freshness": "daily",
+                "spark_30d": [
+                  596.922,
+                  598.064,
+                  596.759,
+                  596.867,
+                  599.65
+                ],
+                "change_pct": 0.9201,
+                "instrument_id": "USDXOF",
+                "change_30d_pct": 2.78
+              }
+            ]
+          }
+        ],
+        "attributions": [
+          "attr.coingecko",
+          "attr.finnhub",
+          "attr.fred",
+          "attr.peg",
+          "attr.twelvedata"
+        ]
+      },
+      "etag": "0405d9248587792af0f7493fa7e34744",
+      "as_of": "2026-11-23T16:38:57+00:00",
+      "not_modified": false
+    },
+    {
+      "etag": "0405d9248587792af0f7493fa7e34744",
+      "not_modified": true
+    }
+  ]
+}

@@ -455,3 +455,9 @@ verify_jwt = false
 
 [functions.account-demo-cleanup]
 verify_jwt = false
+
+[functions.market-refresh]
+verify_jwt = false
+
+[functions.market-eod]
+verify_jwt = false

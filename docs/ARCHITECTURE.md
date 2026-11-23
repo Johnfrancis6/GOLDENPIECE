@@ -800,9 +800,9 @@ marked [secondary] in TECH_ANALYSIS §7 stay to verify.
 | Supabase no backups | data loss | data regenerable (seed) + `pg_dump` of `core` weekly to a private GitHub Actions artefact (90-day retention) [assumed acceptable: fake data] | — |
 | Supabase logs 1 day | no history | `ops.job_runs` 90 days | — |
 | Edge Function CPU limit per request [assumed 2 s] | scoring timeout | model parsed once per isolate; scoring ≈ 10-50 ms | — |
-| Twelve Data 800 credits/day, 8/min | stale quotes | daily bars only (30/day) + FX hourly (4 pairs × 24 = 96) ≈ 130/day | 84 % |
+| Twelve Data 800 credits/day, 8/min | stale quotes | daily bars (25/day) + FX & gold hourly (5 × 24 = 120) ≈ 145/day; 5-year backfill 25 credits once (B3, ≤ 8/min) | 82 % (cap 50 % enforced in `market_quota_take`) |
 | Finnhub 60/min | quotes fail | 12 symbols every 15 min in exchange hours ≈ 320/day, spread ≤ 12/min | 80 % per minute |
-| CoinGecko Demo 10k/month, 30/min | crypto stale | 1 call/10 min (all coins) + 8 daily history = ≈ 4,600/month | 54 % |
+| CoinGecko Demo 10k/month, 30/min | crypto stale | 1 call/10 min (all coins) = ≈ 4,460/month; history from Twelve Data (Demo stops at 365 days) (B3) | 55 % |
 | FRED key (~120/min [secondary]) | commodities stale | 4 series daily | ≫ 50 % |
 | Groq 1,000 RPD, 30 RPM, 200k TPD | uncategorised backlog | 40 labels/request; ≈ 30 requests/day; ≈ 60k tokens/day | 97 % / 70 % |
 | Expo free: 15 cloud builds/month | no builds | builds on GitHub Actions (S2-11) | — |

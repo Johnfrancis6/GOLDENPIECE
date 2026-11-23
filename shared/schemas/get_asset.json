@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/get_asset.json",
+  "title": "api.get_asset(p_instrument_id, p_range, p_etag) response (API.md §2.4; 5Y monthly = BACKEND_NEEDS #8)",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/envelope"
+    }
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instrument",
+        "range",
+        "interval",
+        "candles",
+        "stats",
+        "my_position",
+        "attribution_text_key",
+        "history_attribution_text_key"
+      ],
+      "properties": {
+        "instrument": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "class",
+            "currency",
+            "unit",
+            "proxy_of",
+            "group"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "class": {
+              "type": "string"
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$",
+              "description": "ISO 4217 (quote currency; may be outside the money set)"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "proxy_of": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "group": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "range": {
+          "enum": [
+            "3M",
+            "1Y",
+            "5Y"
+          ]
+        },
+        "interval": {
+          "enum": [
+            "day",
+            "month"
+          ]
+        },
+        "candles": {
+          "type": "array",
+          "maxItems": 260,
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "description": "[d, o, h, l, c], oldest first; 5Y (and monthly series) = monthly candles ≤ 60"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "last",
+            "as_of",
+            "freshness",
+            "change_1d",
+            "change_1y",
+            "vol_ann",
+            "beta",
+            "benchmark"
+          ],
+          "properties": {
+            "last": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "as_of": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "freshness": {
+              "enum": [
+                "delayed",
+                "daily",
+                "monthly",
+                "peg"
+              ]
+            },
+            "change_1d": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "change_1y": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "vol_ann": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "annualised volatility (fraction) of daily log returns over 1 year; null if < 60 returns"
+            },
+            "beta": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "vs benchmark over 1 year; null if < 120 overlapping returns"
+            },
+            "benchmark": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "my_position": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "qty",
+            "currency",
+            "avg_cost_minor",
+            "cost_minor",
+            "realised_minor"
+          ],
+          "properties": {
+            "qty": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$",
+              "description": "ISO 4217 (quote currency; may be outside the money set)"
+            },
+            "avg_cost_minor": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "cost_minor": {
+              "type": "integer"
+            },
+            "realised_minor": {
+              "type": "integer"
+            },
+            "value_minor": {
+              "type": "integer"
+            }
+          }
+        },
+        "attribution_text_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "history_attribution_text_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "range": "1Y",
+        "stats": {
+          "beta": null,
+          "last": 722.6,
+          "as_of": "2026-11-23T17:29:43+00:00",
+          "vol_ann": 0.1429,
+          "benchmark": "SPY",
+          "change_1d": 4.7535,
+          "change_1y": 9.65,
+          "freshness": "delayed"
+        },
+        "candles": [
+          [
+            "2026-11-18",
+            733.37,
+            735.06,
+            726.8,
+            730.2
+          ],
+          [
+            "2026-11-19",
+            737.46,
+            739.9,
+            715.65,
+            715.87
+          ],
+          [
+            "2026-11-20",
+            713.56,
+            718.29,
+            686.75,
+            689.81
+          ]
+        ],
+        "interval": "day",
+        "instrument": {
+          "id": "SPY",
+          "name": "S&P 500",
+          "unit": null,
+          "class": "etf",
+          "group": "indices",
+          "currency": "USD",
+          "proxy_of": "S&P 500"
+        },
+        "my_position": {
+          "qty": 5,
+          "currency": "USD",
+          "cost_minor": 219450,
+          "value_minor": 361300,
+          "avg_cost_minor": 43890,
+          "realised_minor": 7340
+        },
+        "attribution_text_key": "attr.finnhub",
+        "history_attribution_text_key": "attr.twelvedata"
+      },
+      "etag": "281674b75bec29480150c9b15ffbadaa",
+      "as_of": "2026-11-23T17:29:43+00:00",
+      "not_modified": false
+    },
+    {
+      "data": {
+        "range": "1Y",
+        "stats": {
+          "beta": null,
+          "last": 5918.98,
+          "as_of": "2026-09-01T00:00:00+00:00",
+          "vol_ann": null,
+          "benchmark": null,
+          "change_1d": -1.1938,
+          "change_1y": 5.87,
+          "freshness": "monthly"
+        },
+        "candles": [
+          [
+            "2026-08-01",
+            5990.5,
+            5990.5,
+            5990.5,
+            5990.5
+          ],
+          [
+            "2026-09-01",
+            5918.98,
+            5918.98,
+            5918.98,
+            5918.98
+          ]
+        ],
+        "interval": "month",
+        "instrument": {
+          "id": "COCOA",
+          "name": "Cacao",
+          "unit": "t",
+          "class": "commodity",
+          "group": "agri",
+          "currency": "USD",
+          "proxy_of": null
+        },
+        "my_position": null,
+        "attribution_text_key": "attr.fred",
+        "history_attribution_text_key": "attr.fred"
+      },
+      "etag": "58078cd54995d850eb63a8217a0636a2",
+      "as_of": "2026-09-01T00:00:00+00:00",
+      "not_modified": false
+    }
+  ]
+}

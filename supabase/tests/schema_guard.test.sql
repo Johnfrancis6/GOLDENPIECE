@@ -10,7 +10,7 @@ select tables_are('core', array['profiles','devices','consents','questionnaire',
   'transactions','tx_momo','security_events','trades','corporate_actions','real_estate','real_estate_valuations',
   'debts','user_categories','cat_rules','budgets','scores','alerts','analyst_decisions'], 'core tables (DATA_MODEL §2)');
 select tables_are('ref', array['countries','operators','banks','card_bins','legal_texts','categories','fraud_rules'], 'ref tables');
-select tables_are('mkt', array['instruments','quotes_latest','bars_daily','fx_daily','fx_latest','version'], 'mkt tables');
+select tables_are('mkt', array['instruments','quotes_latest','bars_daily','fx_daily','fx_latest','version','fetch_state','quota'], 'mkt tables');
 select tables_are('analytics', array['behaviour_profiles','learning_status','portfolio_daily','networth_daily',
   'risk_metrics','drawdown_series','exposures','performance','attribution'], 'analytics tables');
 select tables_are('ops', array['app_config','job_runs','audit_log','rate_limits','idempotency','recompute_queue',
