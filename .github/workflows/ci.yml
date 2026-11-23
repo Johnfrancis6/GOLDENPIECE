@@ -28,7 +28,8 @@ jobs:
         run: |
           python3 shared/fixtures/gen_money.py
           python3 shared/fixtures/gen_money_sql.py
-          git diff --exit-code -- shared/fixtures supabase/tests/money_fixtures.test.sql
+          python3 shared/fixtures/gen_iban.py
+          git diff --exit-code -- shared/fixtures supabase/tests/money_fixtures.test.sql supabase/tests/iban_fixtures.test.sql
       - name: pytest
         working-directory: batch
         run: python3 -m pytest -q
@@ -63,5 +64,21 @@ jobs:
         run: supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,supavisor,storage-api,postgres-meta
       - name: pgTAP
         run: supabase test db
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.9.6"
+      - name: Load simulated-bank templates (B2 generator)
+        working-directory: batch
+        run: python3 -m goldenpiece.generator.sim_templates --sql | psql -v ON_ERROR_STOP=1 -q "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+      - name: Provider contract (SimAdapter against the local stack)
+        working-directory: supabase/functions
+        run: |
+          eval "$(supabase status -o env | sed -n 's/^API_URL=/export SUPABASE_URL=/p; s/^SERVICE_ROLE_KEY=/export SUPABASE_SERVICE_ROLE_KEY=/p; s/^SECRET_KEY=/export GP_SECRET_KEY=/p')"
+          export SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-$GP_SECRET_KEY}"
+          test -n "$SUPABASE_URL" && test -n "$SUPABASE_SERVICE_ROLE_KEY"
+          GP_CONTRACT=1 deno test --allow-read --allow-env --allow-net _shared/provider/live_contract_test.ts
       - if: always()
         run: supabase stop --no-backup || true

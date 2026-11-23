@@ -6,7 +6,7 @@ name: deploy-dev
 on:
   push:
     branches: [main, "build/**"]
-    paths: ["supabase/**", ".github/workflows/deploy-dev.yml"]
+    paths: ["supabase/**", "batch/goldenpiece/generator/**", ".github/workflows/deploy-dev.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -50,6 +50,16 @@ jobs:
             -d '{"external_anonymous_users_enabled":true}' > /dev/null
       - name: Edge Functions
         run: supabase functions deploy --use-api --yes
+      - name: Functions URL for pg_cron → provider-tick (not a secret)
+        run: |
+          curl -sf -X POST "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+            -d "{\"query\": \"insert into ops.app_config (key, value) values ('functions', jsonb_build_object('url', 'https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1')) on conflict (key) do update set value = excluded.value\"}" > /dev/null
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Simulated-bank templates (skipped when the generator version is unchanged)
+        run: python3 scripts/sb_api.py load-sim
       - name: Smoke test
         run: |
           sleep 10
