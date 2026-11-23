@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame; continuation 2: C9, C18-C19,
+Updated 2026-11-22 (continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame, S2 Home; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -47,10 +47,10 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B6 Budget ring (Home: two tiles "Ce mois" + worst category; D3: badge left, ring right) | validated 2026-11-22 | [blocks/b6-budget-ring.md](blocks/b6-budget-ring.md) |
 | B9 Quote row (one card, freshness line under it, 1-month period; **G2 sparklines get a light fading area**, Franco 2026-11-23) | validated 2026-11-23 | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) |
 | B8 Chart frame (no card; title, summary sentence, 22 sp value driven by scrub, period bar or month pill, chart, controls, freshness) | validated 2026-11-23 | [blocks/b8-chart-frame.md](blocks/b8-chart-frame.md) |
-| Tokens | v0.25.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame) | [tokens.json](tokens.json) |
+| **S2 Home** (first full screen; light glow = gold bloom only; small title centred on scroll, C12 updated; profile circle → Settings) | validated 2026-11-23 | [screens/s2-home.md](screens/s2-home.md) |
+| Tokens | v0.26.0: all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame) + `screen` (home) | [tokens.json](tokens.json) |
 
-**Next items, in order** (README "Build order"): **S2 Home layout** (first full screen: check glow C light alphas
-there) → Alerts (C2-C4, B13, B14, B15 + G8, S6) → … → … → M14 App opening (last).
+**Next items, in order** (README "Build order"): **Alerts: C2-C4** (input, PIN, keypad), then B13, B14, B15 + G8, S6 → … → … → M14 App opening (last).
 
 Branch: `claude/brave-bardeen-g5ro94` (also holds Session 1-2 docs; not
 yet merged into `main`; Franco merges through a pull request).
@@ -158,7 +158,8 @@ yet merged into `main`; Franco merges through a pull request).
   exactly bank-card visuals appear is decided with S3 (accounts).
 - M14 App opening: Franco found the first proposal mediocre; design it
   **last**.
-- Glow C light-theme alphas and banding on the Tecno: to check (S2).
+- Glow C: light theme changed to gold bloom only (S2); banding and tint on
+  the Tecno still to check in the first build.
 - Done in F6 (formats.md): abbreviation rule used by F2 §3 ("1,2 M F CFA") and
   U+2212 minus / U+202F separators (Poppins GP has both).
 - Arrows and status shapes (▲ ▼ ● ◆) are icons (F4), not text glyphs.

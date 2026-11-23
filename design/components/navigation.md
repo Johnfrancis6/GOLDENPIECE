@@ -21,7 +21,8 @@
 | State | Look |
 |---|---|
 | Top of a tab screen | 56 dp bar with actions on the right (open-alert icon only when an alert is open, then the eye); **large title** under it, left, `titleScreen` 24/32 SemiBold, scrolls with the page |
-| Scrolled | the large title has scrolled away; a **small title** (15/22 SemiBold, left) fades in in the bar (`quick`, F5); 1 dp hairline under the bar |
+| Scrolled | the large title has scrolled away; a **small title** (15/22 SemiBold, **centred**, S2 2026-11-23) fades in in the bar (`quick`, F5); the bar takes the page background and a 1 dp hairline under it |
+| Home only | a 32 dp **profile circle** (initials) on the left of the bar opens Settings (S2, 2026-11-23) |
 | Sub-page | `arrow-left` back button (48 dp target) + small title + at most one action (`ellipsis` menu) |
 
 Actions follow the Finary-clean rule (icons.md §7): one action, plus the

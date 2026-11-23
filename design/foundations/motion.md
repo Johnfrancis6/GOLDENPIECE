@@ -75,8 +75,8 @@ until then.
 | `colour.bankCard` | — | linear 160°: `#1C1915` → `#141312` → `#111111` (barely warm black), hairline border |
 
 Many eased stops reduce visible colour banding on 8-bit LCD screens; to
-check on the Tecno Spark 50 [assumed LCD]. Light-theme alphas are scaled
-from dark [to confirm on S2 Home light].
+check on the Tecno Spark 50 [assumed LCD]. Light theme (S2, 2026-11-23): **gold bloom only**, no ember wash
+(the wash looked pink), alpha 0.40; banding still to check on the phone.
 
 ## 7. Performance
 

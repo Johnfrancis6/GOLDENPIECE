@@ -54,7 +54,7 @@ text on this orange is **forbidden** (2.6:1).
 
 | Token | Definition | Where |
 |---|---|---|
-| `glow.homeHeader` | **updated in F5 (variant C "Halo haut")**: gold → orange → ember radial bloom at the top right over a vertical ember wash, many eased stops; values in tokens, see [motion.md](motion.md) §6; height 330 dp | top of **Home only**, behind header and net-worth card |
+| `glow.homeHeader` | **updated in F5 (variant C "Halo haut")**: gold → orange → ember radial bloom at the top right over a vertical ember wash, many eased stops; values in tokens, see [motion.md](motion.md) §6; height 330 dp; light theme = gold bloom only (S2, 2026-11-23) | top of **Home only**, behind header and net-worth card |
 | `glow.edge` | linear 90°, ember → orange → gold, 2 dp high | top edge of **highlighted cards** only (bank-card visual, highlighted alert/offer card); not on the net-worth block, which sits on the page (F3 §7, 2026-11-22) |
 | `glow.goldSheen` | **updated in F5**: linear 110° gaussian band of gold `#FFC478` with a light-gold core, 25 stops, normal blend; layer 1.8 × card width | bank cards (M13, see §6) |
 
