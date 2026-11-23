@@ -55,13 +55,14 @@ Files are in English; UI copy is French first, then English.
 | B23 Device row (smartphone icon, model + "Actif … · city", "Cet appareil" tag; tap → C9 sheet with "Déconnecter cet appareil"; biometric/code, row fades, C11 toast) | [blocks/b23-device-row.md](blocks/b23-device-row.md) · [preview](previews/b23-device-row.png) | 2026-11-23 |
 | **S7 Settings** (one scrolling page, 6 groups Général · Sécurité · Notifications · Mes données · Aide · Compte; profile card, demo card with "Créer mon compte"; "Montants visibles" off, sheet + unlock to turn on) | [screens/s7-settings.md](screens/s7-settings.md) · [preview](previews/s7-settings.png) | 2026-11-23 |
 | **N Notifications** (3 channels Sécurité · Budgets · Marchés; 7 types; lock screen = general text; Oui / Non → unlock → B13 pre-selected; Budgets/Marchés ≤ 1 per day, quiet 22:00-07:00; amounts hidden by default) | [screens/n-notifications.md](screens/n-notifications.md) · [preview](previews/n-notifications.png) | 2026-11-23 |
+| **W Widgets** (Patrimoine 2×2 with 30-day line, Patrimoine 2×1, Budget, Alertes; amounts "••• F" by default, config switch + unlock; follows system theme) | [screens/w-widgets.md](screens/w-widgets.md) · [preview](previews/w-widgets.png) | 2026-11-23 |
 | **S1 Onboarding** (flow map: 5 dotted steps Langue · Pays · Compte · Sécurité · Accords; demo branch via persona; O13-O15 offered later from Home; O3 country tap = next; O12 one consents list, controls right, service required; O18 biometric first, PIN fallback) | [screens/s1-onboarding.md](screens/s1-onboarding.md) · [preview](previews/s1-onboarding.png) | 2026-11-23 |
 | **S6 Alerts** (header icon: 1 alert → that alert, ≥ 2 → L1; L1 = open alerts + "Historique des alertes"; history by month in compact rows; shield empty state; L5 once) | [screens/s6-alerts.md](screens/s6-alerts.md) · [preview](previews/s6-alerts.png) | 2026-11-23 |
 | **S5 Spending** (pills Aperçu · Flux · Budgets; one shared month pill; Aperçu hero = G3 value; info banner "N opérations à classer"; Sankey without hub label) | [screens/s5-spending.md](screens/s5-spending.md) · [preview](previews/s5-spending.png) · [200 %](previews/s5-spending-200.png) | 2026-11-23 |
 | **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Onboarding and Settings complete** (B19, B21, S1; B16, B23, S7 — 2026-11-23; B24 and T delegated, D13). **N notifications validated** (2026-11-23). Next: **W widgets → X copy FR/EN → D bank dashboard → M14 app opening (last)**. Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Onboarding and Settings complete** (B19, B21, S1; B16, B23, S7 — 2026-11-23; B24 and T delegated, D13). **N notifications and W widgets validated** (2026-11-23). Next: **X copy FR/EN → D bank dashboard → M14 app opening (last)**. Accounts: left to build sessions (D10). Rules D11 (clean screens) and D12 (no overlapping text) apply. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -228,7 +229,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 |---|---|---|
 | T | Guided tour | 5-7 steps |
 | N | Notifications | **validated 2026-11-23** → [screens/n-notifications.md](screens/n-notifications.md) |
-| W | Widgets | net worth (2×1 and 2×2), budget left, open alerts; light and dark; "•••" |
+| W | Widgets | **validated 2026-11-23** → [screens/w-widgets.md](screens/w-widgets.md) |
 | X | Copy FR / EN | reason codes, "?" texts, state messages |
 | D | Bank dashboard (web, 1280 px) | queue, detail, decision, model settings, Ops tab; dense layout, keyboard shortcuts |
 
