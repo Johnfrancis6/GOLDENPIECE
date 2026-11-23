@@ -766,3 +766,53 @@ Checks: `npx jest` → **75 passed** (3 new: mark geometry, sparkle path, M14 ti
 - Demo users cloned **before** the generator fix keep the old trader balances (anonymous, expire with the demo purge); new demos are correct.
 
 ### Next: B6.6 — Device + close (same branch, plan above)
+
+---
+
+## B6.6 — Device + close · 2026-11-23 · branch `build/b6-app-shell`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Android test build: GitHub Actions workflow `android` (push on `build/**`/`main` touching `app/**`, or manual): `npm ci` → `expo prebuild -p android --clean` → `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a` → artifact `goldenpiece-apk` (`goldenpiece-<sha>-arm64.apk`, 30 days). Release build = JS bundled, standalone (no Metro), signed with the template debug key (test phones only; B10 adds the upload keystore + AAB). `SENTRY_DISABLE_AUTO_UPLOAD=true` (no Sentry org/project yet). Added `expo-system-ui` (prebuild warned: needed for `userInterfaceStyle: automatic` on Android) | `.github/workflows/android.yml`, `app/package.json` | see "Measured" for the first run |
+| 2. Phone checks script (cold start p50 ≤ 3 s, M14 fluidity, airplane mode on Home, tour offline, lock) for Franco or any session with the phone | `docs/DEVICE_TEST.md` | written; **not run (no phone in the chain)** |
+| 3. B6 close: this section, PR #11 ready, B9 plan below, B9.1 created | — | done |
+
+Checks: `npx jest` 75 passed; `npx tsc --noEmit` clean; local `expo prebuild -p android` OK.
+
+### Measured
+
+- APK_RESULT_PLACEHOLDER
+
+### Decisions [B6.6] (one line each)
+
+- Gradle in GitHub Actions rather than EAS: no Expo project id/`eas init` needed, no EAS queue or monthly build quota, and the build is reproducible from the repo; EAS (with `EXPO_TOKEN`) stays the B10 option for store builds.
+- arm64-v8a only (Tecno Spark 50 class phones are arm64; smaller APK, half the native build time). Add `armeabi-v7a` if a 32-bit test phone appears.
+
+### BUILD_PLAN B6 "Done"
+
+| Criterion | State |
+|---|---|
+| cold start ≤ 3 s p50 on the Tecno | **blocked: phone** (DEVICE_TEST #1) |
+| airplane-mode test on Home | **blocked: phone** (DEVICE_TEST #3); logic covered by sync Jest tests + web offline check (B6.4) |
+| tour works offline | **blocked: phone** (DEVICE_TEST #4); tour reads bundled JSON (B6.4) |
+
+### Defects open
+
+- Tecno Spark 50 specs + phone results missing (SETUP §2, DEVICE_TEST) — Franco.
+- Brevo SMTP sign-up e-mail failing (B6.3) — Franco asked.
+- `sentryDsn` absent from `env.dev.json`; Sentry source-map upload disabled in the APK build.
+- Web preview only: `adjustsFontSizeToFit` no-op at 200 % (B6.4).
+
+### Plan by block and step — B9 Bank dashboard (branch `build/b9-bank-dashboard`, one draft PR)
+
+| Part | Steps (each with a test or a 1280 × 800 screenshot) |
+|---|---|
+| **B9.1 Shell + login** | 1. `dashboard/` Vite + React + TS scaffold, tokens copied from `design/tokens.json` (checked identical by a test), Poppins GP, FR/EN strings of D §7, light + dark (delegated: same tokens as app dark). 2. Supabase client (dev URL + publishable key), route guard: analyst role + aal2 else login. 3. Login + TOTP (delegated: B18 form + C2/C3 code entry, centred card 400): password sign-in, MFA enrol (QR) on first login, challenge/verify → aal2; a dev analyst account created by script (e-mail/password from env, never in the repo). 4. Top bar (brand mark tile, tabs pills, "En direct"/"Hors ligne", analyst name). 5. CI job `dashboard` (vitest, tsc, lint, build). |
+| **B9.2 Queue + detail** | 1. Queue (`analyst_queue`, chips Statut/Score/Type/24 h, groups, rows, simulated tag, search `/`). 2. Realtime on `core.alerts` (row fade-in, title count, offline banner disables decisions). 3. Detail head + Opération / Pourquoi (`.analyst` reason sentences) / Score breakdown / Réponse. 4. 90-day bars (G3 style + median + text summary), security events, devices (B23). 5. States: empty, decided by another analyst, aal1 redirect. |
+| **B9.3 Decision** | 1. Decision bar (comment required for Fraude, L/F/C/J/K/?/Esc keys, disabled while typing). 2. Toast "Décision enregistrée · Annuler" 8 s: the RPC is sent when the toast closes (no undo RPC exists), then next alert. 3. Live check: decide a dev alert → app user receives the decided status via Realtime and `ops.param_changes` logs the change (BUILD_PLAN "Done"). |
+| **B9.4 Settings + Ops + legal** | 1. Réglages du modèle (`scoring_params`: table, change log paged by 20, reset dialog → `reset_params`). 2. Ops tab (delegated: `ops_metrics` → B7 tiles + G1/G3 charts, one chart per card). 3. `/legal` (`legal_texts`, text page). 4. Screenshots light/dark 1280, contrast pairs of D §6. |
+| **B9.5 Deploy + close** | 1. Cloudflare Pages project (direct upload via API from CI or session), SPA fallback, security headers (CSP to the Supabase host). 2. Playwright e2e against dev (login with TOTP secret from env, queue, decide). 3. CHAIN_LOG B9 summary, PR ready, create **B7.1** (new branch `build/b7-accounts-spending-markets` from this one, plan B7 by block and step first). |
+
+### Next: B9.1 — Shell + login (new branch `build/b9-bank-dashboard` from `build/b6-app-shell`)
