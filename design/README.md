@@ -36,9 +36,10 @@ Files are in English; UI copy is French first, then English.
 | B9 Quote row (5 Home quotes in one card, freshness line, 1-month sparkline + change; G2 sparklines now with a light fading area) | [blocks/b9-quote-row.md](blocks/b9-quote-row.md) · [preview](previews/b9-quote-row.png) | 2026-11-23 |
 | B8 Chart frame (on the page, small value line driven by the scrub, visible summary sentence, month pill) | [blocks/b8-chart-frame.md](blocks/b8-chart-frame.md) · [preview](previews/b8-chart-frame.png) | 2026-11-23 |
 | **S2 Home** (Alertes → Budget → Marchés; light glow gold only; centred small title on scroll; profile circle → Settings) | [screens/s2-home.md](screens/s2-home.md) · [preview](previews/s2-home.png) | 2026-11-23 |
+| B7 Stat tiles (2 × 2 cards, plain sentence under the value, only "Évolution" coloured) | [blocks/b7-stat-tiles.md](blocks/b7-stat-tiles.md) · [preview](previews/b7-stat-tiles.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Spending (S5): B7 Stat tiles, G3 Bars, G5 Sankey, then S5** (new session, Franco 2026-11-23). Still open in Alerts: B14, B15 + G8, S6 (after Spending unless Franco says otherwise). Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Spending (S5): B7 ✓, G3 Bars, G5 Sankey, B22 Categories & rules, then S5** (Franco 2026-11-23). Still open in Alerts: B14, B15 + G8, S6 (after Spending unless Franco says otherwise). Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -216,7 +217,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
 5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
-7. **Spending (next, new session):** B7, G3, G5, B6 ✓, D4 categories (B22, moved here from Accounts), then S5.
+7. **Spending (in progress):** B7 ✓, G3, G5, B6 ✓, D4 categories (B22, moved here from Accounts), then S5.
 8. **Placements:** B10, B11, B12, G4, G6, G7, B18, then S4.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
