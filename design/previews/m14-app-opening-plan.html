@@ -39,7 +39,7 @@ body{margin:0;background:#2a2a2a;font:15px/22px P}.w{display:flex;gap:16px;paddi
 .light .blank{box-shadow:0 0 0 1px rgba(0,0,0,.06)}
 .bar{display:flex;gap:10px;padding:16px 16px 0;align-items:center}.bar button{font:600 14px P;border:0;border-radius:999px;padding:10px 18px;background:#333;color:#eee;cursor:pointer}.bar button.on{background:#FF7A2F;color:#060606}.bar span{font:400 13px P;color:#aaa;margin-left:8px}
 </style><body>
-<div class="bar"><button id="rp">Rejouer</button><button id="sl">Ralenti ×3</button><span>M14 · « Le plan » — inspiré de la référence Deel : un point trace la pièce, elle se remplit, devient la carte, l’Accueil se construit autour. ≈ 3,8 s</span></div>
+<div class="bar"><button id="rp">Rejouer</button><button id="sl">Ralenti ×3</button><span>M14 · « Le plan » — inspiré de la référence Deel : un point trace la pièce, elle se remplit, devient la carte, l’Accueil se construit autour. Rebond léger sur GOLDENPIECE, pause de 0,3 s avant l’Accueil. ≈ 4,3 s</span></div>
 <div class="w"><div class="col"><div class="ph dark" id="pdark">
 <div class="st"><span>07:42</span><span class="sti"> <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 20h.01" /> <path d="M2 8.82a15 15 0 0 1 20 0" /> <path d="M5 12.859a10 10 0 0 1 14 0" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /> </svg>  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 14v-4" /> <path d="M22 14v-4" /> <path d="M6 14v-4" /> <rect x="2" y="6" width="16" height="12" rx="2" /> </svg> </span></div>
 <div class="hd"><span class="av">AK</span><span class="hello">Bonjour, Amani</span><span class="ib"> <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="M12 8v4" /> <path d="M12 16h.01" /> </svg> <i></i></span><span class="ib"> <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /> <circle cx="12" cy="12" r="3" /> </svg> </span></div>
@@ -93,26 +93,29 @@ function build1(p){
   // 3 — outline fills: gold coin, dark G, ember accent (like the coloured piece)
   A(Q1(p,'.fl'),[{opacity:0,transform:'scale(.94)'},{opacity:1,transform:'scale(1)'}],{delay:1150,duration:450});
   A(Q1(p,'.ol'),[{opacity:1},{opacity:0}],{delay:1200,duration:300,easing:E.exit,fill:'forwards'});
-  Q(p,'.wm2 span').forEach((s,i)=>A(s,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{delay:1250+i*28,duration:420}));
+  // wordmark: letters rise with a light bounce (overshoot 2.5 px, soft settle), 24 ms stagger; last letter settles at 1750
+  Q(p,'.wm2 span').forEach((s,i)=>A(s,[{opacity:0,transform:'translateY(12px)',offset:0,easing:E.enter},{opacity:1,transform:'translateY(-2.5px)',offset:.6,easing:E.std},{opacity:1,transform:'translateY(.5px)',offset:.82,easing:E.std},{opacity:1,transform:'none',offset:1}],{delay:1150+i*24,duration:360,easing:'linear'}));
+  // hold: the full mark + wordmark stay still 300 ms (1750-2050) before Home starts building
+  const H=400; // everything after the hold is shifted by H vs the first version
   // 4 — mark leaves, a blank card grows in its place
-  A(Q1(p,'.mk'),[{opacity:1,transform:'none'},{opacity:0,transform:'scale(.7)'}],{delay:1700,duration:300,easing:E.exit,fill:'forwards'});
-  A(Q1(p,'.wm2'),[{opacity:1},{opacity:0,transform:'translateY(8px)'}],{delay:1650,duration:300,easing:E.exit,fill:'forwards'});
-  A(Q1(p,'.blank'),[{opacity:0,transform:'scale(.4)',offset:0,easing:E.enter},{opacity:1,transform:'scale(1)',offset:450/800,easing:E.std},{opacity:0,transform:'scale(1)',offset:1}],{delay:2000,duration:800,easing:'linear'});
+  A(Q1(p,'.mk'),[{opacity:1,transform:'none'},{opacity:0,transform:'scale(.7)'}],{delay:1700+H,duration:300,easing:E.exit,fill:'forwards'});
+  A(Q1(p,'.wm2'),[{opacity:1},{opacity:0,transform:'translateY(8px)'}],{delay:1650+H,duration:300,easing:E.exit,fill:'forwards'});
+  A(Q1(p,'.blank'),[{opacity:0,transform:'scale(.4)',offset:0,easing:E.enter},{opacity:1,transform:'scale(1)',offset:450/800,easing:E.std},{opacity:0,transform:'scale(1)',offset:1}],{delay:2000+H,duration:800,easing:'linear'});
   // the real card sits at the screen centre, fills with gradient, then moves up to its Home place
   const card=Q1(p,'.card');const dy=212,dx=12;
-  A(card,[{opacity:0,transform:`translate(${dx}px,${dy}px)`},{opacity:1,transform:`translate(${dx}px,${dy}px)`}],{delay:2400,duration:400,easing:E.std});
-  A(card,[{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{delay:2850,duration:650,easing:E.morph,composite:'replace',fill:'forwards'});
-  Q(p,'.card .pill,.card .amt,.card .dl,.card .foot').forEach((e,i)=>A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{delay:2500+i*70,duration:450}));
-  counters.push({el:Q1(p,'.amt'),d:2550,dur:1100});
+  A(card,[{opacity:0,transform:`translate(${dx}px,${dy}px)`},{opacity:1,transform:`translate(${dx}px,${dy}px)`}],{delay:2400+H,duration:400,easing:E.std});
+  A(card,[{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{delay:2850+H,duration:650,easing:E.morph,composite:'replace',fill:'forwards'});
+  Q(p,'.card .pill,.card .amt,.card .dl,.card .foot').forEach((e,i)=>A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{delay:2500+H+i*70,duration:450}));
+  counters.push({el:Q1(p,'.amt'),d:2550+H,dur:1100});
   // 5 — the screen builds around the card
-  A(Q1(p,'.st'),[{opacity:0},{opacity:1}],{delay:2950,duration:400});
-  A(Q1(p,'.hd'),[{opacity:0,transform:'translateY(-8px)'},{opacity:1,transform:'none'}],{delay:3050,duration:500});
-  A(Q1(p,'.peek'),[{opacity:0,transform:'translateX(40px)'},{opacity:1,transform:'none'}],{delay:3150,duration:500});
-  A(Q1(p,'.dots'),[{opacity:0},{opacity:1}],{delay:3200,duration:400});
-  const ban=Q1(p,'.ban');if(ban)A(ban,[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{delay:3100,duration:500});
-  Q(p,'.act').forEach((a,i)=>A(a,[{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'scale(1)'}],{delay:3150+i*70,duration:450,easing:E.back}));
-  [['.tiles',3150],['.lh',3250],['.list',3300]].forEach(([s,d])=>A(Q1(p,s),[{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'none'}],{delay:d,duration:550}));
-  A(Q1(p,'.nav'),[{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'none'}],{delay:3350,duration:550});
+  A(Q1(p,'.st'),[{opacity:0},{opacity:1}],{delay:2950+H,duration:400});
+  A(Q1(p,'.hd'),[{opacity:0,transform:'translateY(-8px)'},{opacity:1,transform:'none'}],{delay:3050+H,duration:500});
+  A(Q1(p,'.peek'),[{opacity:0,transform:'translateX(40px)'},{opacity:1,transform:'none'}],{delay:3150+H,duration:500});
+  A(Q1(p,'.dots'),[{opacity:0},{opacity:1}],{delay:3200+H,duration:400});
+  const ban=Q1(p,'.ban');if(ban)A(ban,[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{delay:3100+H,duration:500});
+  Q(p,'.act').forEach((a,i)=>A(a,[{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'scale(1)'}],{delay:3150+H+i*70,duration:450,easing:E.back}));
+  [['.tiles',3150+H],['.lh',3250+H],['.list',3300+H]].forEach(([s,d])=>A(Q1(p,s),[{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'none'}],{delay:d,duration:550}));
+  A(Q1(p,'.nav'),[{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'none'}],{delay:3350+H,duration:550});
 }
 function build(){anims.forEach(a=>a.cancel());anims=[];counters=[];['pdark','plight'].forEach(build1);anims.forEach(a=>a.playbackRate=rate);T0=performance.now()}
 function fmt(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u202F')+'\u00A0F'}
