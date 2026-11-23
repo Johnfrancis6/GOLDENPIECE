@@ -47,5 +47,6 @@ export async function rpc<T>(name: string, args: Record<string, unknown> = {}, f
     }
     throw new RpcError(res.status, body);
   }
-  return await res.json() as T;
+  const text = await res.text();
+  return (text ? JSON.parse(text) : null) as T; // void functions answer 204 / empty body
 }

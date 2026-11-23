@@ -93,7 +93,7 @@ Size ≈ 2.5 KB; `not_modified` most opens.
 
 ### 2.5 Markets (§2.4)
 
-`api.get_markets(p_etag)` → `groups[{key: 'indices'|'metals'|'energy'|'agri'|'crypto'|'fx', items[{instrument_id, name, price, currency, change_pct, as_of, freshness, proxy_of}]}]`, `attributions[]` (CoinGecko etc.). XOF/XAF rows computed from the peg. ≈ 2 KB.
+`api.get_markets(p_etag)` → `groups[{key: 'indices'|'metals'|'energy'|'agri'|'crypto'|'fx', items[{instrument_id, name, class, currency, unit, price, change_pct, change_30d_pct, spark_30d[≤30], as_of, freshness: 'delayed'|'daily'|'monthly'|'peg', proxy_of}]}]`, `attributions[]` (i18n keys `attr.*`). **As built in B3**: `change_30d_pct` + `spark_30d` added for design B9 (Home strip and P7 show change and sparkline over 1 month); names in the profile language; the `fx` group holds `EURXOF` (peg, constant) and `USDXOF` (655.957 / ECB-or-hourly USD rate) — one row covers XOF and XAF (same parity). Home's 5-quote strip is a client-side pick from this payload (`SPY`, `XAU`, `COCOA`, `BTC`, `EURXOF`) until `get_home` (B4/B5) embeds it. Size: see CHAIN_LOG B3 (measured).
 
 ### 2.6 Spending (§2.5)
 
@@ -389,6 +389,12 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | `api.record_consents(p_items)` | B1 | `record_consents.request.json` |
 | `api.fx_rate(p_from, p_to)` (display rate; XOF/XAF peg exact, USD from `mkt.fx_latest`) | B1 | — |
 | `api.health_internal()` (service role) + Edge `health` (GET, no JWT) | B1 | `health.json` |
+| `api.get_markets(p_etag)` (authenticated) | B3 | `get_markets.json` |
+| `api.get_asset(p_instrument_id, p_range '3M'\|'1Y'\|'5Y', p_etag)` (authenticated; 5Y = monthly candles ≤ 60, #8; `my_position` = weighted-average cost from `core.trades`, splits from `core.corporate_actions`) | B3 | `get_asset.json` |
+| `api.search_instruments(p_q)` (authenticated; ≤ 20; FX/peg rows excluded) | B3 | `search_instruments.json` |
+| Edge `market-refresh` (cron secret) `{kind: quotes\|crypto\|fx}` → `{kind, updated, errors}` | B3 | — |
+| Edge `market-eod` (cron secret) `{kind: bars\|fred\|ecb, limit?}` → `{kind, instruments?, rows, errors}` | B3 | — |
+| Service-role RPCs behind them: `market_targets(kind, limit)`, `market_quota_take(vendor, credits)`, `market_mark`, `market_vendor_error`, `market_upsert_quotes`, `market_upsert_bars`, `market_upsert_fx_daily`, `market_job_log`; reports `market_report(days)` (quota use, job gaps, quote ages, bar coverage) and `market_split_check(years, pct)` (G5) | B3 | — |
 | Edge `account-demo-start` `{persona, lang?, country?}` (anonymous caller only; `{warmup:true}` → `{warm:true}` without auth, sent by the app during the guided tour) → `{user_id, persona, accounts_count, transactions_count, trades_skipped, ms}`; 5 starts/IP/hour | B2 | `account_demo_start(.request).json` |
 | Edge `account-demo-reset` `{}` → same as start (deletes the caller's demo data, keeps devices/consents/questionnaire/card, re-clones the persona; 5/hour) | B2 | `account_demo_start.json` |
 | Edge `account-demo-cleanup` (cron secret) `{days?}` → `{deleted, days}`; pg_cron runs `api.demo_cleanup()` daily 03:07 UTC | B2 | — |
@@ -404,3 +410,15 @@ Notes (B2):
 - **Server-to-server**: header `x-gp-cron` = Vault secret `gp_cron_secret` (generated in the database by migration 20261125000300, never in the repo). `ops.app_config` key `functions` `{url}` is set by `deploy-dev.yml`.
 - **Categorisation at ingest**: user rules (`core.cat_rules.user_id` = the user) always win, then global keyword rules (49 seeded, `source='keyword'`), then priority. `match_field='remittance'` matches `core.norm_text(remittance_info || ' ' || cp_name)` (lower case, accents folded). Unmatched rows stay `category_source='none'` for `categorise-llm`.
 - **`cp_key`** (features, user rules): `m:<msisdn>` | `i:<IBAN>` | `n:<normalised name>` | `op:<momo op>` | `x:<label>`.
+
+Notes (B3):
+- **Scheduler**: one pg_cron job `gp-market` (every minute) → `mkt.cron_market()` → pg_net → Edge with `x-gp-cron`.
+  Quotes `:00/:15/:30/:45` while a US exchange is open (+20 min grace), crypto every 10 min, FX + gold spot hourly at `:05`
+  (FX market open), daily bars every odd minute while any is due (≤ 8 symbols per call = Twelve Data's per-minute
+  limit; the same path does the 5-year backfill of a new instrument), FRED when due (≈ daily), ECB (Frankfurter)
+  weekdays after 15:30 UTC. Every vendor call first takes credits with `market_quota_take` (per-minute hard limit,
+  daily/monthly capped at 50 % — `ops.app_config.market_quotas`); a vendor error keeps the stale value and backs the
+  job key off (`mkt.fetch_state`; 429 → Retry-After, "not on your plan" → 7 days).
+- **Only complete daily bars are stored** (`d <= mkt.expected_bar_date(id)`): Twelve Data also returns the live bar.
+- Quote vendor vs history vendor: `mkt.instruments.vendor/vendor_symbol` (live) and `hist_vendor/hist_symbol` (daily
+  bars). Crypto history comes from Twelve Data (CoinGecko Demo stops at 365 days).

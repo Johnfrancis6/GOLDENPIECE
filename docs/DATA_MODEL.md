@@ -325,6 +325,13 @@ create table mkt.version (id int primary key default 1, etag text not null, upda
 -- XOF and XAF never stored: rate = 655.957 per EUR (exact, in code and in api.fx_rate()).
 ```
 
+**As built in B3** (migration `20261126000100`): `mkt.instruments` also has `name_en`, `group_key`
+(`indices|metals|energy|agri|crypto|fx`), `hist_vendor`/`hist_symbol` (daily bars source; `vendor`/`vendor_symbol`
+= live quote source), `unit` (`oz|bbl|t|lb`), `sort`, `active`; vendor `derived` and frequency `peg` for the XOF rows
+(`EURXOF`, `USDXOF`, bars derived from `fx_daily`). New tables `mkt.fetch_state` (per job key: last try / ok, fails,
+backoff) and `mkt.quota` (credits and errors per vendor per UTC minute, kept 35 days). Size at 5-year backfill:
+≈ 37k bars + 55k `fx_daily` rows (see CHAIN_LOG B3).
+
 ### 2.6 Scoring, alerts, bank (`core`, `ref`, `ops`, `analytics`)
 
 ```sql

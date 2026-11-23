@@ -210,3 +210,85 @@ contract. Remember the PUBLIC-execute revoke rule.
 Start from branch `build/b2-fake-bank`. Include `SPY, QQQ, BTC, ETH, GLD` in the 30-instrument
 universe (demo trades). After seeding instruments, a demo reset gives clones their trades. Remember
 `scripts/sb_api.py load-sim` if the generator changes (update `shared/fixtures/sim_templates.sha256`).
+
+---
+
+## B3 — Market data · 2026-11-23 · branch `build/b3-market-data`
+
+### Done
+
+| Item (BUILD_PLAN B3) | Where | State |
+|---|---|---|
+| Instrument universe: 30 vendor rows (12 ETFs incl. index proxies `SPY QQQ DIA IWM VGK EFA EEM AFK EZA` + `GLD SLV USO`; 8 crypto `BTC ETH SOL BNB XRP ADA DOGE LTC`; 4 FX `EURUSD EURGBP USDNGN USDGHS`; FRED daily `BRENT WTI`; FRED monthly `COCOA COFFEE`; spare slots = spot `XAU`, `XAG`) + 2 peg rows `EURXOF`, `USDXOF`; FR/EN names, group, unit, live vs history vendor | migration `20261126000100` | done; demo trade ids `SPY QQQ BTC ETH GLD` included |
+| `market-refresh` (quotes / crypto / fx) and `market-eod` (bars / fred / ecb) | `supabase/functions/market-*`, adapters `_shared/market/vendors.ts` | deployed to dev, live |
+| Scheduler | pg_cron `gp-market` every minute → `mkt.cron_market()` → pg_net (cron secret) | live since 17:23 UTC |
+| Quota counters (G: ≥ 50 % headroom) | `mkt.quota` per vendor per minute, `api.market_quota_take` (per-minute hard limit, day/month capped at 50 %), limits in `ops.app_config.market_quotas`; health warning `market_quota` | done |
+| Frankfurter (ECB) backfill from 2020 + daily; FRED backfill 5 years + daily | `fx_daily` 55,002 rows (36 currencies, 2019-12-31 → today, one call per year); FRED 4 series | done |
+| Twelve Data 5-year daily backfill (ETFs, crypto, FX, gold) | 25 symbols, 8 per call (per-minute limit), 4 runs, 0 errors | done (43,080 bars total) |
+| `api.get_markets` (+ `change_30d_pct`, `spark_30d` for design B9), `api.get_asset` (3M/1Y daily ≤ 260, **5Y monthly ≤ 60 = BACKEND_NEEDS #8**, vol, beta vs benchmark, `my_position`), `api.search_instruments` | migration 0100 (+ fixes 0500/0600) | done, schemas `get_markets.json`, `get_asset.json`, `search_instruments.json` with live examples |
+| Attributions (G13) | i18n keys `attr.coingecko/fred/twelvedata/finnhub/frankfurter/peg` in `shared/i18n/{fr,en}.json`; RPCs return keys | done (texts are drafts for B10's legal pass) |
+| Splits (G5) | `api.market_split_check(years, pct)` on stored series | checked: **no split in the universe over 2 years**; 5-year scan at 25 % shows only real moves (cocoa 2024, SLV −28.5 % on 2026-01-30 with spot gold −10 % the same day) |
+| Health: quotes check per exchange (B1 simplification removed) | `ops.health_check` | done: Finnhub/CoinGecko rows only, exchange open ≥ 45 min |
+| Tests | pgTAP `market.test.sql` (40); Deno `_shared/market/market_test.ts` (12, vendors + handlers with fakes + key redaction) | green on dev |
+
+### Fixes of earlier work (B2)
+
+- **Demo trade prices** (migration 0700): `sim.template_wealth` trades carried generator prices far from the market
+  (SPY bought at 438.90 $ when it closed at 676.47 $) — TWR/IRR in B4 would be absurd. A `before insert` trigger on
+  `core.trades` prices `source='demo'` trades at the instrument's close on or before the trade date (same currency);
+  existing demo trades updated. Manual trades untouched. The generator itself is unchanged (digest unchanged).
+- `_shared/supabase_env.ts` `rpc()`: void SQL functions answer an empty body; it parsed JSON and threw (first
+  market runs failed on `market_mark`). Now returns `null`. Other functions get it at the next `deploy-dev` run.
+
+### Measured (2026-11-23, dev, from this session)
+
+- First live runs: Finnhub 12/12 ETF quotes, CoinGecko 8/8 in one call, Twelve Data 5/6 (XAG refused: "not available
+  with your plan" → `XAG` set inactive, silver via `SLV`), FRED 4/4, Frankfurter 7 calls.
+- Quote age at 17:34 UTC (US open): ETFs ≤ 19 min (`as_of` = last trade; illiquid `AFK` 55 min), crypto ≤ 5 min.
+- Vendor use on day 1 including the full 5-year backfill: Twelve Data 31 credits (of 800; cap 400), Finnhub 24,
+  CoinGecko 2, FRED 4, Frankfurter 7. Steady state [estimated from the schedule]: Twelve Data ≈ 145/day (18 %),
+  Finnhub ≈ 336/day ≤ 12/min (20 % of the per-minute limit), CoinGecko ≈ 4,460/month (45 %), FRED ≤ 4/day.
+  Edge invocations ≈ 210/day (≈ 6.3k/month of 500k).
+- Payloads (gzip): `get_markets` **4.0 KB** (API.md assumed 2 KB: the 31 × 30-point sparklines B9 asked for;
+  ≈ 66 MB/month at demo load — negligible vs 5 GB), `get_asset` 1Y 4.0 KB / 5Y 1.5 KB / monthly series 0.5 KB
+  (assumed 6 KB), `search_instruments` 0.2 KB.
+- Storage: `bars_daily` 4.4 MB (43k rows), `fx_daily` 3.7 MB; DB 42 MB.
+- Demo clone (diaspora investor) after B3: `trades_skipped: 0`, 4 trades, clone 1.17 s in the DB (test user deleted).
+- Tests: pgTAP on dev **429/429** (market 40, provider_sim 41, iban 30, money 210, RLS 75, guards 11, api 22);
+  Deno 29 passed; pytest 283 passed (+ schema examples of the 3 new RPCs).
+
+### Decisions / assumptions
+
+- Index proxies are US-listed ETFs (C4); BRVM Composite shown in design B9 has **no source** (phase 2). The Home
+  5-quote strip (`SPY`, `XAU`, `COCOA`, `BTC`, `EURXOF`) is picked client-side from `get_markets` until `get_home`
+  (B4/B5) embeds it [mine].
+- FX pairs chosen for the region: EUR/USD, EUR/GBP, USD/NGN, USD/GHS [mine]; XOF/XAF from the peg (one "Euro / F CFA"
+  row serves both). `fx_latest` gains GBP/NGN/GHS from the hourly quotes; Frankfurter fills the ECB set (no NGN/GHS).
+- Crypto history from Twelve Data (CoinGecko Demo stops at 365 days); CoinGecko for live prices only.
+- Coffee: FRED `PCOFFOTMUSDM` is US cents/lb → stored in USD/lb (unit `lb`); cocoa USD/t; oil USD/bbl; gold USD/oz.
+- Monthly series: `change_pct` and `change_30d_pct` = month over month; `spark_30d` = up to 13 monthly points.
+- `vol_ann` = sample stdev of daily log returns over 1 year × √252 (√365 crypto), null under 60 returns; `beta` vs
+  `benchmark_id` (SPY for ETFs, BTC for crypto) over 1 year, null under 120 overlapping returns — same thresholds as
+  ARCHITECTURE "Minimum data"; B4's batch remains the source for portfolio risk.
+- `get_asset.my_position` = weighted-average cost (fees in cost), realised P/L on sells, splits from
+  `core.corporate_actions`; B4's `get_portfolio` may reuse `core.position_of`.
+- Quote freshness check uses `fetched_at` (we fetched within 15 min), not `as_of` (last trade time of an illiquid ETF).
+
+### Not done / blocked
+
+- **"Quotes ≤ 30 min old in exchange hours for 3 days"** cannot be observed inside one session: the scheduler is live;
+  **B4 verifies** with `select api.market_report(3)` (`jobs.market-quotes.max_gap_min` ≤ 30 during US hours,
+  `quota` per vendor) and `health` (quotes check), and writes the result here.
+- BACKEND_NEEDS #7 (`upsert_debt` with `lender`; column exists) → B4 with `get_portfolio` (API.md §5 says B3/B4).
+- `XAG` (silver spot) not on the Twelve Data free plan: inactive; spare slot free.
+
+### Defects open
+
+- none known.
+
+### Next: B4 — Batch analytics
+
+Start from branch `build/b3-market-data`. Market history is in `mkt.bars_daily` (5 years daily, monthly FRED series
+excluded from risk via `in_risk=false`), FX history in `mkt.fx_daily` (base EUR, from 2020; XOF/XAF via the peg).
+Demo trades are now priced from real closes. First check the 3-day quotes criterion (above), then the PAT in Vault
+(`github_dispatch_pat`, present) for `dispatch-batch`. `batch_writer` needs LOGIN + password (B1 note).

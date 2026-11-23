@@ -7,6 +7,17 @@
     "consents.invalid": "Accord non valide.",
     "profile.missing": "Profil introuvable.",
     "fx.usd_missing": "Taux du dollar indisponible pour le moment.",
-    "generic": "Une erreur est survenue. Réessayez."
+    "generic": "Une erreur est survenue. Réessayez.",
+    "asset.range": "Période non disponible.",
+    "asset.not_found": "Actif introuvable.",
+    "market.kind": "Requête de marché invalide."
+  },
+  "attr": {
+    "coingecko": "Données crypto fournies par CoinGecko (coingecko.com).",
+    "fred": "Source : FRED®, Federal Reserve Bank of St. Louis. Ce produit utilise l'API FRED® mais n'est ni approuvé ni certifié par la Federal Reserve Bank of St. Louis.",
+    "twelvedata": "Données de marché : Twelve Data.",
+    "finnhub": "Cours différés : Finnhub.",
+    "frankfurter": "Taux de référence de la BCE (via Frankfurter).",
+    "peg": "Parité fixe : 1 € = 655,957 F CFA."
   }
 }
