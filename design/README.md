@@ -39,9 +39,10 @@ Files are in English; UI copy is French first, then English.
 | B7 Stat tiles (2 × 2 cards, plain sentence under the value, only "Évolution" coloured) | [blocks/b7-stat-tiles.md](blocks/b7-stat-tiles.md) · [preview](previews/b7-stat-tiles.png) | 2026-11-23 |
 | G3 Bars (horizontal, category colours, black "v" arrow for last month inside the bar, top 6 + Autres) | [charts/g3-bars.md](charts/g3-bars.md) · [preview](previews/g3-bars.png) | 2026-11-23 |
 | G5 Sankey (sources → Revenus → top 6 + Autres + Épargne; flows in destination colour; lists at large font) | [charts/g5-sankey.md](charts/g5-sankey.md) · [preview](previews/g5-sankey.png) | 2026-11-23 |
+| B22 Categories & rules (one list card → category screen; rules as sentences; "Appliquer aux N" short sheet with preview, pre-checked rule box) | [blocks/b22-categories-rules.md](blocks/b22-categories-rules.md) · [preview](previews/b22-categories-rules.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Spending (S5): B7 ✓, G3 ✓, G5 ✓, B22 Categories & rules, then S5** (Franco 2026-11-23). Still open in Alerts: B14, B15 + G8, S6 (after Spending unless Franco says otherwise). Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Placements (S4): B10, B11, B12, G4, G6, G7, B18, then S4** — new session, Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -57,6 +58,7 @@ Next item: **Spending (S5): B7 ✓, G3 ✓, G5 ✓, B22 Categories & rules, then
 | D8 | **No Alertes tab** (2026-11-22): bottom bar Accueil · Comptes · Dépenses · Placements; an open-alert icon appears in the header only while an alert is open, plus the Home strip and push; past alerts in Settings ([icons.md](foundations/icons.md) §6). |
 | D9 | **Period selector is an expandable bar "Période"** (C12, 2026-11-22), not pills; bottom-bar tabs do not animate. |
 | D10 | **Accounts section (S3: B2, B3, B17, B20; B22 moves to Spending) is left to the build sessions** (Franco, 2026-11-23): they compose it from validated items (C6 rows, C21 badges, C14 tags, C15 badges, C2 search pill, C13 chips, C9 sheets, B20-style key-value lines from B13, C5 amounts) and report choices in one line (formats.md §7). Design goes on with **Spending (S5)**. |
+| D11 | **Clean, uncluttered screens** (Franco, 2026-11-23, for Placements and after): few elements per screen, one idea per block, details behind a tap ("?", sheet, detail screen) rather than shown at once; when in doubt, remove. |
 
 ---
 
@@ -219,8 +221,8 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 4. **Home blocks:** B1 ✓, B4 ✓, B5 ✓, B6 ✓, B9 ✓, B8 ✓, then **S2 Home layout** ✓, the first full screen that tests the whole system.
 5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
-7. **Spending (in progress):** B7 ✓, G3 ✓, G5 ✓, B6 ✓, D4 categories (B22, moved here from Accounts), then S5.
-8. **Placements:** B10, B11, B12, G4, G6, G7, B18, then S4.
+7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
+8. **Placements (next, new session):** B10, B11, B12, G4, G6, G7, B18, then S4.
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
