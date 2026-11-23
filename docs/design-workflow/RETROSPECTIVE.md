@@ -60,3 +60,10 @@ and the run logs of the design sessions (cost figures read from the last
 4. Question rounds where the recommended default was always taken (could be "default unless you object").
 5. Rework after Franco found issues a script could find (clipping, overlap, text length, off-token colour).
 6. Writing narrative handovers instead of structured state.
+
+## Answers from session 4 (M14, icon), 2026-11-23
+
+1. Most re-work: validation bookkeeping (motion.md, tokens.json, README, HANDOFF, NEXT_SESSION, PNG strip) hand-edited with ad-hoc string replaces, redone after the icon change; key-frame strip rendered twice (sample times did not match labels); Playwright snippets rewritten each render, one broke on a stale path.
+2. Start-up: NEXT_SESSION.md alone was enough; HANDOFF was only grepped for anchors, BRIEF_03 not needed. An index of section anchors beats full reads.
+3. Catchable by script: SVG rendered size vs its width/height attributes (the clipped ring), scrollWidth > clientWidth, overlapping boxes, contrast of graphic marks vs background (light-theme coins nearly invisible), stale local branch, stray untracked preview PNG.
+4. Automate first: render + layout lint before any preview is sent, validation bookkeeping, handover + session creation. Keep human: direction choices (brand, motion feel, variant), any use of a third-party reference, final validation of each item.
