@@ -112,7 +112,7 @@ install on the Tecno, client test script).
 | B6 | **Brevo** (free) → verify a sender address → SMTP & API → SMTP key → put it in Supabase → goldenpiece-dev → Authentication → Emails → SMTP settings (host smtp-relay.brevo.com, port 587) |
 | B6 | **Sentry** (free) → create a React Native project → its DSN is public (no secret); create an auth token → GitHub secret `SENTRY_AUTH_TOKEN` |
 | B9 | Cloudflare: already connected to the sessions (Pages) — nothing to do |
-| B8 | **Firebase** (Spark, free) → project → Android app → service-account key (FCM v1) → upload it in expo.dev → project → Credentials → Android → FCM V1 |
+| B8 | **Firebase** (Spark, free) → project → Android app (package **`com.goldenpiece.app`**, nickname GOLDENPIECE; fixed 2026-11-23, B6 uses it as `android.package`) → service-account key (FCM v1) → upload it in expo.dev → project → Credentials → Android → FCM V1 |
 | B10 | **UptimeRobot** (free) account; Firebase **App Distribution** enabled; keep an offline copy of the Android upload keystore when B10 creates it |
 
 A session that reaches a step whose item is missing marks it blocked in
