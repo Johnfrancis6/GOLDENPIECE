@@ -19,6 +19,16 @@ export function supabaseUrl(): string {
   return u;
 }
 
+/** Error from PostgREST: HTTP status + API.md §1 body ({code, message, details, hint}). */
+export class RpcError extends Error {
+  constructor(readonly status: number, readonly body: Record<string, unknown>) {
+    super(`rpc failed: ${status} ${JSON.stringify(body)}`);
+  }
+}
+
+/** Signature of `rpc` (injected in handlers so tests can fake the database). */
+export type Rpc = <T = any>(name: string, args?: Record<string, unknown>) => Promise<T>;
+
 /** Call an `api` RPC with the service role. */
 export async function rpc<T>(name: string, args: Record<string, unknown> = {}, fetchFn = fetch): Promise<T> {
   const key = serviceKey();
@@ -27,6 +37,15 @@ export async function rpc<T>(name: string, args: Record<string, unknown> = {}, f
     headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify(args),
   });
-  if (!res.ok) throw new Error(`rpc ${name} failed: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const text = await res.text();
+    let body: Record<string, unknown>;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = { code: "UNAVAILABLE", message: "rpc." + name, details: text.slice(0, 200), hint: null };
+    }
+    throw new RpcError(res.status, body);
+  }
   return await res.json() as T;
 }

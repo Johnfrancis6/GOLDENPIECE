@@ -431,3 +431,27 @@ enabled = true
 # Edge Functions (B1). health is public (UptimeRobot, no JWT).
 [functions.health]
 verify_jwt = false
+
+[functions.provider-link-start]
+verify_jwt = false
+
+[functions.provider-link-complete]
+verify_jwt = false
+
+[functions.provider-sync]
+verify_jwt = false
+
+[functions.provider-tick]
+verify_jwt = false
+
+[functions.ingest]
+verify_jwt = false
+
+[functions.account-demo-start]
+verify_jwt = false
+
+[functions.account-demo-reset]
+verify_jwt = false
+
+[functions.account-demo-cleanup]
+verify_jwt = false

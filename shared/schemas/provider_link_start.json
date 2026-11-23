@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_link_start.json",
+  "title": "Edge provider-link-start response: consent descriptor for the in-app consent screen",
+  "type": "object",
+  "required": [
+    "link_id",
+    "consent"
+  ],
+  "properties": {
+    "link_id": {
+      "$ref": "common.json#/$defs/uuid"
+    },
+    "consent": {
+      "type": "object",
+      "required": [
+        "institution",
+        "institution_name",
+        "scopes",
+        "history_days",
+        "simulated"
+      ],
+      "properties": {
+        "institution": {
+          "type": "string"
+        },
+        "institution_name": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "balances",
+              "transactions"
+            ]
+          }
+        },
+        "history_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "simulated": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "link_id": "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10",
+      "consent": {
+        "institution": "kola_money",
+        "institution_name": "Kola Money",
+        "scopes": [
+          "balances",
+          "transactions"
+        ],
+        "history_days": 365,
+        "simulated": true
+      }
+    }
+  ]
+}

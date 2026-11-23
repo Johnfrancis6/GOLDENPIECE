@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goldenpiece.invalid/schemas/provider_link_complete.request.json",
+  "title": "Edge provider-link-complete request",
+  "type": "object",
+  "required": [
+    "link_id",
+    "approve"
+  ],
+  "properties": {
+    "link_id": {
+      "$ref": "common.json#/$defs/uuid"
+    },
+    "approve": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "link_id": "6f1c2a52-8d0e-4d6a-9a77-2f3b7e2c1a10",
+      "approve": true
+    }
+  ]
+}

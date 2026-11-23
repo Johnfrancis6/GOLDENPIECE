@@ -93,7 +93,8 @@ select is(pg_temp.cnt('select count(*) from core.real_estate_valuations'), 1::bi
 select is(pg_temp.cnt('select count(*) from core.analyst_decisions'), 1::bigint, 'A reads only own alert decisions');
 select throws_ok('select analyst_id from core.analyst_decisions', '42501', null, 'A cannot read the analyst id');
 select throws_ok('select comment from core.analyst_decisions', '42501', null, 'A cannot read the analyst comment');
-select is(pg_temp.cnt('select count(*) from core.cat_rules'), 2::bigint, 'A reads own + global rules');
+-- B2 seeds global keyword rules: count own + the test's global rule
+select is(pg_temp.cnt('select count(*) from core.cat_rules where user_id is not null or pattern = ''SENELEC'''), 2::bigint, 'A reads own + global rules');
 select is(pg_temp.cnt('select count(*) from core.corporate_actions'), 1::bigint, 'A reads own corporate actions');
 select is(pg_temp.cnt('select count(*) from analytics.learning_status'), 1::bigint, 'A reads only own analytics');
 
