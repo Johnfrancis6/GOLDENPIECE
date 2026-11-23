@@ -1,6 +1,6 @@
 # Session 3 handoff — design system, continuation
 
-Updated 2026-11-23 (Onboarding session: D13 option A — design B19, B21, S1; B24 and T to build sessions; **B19, B21, S1 validated — Onboarding complete**; B16 validated; next Settings B23. Spending S5 session: **S5 validated** with A, A, A + "Revenus" hub label removed, D12 no overlapping text; next Alerts B14. Placements session: B10, B11 + G4, B12, G6, G7, B18 and **S4 validated** — Placements complete; next S5 decision then Alerts. Spending session: B7, G3, G5, B22 validated; S5 layout pending; next Placements in a new session. Continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame, S2 Home, C2-C4, B13; Franco then asked to delegate Accounts and open a new session for Spending; continuation 2: C9, C18-C19,
+Updated 2026-11-23 (Onboarding session: D13 option A — design B19, B21, S1; B24 and T to build sessions; **B19, B21, S1 validated — Onboarding complete**; B16, B23 validated; next S7. Spending S5 session: **S5 validated** with A, A, A + "Revenus" hub label removed, D12 no overlapping text; next Alerts B14. Placements session: B10, B11 + G4, B12, G6, G7, B18 and **S4 validated** — Placements complete; next S5 decision then Alerts. Spending session: B7, G3, G5, B22 validated; S5 layout pending; next Placements in a new session. Continuation 3: B4 alert card, B5 learning card, B6 budget ring, B9 quote row, B8 chart frame, S2 Home, C2-C4, B13; Franco then asked to delegate Accounts and open a new session for Spending; continuation 2: C9, C18-C19,
 C13-C16-C17, C20, C21, C22 — base components complete — G0-G1-G2 and
 B1 validated; earlier sittings: all foundations, C1, C5, C6-C7, C8-C10-C11,
 C12, C14-C15). First written
@@ -64,12 +64,13 @@ on a low/mid-range Android phone (Tecno Spark 50).
 | B19 Step screen (A, A, A; preview validated "je valide") | validated 2026-11-23 | [blocks/b19-step-screen.md](blocks/b19-step-screen.md) |
 | B21 Institution picker (A, A, A; preview validated "je valide"; "Autre banque" shortened to stay ≤ 2 lines) | validated 2026-11-23 | [blocks/b21-institution-picker.md](blocks/b21-institution-picker.md) |
 | B16 Settings list (A, A, A; preview validated "je valide") | validated 2026-11-23 | [blocks/b16-settings-list.md](blocks/b16-settings-list.md) |
+| B23 Device row (A, A, A; preview validated "je valide"; B16 red text aligned with C1 destructive text #FF9AA4) | validated 2026-11-23 | [blocks/b23-device-row.md](blocks/b23-device-row.md) |
 | **S1 Onboarding** (A, A, A; flow map + O3, O12, O18 previewed; "je valide") | validated 2026-11-23 | [screens/s1-onboarding.md](screens/s1-onboarding.md) |
 | **S6 Alerts** (A, A, A; preview validated "je valide") | validated 2026-11-23 | [screens/s6-alerts.md](screens/s6-alerts.md) |
 | G7 Positive/negative bars + B18 Form + **S4 Placements** (validated together, "je valide"; header eye + "+" accepted; Courbe · Bougies as icon segments) | validated 2026-11-23 | [charts/g7-pos-neg-bars.md](charts/g7-pos-neg-bars.md), [blocks/b18-form.md](blocks/b18-form.md), [screens/s4-placements.md](screens/s4-placements.md) |
 | Tokens | v0.37.0 (+ `chart.posNegBars`, `block.form`, `screen.placements`; v0.36.0 `chart.candlestick`; v0.35.0 `block.helpSheet`; v0.34.0 `chart.donut`, `block.allocationList`; v0.33.0 `block.holdingRows`; v0.32.0 added `block.statTiles`, `chart.bars`, `chart.sankey`, `block.categoriesRules`): all foundations (colour, typography, spacing, layout, radius, elevation, format, icon, motion) + `component.*` (button, amount, changeTag, tag, scoreBadge, listRow, card, navigation, banner, dialog, toast, input, pinEntry, keypad, bottomSheet, skeleton, emptyState, chip, choiceControl, progress, help, badge, timeline) + `chart` (base, line, sparkline) + `block` (networthHeader, alertCard, learningCard, budgetRing, quoteRow, chartFrame, isItYou) + `screen` (home) | [tokens.json](tokens.json) |
 
-**Next items** (Onboarding session, 2026-11-23): Spending, Alerts and **Onboarding complete** (B19, B21, S1; B24 and T delegated, D13). Next: **Settings** (B16 validated → **B23** device row → S7), then N/W/X/D, M14 (last). Rules D11 and **D12** apply.
+**Next items** (Onboarding session, 2026-11-23): Spending, Alerts and **Onboarding complete** (B19, B21, S1; B24 and T delegated, D13). Next: **Settings** (B16, B23 validated → **S7** layout), then N/W/X/D, M14 (last). Rules D11 and **D12** apply.
 
 Starting prompt for the next session: [NEXT_SESSION.md](NEXT_SESSION.md) (Franco 2026-11-23: Spending S5 first, then the others).
 

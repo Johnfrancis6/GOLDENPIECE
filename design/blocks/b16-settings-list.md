@@ -34,7 +34,7 @@ short ("Verrouillage auto · 1 min", "Appareils connectés · 2").
 | Toggle (Économie de données, notification types) | switch | toggles in place; the whole row is the target |
 | Sub-page (Appareils connectés, Catégories et règles, Accords) | value or count + chevron | sub-page (F5 `screen`) |
 | Action (Rejouer la visite, Se déconnecter partout, Exporter mes données) | nothing | runs or opens a confirmation (C10 dialog / unlock) |
-| Destructive (Supprimer mon compte) | chevron | **red** name (`loss`, Medium: 6.9:1 dark on `surface1`, 5.5:1 light), **no icon**; opens the typed-confirmation page |
+| Destructive (Supprimer mon compte) | chevron | **red** name in the C1 destructive-text colour (Medium; `#FF9AA4` dark, aligned with C1 on 2026-11-23 after the preview used `loss` `#FF6B7A`; `#C8283C` light, 5.5:1), **no icon**; opens the typed-confirmation page |
 
 ## 3. Sensitive actions
 
