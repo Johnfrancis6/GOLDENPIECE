@@ -44,9 +44,12 @@ Files are in English; UI copy is French first, then English.
 | B11 Allocation list + G4 Donut (thin ring, total in the centre, tap highlights a slice; Classe · Devise · Pays chips; gross assets incl. real estate) | [blocks/b11-allocation-list.md](blocks/b11-allocation-list.md) · [charts/g4-donut.md](charts/g4-donut.md) · [preview](previews/b11-g4-allocation.png) | 2026-11-23 |
 | B12 "?" sheet (definition + your figure + how to read it; neutral Faible · Moyen · Élevé scale for risk figures; method sheet with folded "Formule") | [blocks/b12-help-sheet.md](blocks/b12-help-sheet.md) · [preview](previews/b12-help-sheet.png) | 2026-11-23 |
 | G6 Candlestick (line by default + Courbe · Bougies switch; green/red filled; ≤ ~60 candles: 3M daily, 1A weekly, 5A monthly) | [charts/g6-candlestick.md](charts/g6-candlestick.md) | 2026-11-23 |
+| G7 Positive/negative bars ("Ce qui a compté": centre zero axis, gains right in green, losses left in red, Par actif · Par classe) | [charts/g7-pos-neg-bars.md](charts/g7-pos-neg-bars.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
+| B18 Form (sub-page with x, kind chips, filled fields, live total, pinned Enregistrer, offline "En attente", sale > held refused) | [blocks/b18-form.md](blocks/b18-form.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
+| **S4 Placements** (pills Portefeuille · Marchés · Risque · Performance; header eye + "+"; P6 line/candles; first screen hero + ≤ 3 blocks) | [screens/s4-placements.md](screens/s4-placements.md) · [preview](previews/s4-placements.png) | 2026-11-23 |
 | F6 Display formats | [foundations/formats.md](foundations/formats.md) · [preview](previews/f6-formats.png) | 2026-11-22 |
 
-Next item: **Placements (S4): B10 ✓, B11 + G4 ✓, B12 ✓, G6 ✓, then G7, B18, then S4** — Franco 2026-11-23: **clean, uncluttered screens** (D11). Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
+Next item: **Placements done (S4 validated 2026-11-23).** Next: S5 Spending layout (ask Franco: do it or leave it to build sessions), then **Alerts B14, B15 + G8, S6**. Spending blocks are done (B7, G3, G5, B22, B6); the **S5 layout** is still to assemble (see HANDOFF open points). Still open in Alerts: B14, B15 + G8, S6. Accounts: left to build sessions (D10). Foundations are complete; M14 App opening is left for the end. Micro-details not covered by a validated file are decided by build sessions, checked at 100 %/200 % font, and reported in one line, without asking Franco ([formats.md](foundations/formats.md) §7). Continuation notes for a new session: [HANDOFF.md](HANDOFF.md).
 
 ## Decisions taken with the inventory (Franco, 2026-11-22)
 
@@ -226,7 +229,7 @@ Each section is validated at 360 × 800 dp and at 200 % font.
 5. **Alerts:** C2-C4 ✓ (input, needed for the unlock), B13 ✓, B14, B15 + G8, then S6. The most important flow of the demo.
 6. **Accounts:** left to the build sessions (D10, 2026-11-23).
 7. **Spending:** B7 ✓, G3 ✓, G5 ✓, B6 ✓, B22 ✓; S5 layout pending (HANDOFF open points).
-8. **Placements (in progress):** B10 ✓, B11 ✓, G4 ✓, B12 ✓, G6 ✓, G7, B18, then S4.
+8. **Placements:** B10 ✓, B11 ✓, G4 ✓, B12 ✓, G6 ✓, G7 ✓, B18 ✓, S4 ✓ (2026-11-23).
 9. **Onboarding:** B19, B21, B24, then S1, then T (guided tour).
 10. **Settings:** B16, B23, then S7.
 11. N (notifications), W (widgets), X (copy), D (dashboard).
