@@ -961,3 +961,46 @@ Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-decision-bar-light`, `d
 ### Next: B9.4 — Settings + Ops + legal (same branch, plan above unchanged)
 
 Start: `cd dashboard && npm ci && npm run dev-analyst`. Tabs `/settings` and `/ops` are placeholders (`src/screens/Placeholder.tsx`); RPCs `api.scoring_params`, `api.reset_params(p_scope)`, `api.ops_metrics`, `legal_texts`. Browser runs: see `scripts/live-decision-check.mjs` for the login + TOTP helper (proxy, `bypass: 'localhost'`, `locale: 'fr-FR'`).
+
+---
+
+## B9.4 — Settings + Ops + legal · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 0. Backend for the panels: migration `20261201000100_scoring_params_actor` — `api.scoring_params()` adds `rules_version`, `model`, and per change `by` / `simulated`; new `api.ops_series(p_days)` (daily alerts by band, push p95, score p95). Applied to dev (registered in `schema_migrations`); docs/API.md updated; 4 pgTAP checks added to `scoring.test.sql` | `supabase/migrations`, `supabase/tests/scoring.test.sql` | done; **scoring.test.sql 53/53 run on dev, rolled back** |
+| 1. Réglages du modèle (D §4): title + intro, outlined "Rétablir les valeurs par défaut" (`rotate-ccw`, loss text) → C10 dialog (D copy, Esc / scrim cancel, focus on the title) → `api.reset_params('all')` → banner with the counts → reload; table Paramètre · Groupe · Valeur · Défaut · Bornes · Changé (22 global params, grouped, values ≠ default SemiBold `brand.text`, "fixe" when min = max); right column 380 "Journal des changements" (title "U-… · z0 Catégorie : a → b" / "Poids R4 : 50 → 47", cause · alerte A-… · analyste · dd/mm hh:mm), paged by 20, per-user count line, model version line | `src/settings/{params.ts,SettingsPage.tsx}`, `src/ui/Dialog.tsx` | done; **real reset on dev**: 22 user z0 overrides → defaults, 22 `reset` rows logged, older rows kept (log 22 → 44), banner 0.8 s after the click |
+| 2. Ops tab (delegated): 8 B7 tiles in two sections (Temps de réponse: push / ingest→alert / score p95 with median + count, last nightly batch with C14 "Échec"; Données et modèle: Groq backlog, market credits by vendor, model version + parity, bank precision + recall + false prompts) and 3 chart cards (G1 line+area of push p95 per day with keyboard/hover scrub driving the card head; G3-style bars: alerts 24 h by band, 7-day funnel), text summaries as accessible names, G0 empty state | `src/ops/{OpsPage,LineChart,HBars,model}.ts(x)` | done |
+| 3. `/legal` (delegated): public (anon `legal_texts`), brand bar + Retour, 720 column, disclaimer as C8 info banner, Conditions then Confidentialité (Markdown subset rendered as React, no HTML injection), version line, FR/EN | `src/screens/Legal.tsx`, `src/lib/markdown.tsx` | done; anonymous English visitor checked in the browser |
+| 4. Screenshots 1280 × 800 scale 1 + contrast | `docs/screens/b9/d-settings-*`, `d-ops-*`, `d-legal-*`; `__tests__/contrast.test.ts` | done |
+
+Checks: `vitest` **87 passed** (×3 stable): pages 8 (settings table/groups/changed/fixed, log paging, reset dialog Esc + confirm + reload, reset error, Ops tiles/insufficient/failed batch/summaries, scrub + empty chart, /legal public + order + Markdown, D §4/§7 copy verbatim), model 6, contrast 25 (12 pairs × 2 themes). `tsc -b`, `eslint`, `vite build` clean. Browser run `scripts/b94-screens.mjs [--reset]`: no console error.
+
+Contrast (WCAG, translucent fills over surface1), light · dark: loss text on page 4.99 · 7.37; brand text on selected row 5.21 · 6.06; secondary on selected 6.14 · 6.25; white on Fraude 5.49 · 7.37; "En direct" 6.61 · 10.07; secondary on chips 5.31 · 6.31; changed value 5.67 · 7.26; secondary on card 6.69 · 7.49; secondary on page 6.08 · 8.03; dialog body 6.69 · 7.04; "Échec" tag 5.51 · 5.53; G1 line on card 3.97 · 7.26 (graphic ≥ 3). The six light D §6 pairs match the values measured by the design.
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- Code entered → settings table 2.6-3.1 s; `/ops` tiles 1.34 s; `/legal` 0.82 s. RPCs from Node: `scoring_params` 572 ms (9.1 KB), `ops_metrics` 437 ms, `legal_texts` 150-355 ms.
+- Reset: click → banner 0.81 s.
+
+### Decisions [B9.4] (one line each, composed / delegated)
+
+- All 22 global params listed (preview showed 9): groups Habitudes / Combinaison / Règles / Contexte; R1-R6 and "Bonus nouvel appareil" labels from the D preview, the others composed from ARCHITECTURE §7.3-7.4.
+- Value format: weights integer, bonuses "+0,10", other values 1 or 2 decimals; "Changé" = `updated_at` when value ≠ default, else "—".
+- The panel has no analyst names (privacy): actor shown as "analyste A-{user_ref}" (same as the queue), "analyste simulé", or nothing for batch; the weekly line says "Lot hebdomadaire · précision des règles sur 28 jours" (precision number not stored per change).
+- Reset uses scope `all` (dialog: "Tous les paramètres …"); dialog action = C1 primary "Rétablir" (not destructive: the log is kept).
+- Log paging is client-side over the RPC's last 100 changes (20 per page, "1–20 sur N", Plus récents / Plus anciens).
+- Ops: tiles 4 per row; latencies "95 % sous {p95}" with the median in the sentence; batch status as C14 loss tag when failed (B7 values stay neutral otherwise); G1 line starts at the first day with data (dev has 2 days) and fills the card width; bars use F1 chart series (orange/violet/aqua), funnel in one colour.
+- `/legal`: disclaimer as C8 info banner (`history` icon of the info kind), texts as `surface1` cards radius 12.
+
+### Defects open
+
+- **Nightly batch failed on 2026-11-24 02:00** (`batch-nightly` run 45309112933): `pipeline.load_users` with all users → Management API HTTP 500 on `core.accounts where user_id = any({ids})` (very long literal list; many anonymous demo users). Next part or B10: chunk the id list or select by join. Visible in the Ops tab.
+- Reset on dev wiped the 22 learned per-user z0 values (intended by the button; demo calibration relearns from decisions).
+- Queue filtering client-side, bundle > 500 KB (B9.5), dev analyst credentials per session (unchanged).
+
+### Next: B9.5 — Deploy + close (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. Browser helper with login + TOTP: `scripts/b94-screens.mjs`. If cheap, fix the nightly batch defect above before the Pages deploy.

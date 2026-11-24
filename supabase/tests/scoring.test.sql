@@ -5,7 +5,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = extensions, public;
 grant usage on schema extensions to anon, authenticated, batch_writer;
-select plan(49);
+select plan(53);
 set local gp.model_version = '-none-';             -- no Isolation Forest: deterministic scores
 alter table core.transactions alter column value_date set default current_date;   -- fixtures only (rolled back)
 alter table core.tx_momo alter column operator_ref set default 'REF';
@@ -162,6 +162,11 @@ select is((select status from core.alerts where transaction_id = '00000000-0000-
 select is(api.analyst_decide((select id from core.alerts where transaction_id = '00000000-0000-4000-b000-0000000a0002'), 'fraud', 'ok')
           ->> 'status', 'decided_fraud', 'analyst decides fraud');
 select ok(api.scoring_params() -> 'changes' @> '[{"cause": "analyst_fraud"}]', 'parameter change visible in the panel');
+select is((select c ->> 'by' from jsonb_array_elements(api.scoring_params() -> 'changes') c where c ->> 'cause' = 'analyst_fraud' limit 1),
+          left(encode(extensions.digest('00000000-0000-4000-b000-0000000000b6', 'sha256'), 'hex'), 8), 'change log names the analyst (B9.4)');
+select ok(api.scoring_params() ? 'rules_version', 'panel carries the rules version (B9.4)');
+select is(jsonb_array_length(api.ops_series(14)), 14, 'Ops series: one row per day (B9.4)');
+select ok((api.ops_series(3) -> -1 -> 'alerts') ?& array['info', 'ask', 'bank'], 'Ops series: alerts by band (B9.4)');
 reset role;
 select is((select type from ops.push_log l join core.alerts a on a.id = l.alert_id
            where a.transaction_id = '00000000-0000-4000-b000-0000000a0002' order by l.id desc limit 1), 'fraud', 'decision notified');

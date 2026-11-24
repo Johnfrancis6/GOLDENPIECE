@@ -168,6 +168,7 @@ applied|duplicate|conflict|rejected, reason_key?, current?}]`.
 | `api.analyst_alert(p_alert_id)` | `alert`, `score_breakdown{a_thr, a_if, f, m, rules[{code, weight}], bumps[{code, value}]}` with `reasons[{code, params, weight}]` and `user_events[{type, at}]` (notification sent, answer) (**BACKEND_NEEDS #10**), `features`, `tx` (full ISO fields), `history_90d[{booking_ts, amount, cp_name, category_id, score}]`, `security_events_30d[]`, `devices[{label, security_level, created_at}]`, `previous_decisions[]`, `user_answer` | 15 KB |
 | `api.analyst_decide({p_alert_id, p_decision, p_comment})` | `{status, param_changes[]}` → push to user | 0.3 KB |
 | `api.ops_metrics()` | push latency p50/p95 24 h, score latency, Groq backlog, last batch, quotas used, model eval, funnel counts | 3 KB |
+| `api.ops_series(p_days)` | per-day alerts by band, push p95, score p95 (B9.4) | 2 KB |
 | `api.scoring_params()` / `api.reset_params(scope)` | params + change log | 5 KB |
 | Realtime | channel on `core.alerts` filtered by analyst RLS | 0.5 KB/event |
 
@@ -419,6 +420,7 @@ Horizon, Banque de l'Équateur, "Banque (démo)") — `ref.operators`,
 | `api.analyst_alert(p_alert_id)` (#10; opening an `escalated` alert sets `in_review`) | B5 | `analyst_alert.json` |
 | `api.analyst_decide(p_alert_id, p_decision 'legit'\|'fraud', p_comment?)` → `{status, param_changes[]}` (feedback tunes per-user/category params, bounded, `ops.param_changes`; notifies the user) | B5 | — |
 | `api.scoring_params()` → `{bands, params[], user_overrides, rules[] (with sources), changes[≤ 100]}`; `api.reset_params(p_scope 'global'\|'users'\|'all')` | B5 | — |
+| B9.4: `api.scoring_params()` adds `rules_version`, `model {version, trained_at}` and per change `by` (analyst `user_ref`, `'simulated'` for the simulated analyst, null for batch) + `simulated`; `api.ops_series(p_days int = 14)` (analyst, aal2) → `[{day, alerts {info, ask, bank}, push_p95_ms, score_p95_ms}]`, one row per UTC day, 2-60 days (Ops tab G1 line) | B9.4 | — |
 | `api.ops_metrics()` → `{push_latency_ms_24h, ingest_to_alert_ms_24h, score_latency_ms_24h, alerts_24h, groq_backlog, groq_uncategorised_all, last_batch, quotas_today, model, model_eval, funnel_7d, as_of}` | B5 | — |
 | Edge `notify` (cron secret) `{push_id}` → reads `api.notify_get`, sends the N data message (Expo push **stubbed until B8**: status `stub`/`no_token`), `api.notify_done` | B5 | `notify_payload.json` |
 | Edge `categorise-llm` (cron secret, pg_cron `gp-categorise-llm` */5 → `ops.cron_llm`) → `{labels, updated}`; service-role RPCs `llm_backlog(p_limit ≤ 40)`, `llm_apply(p_items)`, `llm_job(...)`; pseudonymised labels (§9.4), consent `ai_categorisation` (demo personas count as consenting) | B5 | — |

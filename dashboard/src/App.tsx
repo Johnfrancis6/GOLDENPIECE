@@ -6,8 +6,10 @@ import { Guard } from './auth/Guard';
 import { LangContext, initialLang, type Lang } from './i18n';
 import { Layout } from './shell/Layout';
 import { Login } from './screens/Login';
-import { Placeholder } from './screens/Placeholder';
+import { Legal } from './screens/Legal';
 import { QueuePage } from './queue/QueuePage';
+import { OpsPage } from './ops/OpsPage';
+import { SettingsPage } from './settings/SettingsPage';
 import { applyTheme, type Scheme } from './theme';
 import { ThemeContext, initialScheme } from './theme/ThemeContext';
 
@@ -44,12 +46,12 @@ export function App({ client }: { client: SupabaseClient }) {
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
-              <Route path="/legal" element={<Placeholder title="legal.link" />} />
+              <Route path="/legal" element={<Legal />} />
               <Route element={<Guard><Layout /></Guard>}>
                 <Route index element={<QueuePage />} />
                 <Route path="alerts/:id" element={<QueuePage />} />
-                <Route path="settings" element={<Placeholder title="settings.title" />} />
-                <Route path="ops" element={<Placeholder title="ops.title" />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="ops" element={<OpsPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

@@ -59,3 +59,41 @@ export function isPending(s: AlertStatus): boolean {
 export function isDecided(s: AlertStatus): boolean {
   return s === 'decided_legit' || s === 'decided_fraud';
 }
+
+/** `api.scoring_params()` (docs/API.md; `by`, `simulated`, `model`, `rules_version` added in B9.4). */
+export type ParamRow = { key: string; value: number; default: number; min: number; max: number; version: number; updated_at: string };
+export type ParamCause = 'user_me' | 'analyst_legit' | 'analyst_fraud' | 'weekly_precision' | 'reset';
+export type ParamChange = {
+  id: number; key: string; user_ref: string | null; category: string | null; before: number; after: number;
+  cause: ParamCause; alert_id: string | null; at: string; by: string | null; simulated: boolean;
+};
+export type FraudRule = { id: string; version: number; name_fr: string; name_en: string; weight_default: number };
+export type ScoringParams = {
+  bands: { ask: number; bank: number };
+  params: ParamRow[];
+  user_overrides: number;
+  rules: FraudRule[];
+  rules_version: number | null;
+  model: { version: string; trained_at: string } | null;
+  changes: ParamChange[];
+};
+
+/** `api.ops_metrics()` + `api.ops_series(p_days)` (B9.4). */
+export type Latency = { n: number; p50: number | null; p95: number | null } | null;
+export type OpsMetrics = {
+  as_of: string;
+  push_latency_ms_24h: Latency;
+  ingest_to_alert_ms_24h: Latency;
+  score_latency_ms_24h: Latency;
+  alerts_24h: Partial<Record<'info' | 'ask' | 'bank' | 'none', number>> | null;
+  groq_backlog: number | null;
+  groq_uncategorised_all: number | null;
+  last_batch: { job: string; status: string; finished_at: string | null; items: number | null } | null;
+  quotas_today: Record<string, number> | null;
+  model: { version: string; trained_at: string; train_rows: number; parity_ok: boolean } | null;
+  model_eval: { run_at: string; precision_bank: number; recall_bank: number; recall_ask_or_bank: number; false_prompts_per_user_month: number } | null;
+  funnel_7d: { demo_starts: number; sign_ups: number; answers: number } | null;
+};
+export type OpsDay = { day: string; alerts: { info: number; ask: number; bank: number }; push_p95_ms: number | null; score_p95_ms: number | null };
+
+export type LegalText = { kind: 'disclaimer' | 'privacy' | 'terms' | string; version: string; body_md: string };

@@ -120,6 +120,17 @@ export function cssVars(scheme: Scheme): Record<string, string> {
     '--toast-text': tokens.component.toast[scheme].text,
     '--toast-action': tokens.component.toast[scheme].action,
     '--toast-ok': '#3DD68C',
+    // B9.4 settings: a value different from its default (D §4 "#B4410F SemiBold" = brand.text).
+    '--changed': c.brand.text,
+    // C10 dialog (component.dialog).
+    '--dialog-fill': tokens.component.dialog[scheme].fill,
+    '--dialog-scrim': String(resolve(tokens.component.dialog.scrim, scheme)),
+    // G1 line (chart.line) and F1 chart series (colour.chart) for the Ops tab.
+    '--chart-line': tokens.chart.line[scheme],
+    '--chart-area-alpha': String(tokens.chart.line.area.alphaTop[scheme]),
+    '--series-1': tokens.colour.chart[scheme].series[0],
+    '--series-2': tokens.colour.chart[scheme].series[1],
+    '--series-3': tokens.colour.chart[scheme].series[2],
     '--ease-enter': `cubic-bezier(${tokens.motion.easing.enter.join(',')})`,
     '--ease-exit': `cubic-bezier(${tokens.motion.easing.exit.join(',')})`,
   };

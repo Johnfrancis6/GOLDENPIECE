@@ -90,9 +90,6 @@ button, input { font: inherit; color: inherit; }
   font: 500 14px/20px 'Poppins GP'; color: var(--tp); text-decoration: none; }
 .menu button:hover, .menu a:hover { background: var(--s2); }
 .menu .menu-danger { color: var(--destructive-text); }
-.placeholder { padding: 28px; }
-.placeholder h1 { margin: 0 0 8px; font: 600 24px/32px 'Poppins GP'; }
-.placeholder p { margin: 0; color: var(--ts); font: 400 13px/18px 'Poppins GP'; }
 .page-loading { height: 100%; background: var(--bg); }
 
 /* C8 info banner */
@@ -244,3 +241,94 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 .sheet dl { margin: 0; }
 .sheet dl div { display: flex; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--hl); }
 .sheet dt { width: 56px; flex: none; } .sheet dd { margin: 0; font: 400 13px/18px 'Poppins GP'; color: var(--tp); }
+
+/* B9.4 tab pages (settings, Ops): D settings preview — padding 24 × 32, title 24/32, sentence 13/18 */
+.page { flex: 1; min-width: 0; overflow: auto; padding: 24px 32px 40px; background: var(--bg); }
+.page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.page-title { margin: 0; font: 600 24px/32px 'Poppins GP'; }
+.page-intro { margin: 4px 0 0; max-width: 720px; font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.page-banner { margin-top: 16px; }
+.page-banner .banner { margin-bottom: 0; }
+.btn-icon { flex: none; }
+.btn-icon > span { display: inline-flex; align-items: center; gap: 6px; }
+.nw { white-space: nowrap; }
+.link { border: 0; padding: 0; background: none; font: inherit; color: var(--brt); text-decoration: underline; cursor: pointer; }
+.sec-title { margin: 24px 0 12px; font: 600 15px/22px 'Poppins GP'; }
+.cols2 { display: flex; gap: 24px; margin-top: 20px; align-items: flex-start; }
+.cols2 .sec-title { margin-top: 0; }
+.tb { flex: 1; min-width: 0; padding: 4px 0; }
+.ptable { border-collapse: collapse; width: 100%; font: 400 13px/18px 'Poppins GP'; }
+.ptable thead th { font: 600 12px/16px 'Poppins GP'; color: var(--ts); text-align: left; padding: 10px 16px; }
+.ptable td, .ptable tbody th { padding: 10px 16px; border-top: 1px solid var(--hl); text-align: left; font-weight: 400; }
+.ptable .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mut { color: var(--ts); }
+.ptable td.chg { font-weight: 600; color: var(--changed); }
+.log-col { width: 380px; flex: none; }
+.log { list-style: none; margin: 0; padding: 0; }
+.lg { padding: 10px 0; border-top: 1px solid var(--hl); }
+.lg:first-child { border-top: 0; }
+.lt { font: 500 13px/18px 'Poppins GP'; font-variant-numeric: tabular-nums; }
+.ls { margin-top: 2px; font: 400 12px/16px 'Poppins GP'; color: var(--ts); }
+.lg-empty { margin: 0; padding: 10px 0; font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.tl { margin: 10px 0 0; font: 400 12px/16px 'Poppins GP'; color: var(--ts); }
+.pager { display: flex; align-items: center; gap: 4px; margin-top: 8px; font: 400 12px/16px 'Poppins GP'; color: var(--ts); }
+.pager > span { margin-right: auto; font-variant-numeric: tabular-nums; }
+
+/* C10 dialog (component.dialog) */
+.dlg-scrim { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 20px; background: var(--dialog-scrim);
+  animation: fade var(--quick) var(--ease-enter) both; }
+.dlg { width: 420px; max-width: 100%; border-radius: 20px; padding: 24px 20px 20px; background: var(--dialog-fill);
+  animation: dlg-in var(--quick) var(--ease-enter) both; }
+.dlg-title { margin: 0; font: 600 18px/26px 'Poppins GP'; outline: none; }
+.dlg-body { margin: 8px 0 0; font: 400 15px/22px 'Poppins GP'; color: var(--ts); }
+.dlg-btns { display: flex; gap: 12px; margin-top: 24px; }
+.dlg-btns .btn { flex: 1; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes dlg-in { from { opacity: 0; transform: scale(0.96); } }
+@media (prefers-reduced-motion: reduce) { .dlg { animation: fade 150ms linear both; } }
+
+/* B7 stat tiles (block.statTiles), 4 per row on the 1280 page */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.tile { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.tile-label { font: 500 13px/18px 'Poppins GP'; color: var(--ts); }
+.tile-value { margin-top: 4px; font: 600 22px/28px 'Poppins GP'; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tile-value .tag { vertical-align: 4px; }
+.tile-unit { font: 600 13px/18px 'Poppins GP'; color: var(--ts); }
+.tile-insuf { margin-top: 4px; font: 500 15px/22px 'Poppins GP'; }
+.tile-ctx { font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+
+/* Charts (G1 line, G3-style bars), one chart per C7 card */
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.chart-card { padding: 16px; }
+.chart-wide { grid-column: 1 / -1; }
+.chart-title { margin: 0; font: 500 13px/18px 'Poppins GP'; color: var(--ts); }
+.chart-hero { margin: 4px 0 8px; font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.chart-hero b { font: 600 22px/28px 'Poppins GP'; font-variant-numeric: tabular-nums; color: var(--tp); margin-right: 6px; }
+.g1 { display: block; width: 100%; height: auto; outline-offset: 2px; }
+.g-lbl { font: 400 11px/14px 'Poppins GP'; fill: var(--ts); font-variant-numeric: tabular-nums; }
+.g1-scrub { stroke: var(--ts); stroke-opacity: 0.6; stroke-width: 1; }
+.g1-line { stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: g1-draw 1100ms var(--ease-enter) forwards; }
+.g1-area { opacity: 0; animation: fade-to 700ms 400ms linear forwards; }
+@keyframes g1-draw { to { stroke-dashoffset: 0; } }
+@keyframes fade-to { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .g1-line { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; } .g1-area { animation: none; opacity: 1; } }
+.g-empty { margin-top: 12px; height: 120px; border: 1px dashed var(--hl); border-radius: 12px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px; font: 400 13px/18px 'Poppins GP'; color: var(--ts); text-align: center; padding: 0 16px; }
+.g-empty b { font: 500 15px/22px 'Poppins GP'; color: var(--tp); }
+.g3 { margin-top: 4px; }
+.g3-row { height: 48px; display: flex; align-items: center; gap: 8px; }
+.g3-name { width: 180px; flex: none; font: 400 13px/18px 'Poppins GP'; }
+.g3-track { flex: 1; height: 16px; }
+.g3-bar { display: block; height: 16px; min-width: 2px; border-radius: 0 4px 4px 0; transition: width 700ms var(--ease-enter); }
+.g3-val { width: 56px; flex: none; text-align: right; font: 600 13px/18px 'Poppins GP'; font-variant-numeric: tabular-nums; }
+
+/* /legal (delegated text page) */
+.legal-page { min-height: 100%; background: var(--bg); }
+.legal-top { justify-content: space-between; }
+.legal-back { text-decoration: none; gap: 6px; }
+.legal { max-width: 720px; margin: 0 auto; padding: 32px 24px 64px; }
+.legal .page-title { margin-bottom: 16px; }
+.legal-doc { margin-top: 24px; padding: 20px 24px; border-radius: 12px; background: var(--s1); font: 400 15px/22px 'Poppins GP'; }
+.legal-doc h2 { margin: 0 0 8px; font: 600 18px/26px 'Poppins GP'; }
+.legal-doc h3 { margin: 16px 0 6px; font: 600 15px/22px 'Poppins GP'; }
+.legal-doc p, .legal-doc ul { margin: 0 0 10px; }
