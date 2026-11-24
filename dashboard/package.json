@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "dev-analyst": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS:-/root/.ccr/ca-bundle.crt} node scripts/dev-analyst.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

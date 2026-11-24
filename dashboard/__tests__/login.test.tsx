@@ -82,7 +82,7 @@ describe('login + TOTP', () => {
     // Top bar: tabs, live state, analyst name and initials
     expect(screen.getByRole('link', { name: "File d'alertes" })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Réglages du modèle' })).toHaveClass('active');
-    expect(screen.getByRole('status')).toHaveTextContent('En direct');
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('En direct'));
     expect(screen.getByText('A. Kone')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Menu du compte' })).toHaveTextContent('AK');
   });

@@ -89,7 +89,7 @@ button, input { font: inherit; color: inherit; }
 .menu button, .menu a { text-align: left; padding: 8px 12px; min-height: 36px; border: 0; border-radius: 8px; background: transparent; cursor: pointer;
   font: 500 14px/20px 'Poppins GP'; color: var(--tp); text-decoration: none; }
 .menu button:hover, .menu a:hover { background: var(--s2); }
-.menu .menu-danger { color: var(--loss); }
+.menu .menu-danger { color: var(--destructive-text); }
 .placeholder { padding: 28px; }
 .placeholder h1 { margin: 0 0 8px; font: 600 24px/32px 'Poppins GP'; }
 .placeholder p { margin: 0; color: var(--ts); font: 400 13px/18px 'Poppins GP'; }

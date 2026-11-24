@@ -76,6 +76,7 @@ export function cssVars(scheme: Scheme): Record<string, string> {
     '--btn-secondary-label': pick(btn.secondary[scheme].label, scheme),
     '--btn-secondary-pressed': btn.secondary[scheme].pressed,
     '--btn-primary-label': btn.primary.label,
+    '--destructive-text': pick(btn.destructiveText, scheme),
     '--btn-danger': pick(btn.destructiveConfirm[scheme].fill, scheme),
     '--btn-danger-label': btn.destructiveConfirm[scheme].label,
     '--btn-disabled': pick(btn.disabled.fill, scheme),

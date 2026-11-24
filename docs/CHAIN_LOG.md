@@ -816,3 +816,46 @@ Checks: `npx jest` 75 passed; `npx tsc --noEmit` clean; local `expo prebuild -p 
 | **B9.5 Deploy + close** | 1. Cloudflare Pages project (direct upload via API from CI or session), SPA fallback, security headers (CSP to the Supabase host). 2. Playwright e2e against dev (login with TOTP secret from env, queue, decide). 3. CHAIN_LOG B9 summary, PR ready, create **B7.1** (new branch `build/b7-accounts-spending-markets` from this one, plan B7 by block and step first). |
 
 ### Next: B9.1 — Shell + login (new branch `build/b9-bank-dashboard` from `build/b6-app-shell`)
+
+---
+
+## B9.1 — Shell + login · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Vite 8 + React 19 + TS 6 scaffold; `tokens.json` copied from design (identical, test), CSS variables per scheme from tokens + D values; Poppins GP + brand icon copied (test: byte-identical); FR/EN strings, D §7 copy checked verbatim by a test; light default, dark option (account menu, kept per browser) | `dashboard/` | done |
+| 2. Supabase client (dev URL + publishable key, `api` schema, `VITE_*` override); route guard `access()` = analyst role claim + aal2, else `/login` (keeps the requested path) | `src/lib`, `src/auth` | done, 6 unit cases |
+| 3. Login + TOTP: password → first login enrols TOTP (QR + grouped key; abandoned unverified factors removed first) → challenge/verify → aal2; non-analyst refused and signed out; dev analyst script (`npm run dev-analyst`, e-mail/password from env or generated, output gitignored) | `src/screens/Login.tsx`, `scripts/dev-analyst.mjs` | done; **real flow run against dev in Chromium** (enrol → aal2 → shell → sign out → challenge → aal2) |
+| 4. Top bar: brand mark 28 on its dark tile (r 8), "GOLDENPIECE · Banque de démonstration", tab pills (NavLink, selected `surface3` + SemiBold), "En direct"/"Hors ligne" (Realtime channel SUBSCRIBED + `navigator.onLine`), analyst name, avatar 32 → menu (theme, language, legal, sign out) | `src/shell` | done |
+| 5. CI job `dashboard` (vitest, tsc, eslint, vite build) | `.github/workflows/ci.yml` | added (runs on the PR) |
+
+Checks: `vitest` 23 passed (theme 7, i18n 3, access 8, login flow with an in-memory auth fake 6 — run 3× after a clean `npm ci`, stable); `tsc -b` clean; `eslint` clean; build OK. Screenshots 1280 × 800 scale 1 in `docs/screens/b9/` (login light/dark/error, TOTP enrol (QR + key blurred, factor rotated after), challenge dark, shell light/dark, menu).
+
+### Measured (2026-11-24, dev, from the session)
+
+- `npm run dev-analyst`: sign-in + enrol + verify → `aal2`; `api.analyst_queue('all')` → 12 items in 398-449 ms (session → eu-west-1 through the proxy).
+- Browser (vite preview, Chromium): login card visible 167 ms after navigation; code entered → shell 1.3 s; `analyst_queue` with the browser's aal2 token → HTTP 200, 12 items.
+- Bundle: 557 KB JS (165 KB gzip), 6.3 KB CSS. Code-splitting per tab left to B9.5 if needed.
+
+### Decisions [B9.1] (one line each, delegated items)
+
+- Login (delegated D §8): centred `surface1` card 400 wide, radius 20 (`radius.lg`), padding 32, brand row, title 24/32, sub 13/18, C2 fields (52, r 12), C1 primary full width; errors as C8 error banner above the fields.
+- TOTP: C3 boxes variant (6 × 44 × 56, gap 8, auto-submit, one real `one-time-code` input), QR 176 on a white 192 tile (scannable in dark), key grouped by 4 under it; wrong code → red boxes + message, boxes cleared.
+- Login/TOTP copy composed (FR/EN in `src/i18n`), e-mail/password wording reused from app O7/O9.
+- Dark theme (delegated): app dark tokens as is; "En direct" uses `gain` dark (no D dark value); selected row fill (B9.2) = dark `tint.brand`.
+- Bank name in the top bar: "Banque de démonstration" (no bank id on the analyst account yet).
+- Account menu on the avatar (theme · language · Mentions légales · Se déconnecter, destructive text per C1) — not in the D preview, needed for sign-out.
+- Router: `react-router` 8 (BrowserRouter) — B9.5 adds the Pages SPA fallback.
+
+### Defects open
+
+- One console 403 on sign-out in Chromium (session token already revoked by the challenge flow?); sign-out works. Check in B9.2.
+- Dark code boxes `surface2` on `surface1` card: weak field boundary (same as CHALLENGES S3-1 option).
+- Dev analyst credentials live only in each session's gitignored `.env.analyst.local`: every session reruns `npm run dev-analyst` (it rotates password + factor). Franco's own analyst account: not created (needs his e-mail; any session can run the script with `ANALYST_EMAIL`).
+
+### Next: B9.2 — Queue + detail (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`; the Realtime channel `dashboard-live` in `src/shell/useLive.ts` is where the `core.alerts` listener goes.
+
