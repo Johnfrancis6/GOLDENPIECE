@@ -86,7 +86,12 @@ function useVerify(factorId: string | null) {
     if (!factorId) return;
     setBusy(true);
     setBad(false);
-    const { error } = await client.auth.mfa.challengeAndVerify({ factorId, code });
+    let { error } = await client.auth.mfa.challengeAndVerify({ factorId, code });
+    // Challenge and verify must come from the same IP: a network that changes its exit
+    // address between the two calls (mobile, proxies) gets a fresh challenge, twice at most.
+    for (let i = 0; i < 2 && error && (error as { code?: string }).code === 'mfa_ip_address_mismatch'; i++) {
+      ({ error } = await client.auth.mfa.challengeAndVerify({ factorId, code }));
+    }
     setBusy(false);
     if (error) {
       setBad(true);

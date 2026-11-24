@@ -7,7 +7,7 @@ import {
 import { useAuth } from '../auth/AuthProvider';
 import { hasKey, useLang, useT } from '../i18n';
 import { BUMP, categoryName, reasonLong } from '../i18n/alerts';
-import { bankName, dateTimeSec, decimal, fullDate, money, percent, dayMonth, time } from '../lib/format';
+import { bankName as opName, bankName, dateTimeSec, decimal, fullDate, money, percent, dayMonth, time } from '../lib/format';
 import { isDecided, isPending, type AlertDetail, type QueueItem } from '../lib/types';
 import type { Live } from '../shell/useLive';
 import { OutcomeBadge, ScoreBadge, Tag } from '../ui/Badge';
@@ -86,7 +86,7 @@ function DetailBody({ d, now, item, live, nav, footer }: { d: AlertDetail; now: 
   const decided = isDecided(a.status);
   const opKey = `op.${a.tx?.op_type ?? 'other'}`;
   const op = hasKey(opKey) ? t(opKey) : t('op.other');
-  const operator = d.tx?.momo?.operator ? ` ${d.tx.momo.operator}` : '';
+  const operator = d.tx?.momo?.operator ? ` ${opName(d.tx.momo.operator)}` : '';
   const payee = a.tx?.cp_name;
   const toLike = ['transfer', 'p2p', 'p2p_out', 'bank_out', 'cash_out'].includes(a.tx?.op_type ?? '');
   const title = payee ? t(toLike ? 'title.to' : 'title.at', { op: `${op}${operator}`, payee }) : `${op}${operator}`;

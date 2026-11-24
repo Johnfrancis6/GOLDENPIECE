@@ -114,6 +114,14 @@ export function cssVars(scheme: Scheme): Record<string, string> {
     '--bar-current': c.brand.fill,
     '--quick': `${tokens.motion.duration.quick}ms`,
     '--rise': `${tokens.motion.distance.enterTranslateDp}px`,
+    // C11 toast (component.toast): light = black pill, dark = #222 + hairline border.
+    '--toast-fill': tokens.component.toast[scheme].fill,
+    '--toast-border': scheme === 'dark' ? tokens.component.toast.dark.border : 'transparent',
+    '--toast-text': tokens.component.toast[scheme].text,
+    '--toast-action': tokens.component.toast[scheme].action,
+    '--toast-ok': '#3DD68C',
+    '--ease-enter': `cubic-bezier(${tokens.motion.easing.enter.join(',')})`,
+    '--ease-exit': `cubic-bezier(${tokens.motion.easing.exit.join(',')})`,
   };
 }
 

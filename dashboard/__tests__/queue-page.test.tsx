@@ -9,7 +9,8 @@ type Change = { eventType: 'INSERT' | 'UPDATE'; new: { id: string; status: strin
 
 /** Signed-in analyst (aal2) with in-memory analyst RPCs and a controllable Realtime channel. */
 function fakeClient(queue: QueueItem[], details: Record<string, AlertDetail> = {}) {
-  const state = { aal: 'aal2', queue, details, rpcCalls: [] as string[], forbidden: false, order: [] as string[] };
+  const state = { aal: 'aal2', queue, details, rpcCalls: [] as string[], forbidden: false, order: [] as string[],
+    decides: [] as Record<string, unknown>[], decideError: false };
   let onChange: ((p: Change) => void) | null = null;
   let onStatus: ((s: string) => void) | null = null;
   const listeners: ((e: string) => void)[] = [];
@@ -25,6 +26,11 @@ function fakeClient(queue: QueueItem[], details: Record<string, AlertDetail> = {
       state.rpcCalls.push(fn === 'analyst_alert' ? `alert:${String(args.p_alert_id)}` : fn);
       if (state.forbidden) return { data: null, error: { code: 'P0001', message: 'FORBIDDEN analyst.required' } };
       if (fn === 'analyst_queue') return { data: { items: state.queue, next_cursor: null }, error: null };
+      if (fn === 'analyst_decide') {
+        state.decides.push(args);
+        if (state.decideError) return { data: null, error: { code: 'P0001', message: 'REJECTED alert.not_decidable' } };
+        return { data: { status: `decided_${String(args.p_decision)}`, param_changes: [] }, error: null };
+      }
       const d = state.details[String(args.p_alert_id)] ?? detail(String(args.p_alert_id));
       return { data: d, error: null };
     },
@@ -183,5 +189,98 @@ describe('queue + detail', () => {
     f.state.forbidden = true;
     f.emit({ eventType: 'INSERT', new: { id: 'eeeeeeee-5', status: 'escalated' }, old: {} });
     expect(await screen.findByRole('heading', { name: 'Code de vérification' }, { timeout: 2000 })).toBeInTheDocument();
+  });
+});
+
+describe('decision (B9.3)', () => {
+  afterEach(() => { vi.useRealTimers(); });
+  const setup = async (queue = q()) => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const f = fakeClient(queue);
+    render(<App client={f.client} />);
+    await screen.findByRole('heading', { level: 1, name: 'Paiement carte chez Électro Plus Sandaga' });
+    await waitFor(() => expect(screen.getByRole('button', { name: /Légitime/ })).toBeEnabled());
+    const u = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    return { f, u };
+  };
+
+  it('L: toast with Annuler, next alert opens, the RPC leaves only when the toast closes (8 s)', async () => {
+    const { f, u } = await setup();
+    expect(screen.getByRole('group', { name: 'Décision' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Ajouter un commentaire (obligatoire pour « Fraude »)…')).toBeInTheDocument();
+    await u.keyboard('l');
+    expect(await screen.findByText('Décision enregistrée')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Annuler' })).toBeInTheDocument();
+    await waitFor(() => expect(window.location.pathname).toBe('/alerts/aaaaaaaa-1'));
+    expect(screen.getByText('En analyse · 1')).toBeInTheDocument();
+    expect(f.state.decides).toEqual([]);
+    await act(async () => { vi.advanceTimersByTime(7900); });
+    expect(f.state.decides).toEqual([]);
+    await act(async () => { vi.advanceTimersByTime(200); });
+    expect(f.state.decides).toEqual([{ p_alert_id: 'bbbbbbbb-2', p_decision: 'legit', p_comment: null }]);
+    await waitFor(() => expect(screen.queryByText('Décision enregistrée')).not.toBeInTheDocument());
+  });
+
+  it('F without a comment focuses the comment; Enter confirms; Annuler sends nothing and goes back', async () => {
+    const { f, u } = await setup();
+    await u.keyboard('f');
+    const box = screen.getByRole('textbox', { name: 'Commentaire' });
+    expect(box).toHaveFocus();
+    expect(screen.getByText(/Ajoutez un commentaire pour décider « Fraude »/)).toBeInTheDocument();
+    expect(screen.queryByText('Décision enregistrée')).not.toBeInTheDocument();
+    await u.type(box, 'Bénéficiaire signalé{Enter}');
+    expect(await screen.findByText('Décision enregistrée')).toBeInTheDocument();
+    await waitFor(() => expect(window.location.pathname).toBe('/alerts/aaaaaaaa-1'));
+    await u.click(screen.getByRole('button', { name: 'Annuler' }));
+    await waitFor(() => expect(window.location.pathname).toBe('/alerts/bbbbbbbb-2'));
+    expect(screen.getByText('En analyse · 2')).toBeInTheDocument();
+    await act(async () => { vi.advanceTimersByTime(9000); });
+    expect(f.state.decides).toEqual([]);
+  });
+
+  it('Fraude button with a comment; a second decision sends the first at once', async () => {
+    const { f, u } = await setup();
+    await u.type(screen.getByRole('textbox', { name: 'Commentaire' }), 'Usurpation');
+    // typing "l" / "f" in the comment never decides
+    expect(screen.queryByText('Décision enregistrée')).not.toBeInTheDocument();
+    await u.click(screen.getByRole('button', { name: /Fraude/ }));
+    await waitFor(() => expect(window.location.pathname).toBe('/alerts/aaaaaaaa-1'));
+    await screen.findByRole('group', { name: 'Décision' });
+    await u.keyboard('l');
+    await waitFor(() => expect(f.state.decides).toEqual([{ p_alert_id: 'bbbbbbbb-2', p_decision: 'fraud', p_comment: 'Usurpation' }]));
+    await act(async () => { vi.advanceTimersByTime(8100); });
+    expect(f.state.decides[1]).toEqual({ p_alert_id: 'aaaaaaaa-1', p_decision: 'legit', p_comment: null });
+  });
+
+  it('a refused decision is reported and the alert returns under review', async () => {
+    const { f, u } = await setup();
+    f.state.decideError = true;
+    await u.keyboard('l');
+    await act(async () => { vi.advanceTimersByTime(8100); });
+    expect(await screen.findByText('Décision non enregistrée. Réessayez.')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('En analyse · 2')).toBeInTheDocument());
+  });
+
+  it('offline: decision buttons and keys are off', async () => {
+    const { f, u } = await setup();
+    f.status('CHANNEL_ERROR');
+    expect(screen.getByRole('button', { name: /Légitime/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Fraude/ })).toBeDisabled();
+    await u.keyboard('l');
+    expect(screen.queryByText('Décision enregistrée')).not.toBeInTheDocument();
+  });
+
+  it('"?" opens the shortcut sheet, Esc closes it; C focuses the comment', async () => {
+    const { u } = await setup();
+    await u.keyboard('?');
+    expect(screen.getByRole('dialog', { name: 'Raccourcis clavier' })).toBeInTheDocument();
+    await u.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await u.keyboard('c');
+    const box = screen.getByRole('textbox', { name: 'Commentaire' });
+    expect(box).toHaveFocus();
+    expect(box).toHaveValue('');
+    await u.keyboard('{Escape}');
+    expect(box).not.toHaveFocus();
   });
 });

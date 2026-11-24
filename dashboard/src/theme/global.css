@@ -200,3 +200,47 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 .bar-median { stroke: var(--ts); } .bar-label { font: 400 11px 'Poppins GP'; fill: var(--ts); }
 .ft { height: 84px; flex: none; display: flex; align-items: center; gap: 16px; padding: 0 28px; background: var(--s1); border-top: 1px solid var(--hl); }
 .ft-outcome { font: 500 14px/20px 'Poppins GP'; color: var(--ts); }
+
+/* B9.3 decision bar (D §2) */
+.ft-decide { position: relative; height: auto; min-height: 84px; padding: 18px 28px; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.cm { flex: 1; min-width: 0; }
+.cm-box { display: flex; border-radius: 12px; background: var(--input-fill); box-shadow: inset 0 0 0 1px var(--input-border); }
+.cm-box:focus-within { box-shadow: inset 0 0 0 2px var(--focus); }
+.cm-box.field-error { box-shadow: inset 0 0 0 2px var(--loss); }
+.cm-box textarea { flex: 1; min-width: 0; height: 48px; min-height: 48px; resize: none; border: 0; background: transparent; outline: none;
+  padding: 13px 16px; font: 400 15px/22px 'Poppins GP'; color: var(--tp); caret-color: var(--focus); }
+.cm-box textarea::placeholder { color: var(--input-placeholder); }
+.cm-box textarea:disabled { cursor: not-allowed; }
+.cm-hint { display: flex; gap: 6px; align-items: center; margin: 6px 0 0; font: 500 12px/16px 'Poppins GP'; color: var(--loss); }
+.btn-decide { height: 48px; flex: none; }
+.btn-decide kbd { margin-left: 2px; }
+.keys-legend { flex: 0 0 100%; margin: -8px 0 -4px; text-align: right; font: 400 12px/16px 'Poppins GP'; color: var(--ts); }
+.ft-held { gap: 12px; }
+.ft-held .btn { margin-left: auto; }
+
+/* C11 toast, bottom of the detail column */
+.toast-zone { position: fixed; left: 420px; right: 0; bottom: 104px; display: flex; justify-content: center; pointer-events: none; z-index: 20; }
+.toast { position: relative; height: 48px; min-width: 320px; max-width: 560px; padding: 0 8px 0 16px; pointer-events: auto; display: flex; align-items: center; }
+.toast-bg { position: absolute; inset: 0; border-radius: 999px; background: var(--toast-fill); box-shadow: inset 0 0 0 1px var(--toast-border);
+  animation: toast-unfold 450ms var(--ease-enter) both; }
+.toast-in { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; font: 500 14px/20px 'Poppins GP'; color: var(--toast-text);
+  animation: toast-content 320ms var(--ease-enter) 220ms both; }
+.toast-ok { color: var(--toast-ok); flex: none; } .toast-warn { color: var(--toast-action); flex: none; }
+.toast-act { margin-left: auto; height: 40px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; cursor: pointer;
+  font: 600 14px/20px 'Poppins GP'; color: var(--toast-action); }
+.toast-act:hover { background: rgba(255,255,255,0.08); }
+@keyframes toast-unfold { from { transform: scaleX(0.12); opacity: 0; } 44% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes toast-content { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .toast-bg, .toast-in { animation: fade 150ms linear both !important; }
+  @keyframes fade { from { opacity: 0; } }
+}
+
+/* "?" shortcut sheet */
+.sheet { position: fixed; right: 28px; bottom: 104px; z-index: 30; width: 380px; padding: 16px 20px 12px; border-radius: 16px; background: var(--s1);
+  box-shadow: 0 0 0 1px var(--hl), 0 8px 24px rgba(0,0,0,0.16); outline: none; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sheet-head h2 { margin: 0; font: 600 15px/22px 'Poppins GP'; }
+.sheet dl { margin: 0; }
+.sheet dl div { display: flex; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--hl); }
+.sheet dt { width: 56px; flex: none; } .sheet dd { margin: 0; font: 400 13px/18px 'Poppins GP'; color: var(--tp); }

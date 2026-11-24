@@ -915,3 +915,49 @@ Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-queue-decided-light/dar
 ### Next: B9.3 — Decision (same branch, plan above unchanged)
 
 Start: `cd dashboard && npm ci && npm run dev-analyst`. The decision bar goes in the `footer` prop of `Detail` (`src/queue/Detail.tsx`, rendered only for pending alerts; decided alerts already show the outcome); keyboard handler is in `src/queue/QueuePage.tsx` (`isTyping` guard exists). Browser runs: Playwright from the global install (`createRequire(npm root -g)`), launch with the session proxy + `bypass: 'localhost'`, context `locale: 'fr-FR'`.
+
+---
+
+## B9.3 — Decision · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Decision bar (D §2) pinned under the detail: comment C2 48 → 3 lines (500 chars), "Légitime L" C1 secondary, "Fraude F" C1 destructive confirm, both 48 high; Fraude with an empty comment focuses it + error hint, Enter confirms; keys L / F / C, "?" shortcut sheet, Esc leaves the field / closes the sheet, all off while typing; offline → buttons and keys disabled; legend line above the bar only once the detail is scrolled | `src/decision/{DecisionBar,ShortcutSheet}.tsx`, `src/queue/QueuePage.tsx` | done |
+| 2. C11 toast "Décision enregistrée · Annuler" 8 s (unfold animation, 150 ms fade under reduced motion): the decision is **held** and `api.analyst_decide` is sent when the toast closes, when a second decision replaces it, or when the queue is left (tab change / sign-out); closing the browser tab while held asks first (`beforeunload`). Annuler → nothing sent, back to the alert. Held/sent decisions show at once in the queue (row moves to "Décidées aujourd'hui"); next alert under review opens (newer first, then wrap). Refused RPC → toast "Décision non enregistrée" and the alert returns under review; `already_decided` → "Déjà décidée par un autre analyste" | `src/decision/{useDecision.ts,Toast.tsx}` | done |
+| 3. **Live check on dev** (BUILD_PLAN B9 "Done"): demo user (Dakar) + SIM swap + 80 % cash-out at a new agent → score 100, `escalated`; analyst decides "Fraude" with a comment in the browser → the app user's Realtime channel on `core.alerts` gets `decided_fraud`; `ops.param_changes` logs `z0 transfers.cash 2.5 → 2.25, cause analyst_fraud`; `core.analyst_decisions` has the comment, `simulated=false`; `ops.push_log` has `fraud` (status `no_token`, no phone) | `dashboard/scripts/live-decision-check.mjs` | **passed** |
+
+Checks: `vitest` **48 passed** (×3 stable after one fix: tests wait until Realtime is up before pressing keys): 6 new decision cases (L + 8 s timing, F without comment → focus → Enter → Annuler sends nothing, Fraude button + a second decision sends the first at once, refused RPC, offline, "?" / Esc / C). `tsc -b`, `eslint`, build clean. D §7 copy (comment placeholder, Légitime · Fraude, Décision enregistrée) checked verbatim by the i18n test.
+Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-decision-bar-light`, `d-decision-fraud-needs-comment`, `d-decision-toast`, `d-decision-after`, `d-shortcuts-dark`, `d-decision-bar-dark-scrolled` (legend). The light ones were taken before the operator-name fix (title shows `teranga_mobile`).
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- `analyst_decide` request → app user's Realtime `decided_fraud` event: **1.34 s** (one run; includes the RPC round-trip through the proxy). Key press → event 9.3 s (8 s undo window by design).
+- Code entered → detail with the decision bar enabled: ~6.6 s this run (includes one `mfa_ip_address_mismatch` retry, below).
+- Bundle 620 KB JS (187 KB gzip) — code-splitting stays a B9.5 item.
+
+### Fixed (earlier defects)
+
+- **TOTP verify refused with `mfa_ip_address_mismatch`** (422) when the network changes its exit IP between challenge and verify (the session proxy does; mobile networks can): `useVerify` now retries `challengeAndVerify` twice on that error only. Before, the analyst saw "wrong code".
+- Detail title showed the raw operator id ("Retrait teranga_mobile …") → "Retrait Teranga Mobile …".
+
+### Decisions [B9.3] (one line each, composed / delegated)
+
+- No undo RPC exists, so "Annuler" is client-side: the RPC is held for the 8 s of the toast (D §3 "Annuler is allowed until the toast closes").
+- Leaving the queue sends the held decision at once (never lost); closing the browser tab asks first.
+- Comment required for Fraude is client-side only (`core.decide_alert` accepts null); comment trimmed, empty → null.
+- Toast sits centred over the detail column, 104 above the bottom (above the decision bar); light/dark colours from `component.toast`.
+- Held alert footer: outcome badge + "Décision : Fraude · envoyée à la fermeture du message" + Annuler (secondary small), so Annuler is also reachable from the item (C11 accessibility rule).
+- Shortcut sheet (delegated look): `surface1` card 380 wide, radius 16, bottom-right above the bar, `kbd` + description rows; legend hidden while the sheet is open.
+- Shortcut legend: an in-flow row at the top of the bar (not over the content), only after scrolling.
+
+### Defects open
+
+- Test data left on dev: 4 anonymous Dakar demo users (`account-demo-cleanup` removes old anonymous accounts) and their B9.3 alerts; 3 of them were left `escalated` by the failed login runs — the simulated analyst decides them after 10 min.
+- Queue filtering client-side (B9.2), bundle > 500 KB (B9.5).
+- Dev analyst credentials: each session reruns `npm run dev-analyst` (unchanged).
+
+### Next: B9.4 — Settings + Ops + legal (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. Tabs `/settings` and `/ops` are placeholders (`src/screens/Placeholder.tsx`); RPCs `api.scoring_params`, `api.reset_params(p_scope)`, `api.ops_metrics`, `legal_texts`. Browser runs: see `scripts/live-decision-check.mjs` for the login + TOTP helper (proxy, `bypass: 'localhost'`, `locale: 'fr-FR'`).
