@@ -511,3 +511,308 @@ Backend contracts for the app are in `docs/API.md` (§2 per screen, §6 built li
 Start from branch `build/b5-scoring-fraud-alerts` (new branch `build/b6-app-shell`). Follow AUTORUN_BACKEND.md
 "Visual build sessions" rules and design/HANDOFF.md "What build sessions do first". Ask Franco once (French) for the
 Tecno Spark 50 specs (SETUP §2) and to fix the PAT if `select ops.health_check()` still shows `dispatch_failed`.
+
+---
+
+## B6.1 — App shell: backend RPCs, Expo scaffold, data layer · 2026-11-23 · branch `build/b6-app-shell`
+
+Franco stopped the session mid-way (2026-11-23) and asked for **small sessions with a plan per block and step that hand
+over automatically** — rule written in AUTORUN_BACKEND.md "Session sizing". B6 is now split into B6.1 … B6.5 below.
+
+### Done
+
+| Item | Where | State |
+|---|---|---|
+| Missing app RPCs: `api.sync_transactions(p_cursor, p_limit)` (keyset `(updated_at,id)`, ascending, 24-month cap, row shape of API.md §2.3 + `amount_ref`, `alert_id`), `api.save_questionnaire(section, answers, version)` (risk r1..r5 → `risk_profile` = rounded mean), `api.update_settings(p_client_id, p_settings)` (whitelisted keys incl. new `first_name`; idempotent; writes `settings_changed`), `api.record_security_event(type, details, device_id)` (whitelist, 30/h), `api.apply_mutations(p_items)` (≤ 20, per-item sub-transaction: applied / duplicate / conflict / rejected + `reason_key`; B6 supports `update_settings`, `upsert_debt`, `save_questionnaire` — B7/B8 add theirs); `bootstrap` adds `profile.first_name`, `notif_prefs`, `row_version`, `questionnaire{section:{version}}` | migration `20261129000100_app_sync.sql`, pgTAP `app_sync.test.sql` | **applied on dev; 27/27**; api_skeleton 22/22, rls_core 75/75 |
+| New error keys | `shared/i18n/{fr,en}.json` (`sync.bad_cursor`, `questionnaire.invalid`, `settings.invalid`, `security_event.invalid`, `mutations.*`, `rate_limited`, `network`) | done |
+| Expo app scaffold | `app/` — Expo **58.0.26**, RN 0.88.1, React 19.3, TS 6, expo-router, expo-sqlite (**plugin `useSQLCipher: true`** — verified in SDK 58 plugin source), secure-store, local-authentication (`getEnrolledLevelAsync`, `authenticateAsync({biometricsSecurityLevel})` verified), supabase-js 2.119, Sentry RN 8.28, lucide-react-native, @noble/hashes; `app.json` name GOLDENPIECE, package `com.goldenpiece.app` | installed; **no screen yet** (`app/app/` routes do not exist) |
+| Design copies (checked identical by Jest) | `app/src/theme/tokens.json` (v0.55.0), `app/assets/fonts/PoppinsGP-*.ttf`, `app/src/i18n/shared.*.json`, `app/src/lib/money.ts` (= `_shared/money.ts`) | done |
+| Bundled data | `app/src/data/countries.json` (249, fr/en/dial/profile/tz), `categories.json` (50 ref categories), `env.dev.json` (dev URL + **publishable** key, public by design §9.3) | done |
+| Theme | `app/src/theme/index.ts` (resolves `{colour.*.x}` refs, `type()` styles, Poppins GP families) | done, not yet used by UI |
+| i18n | `app/src/i18n/index.ts` — FR/EN strings for S1 (O2-O18), B19 variants, S2 home, tour (6 steps), personas, states | done; composed keys (not in design): O6, O7/O9 errors, O8 errors, O10 strong/weak/secret texts, O14, tour texts, persona first names **Awa / Koffi / Moussa** (fictitious) |
+| Formats F6 | `app/src/lib/format.ts` (amounts, row "F", hidden •••, abbreviations M/Md/B, change %, share %, relative ages in user zone, countdown) | 12 Jest tests (incl. token examples) |
+| Local DB | `app/src/lib/db/{types,schema,open}.ts` — tables of ARCHITECTURE §8.1 (FTS5 not yet), `PRAGMA key` raw 256-bit key from secure-store, `wipe()` | schema tested via node:sqlite |
+| Sync engine + outbox | `app/src/lib/sync.ts` — etag payload cache (5 MB LRU), transactions pull (crash-safe cursor in the same SQLite transaction, **5-min overlap** on incremental pulls so late commits are not missed, never overwrites a higher `row_version`), outbox FIFO ≤ 20, backoff 2/8/30/120 s then parked until `wakeOutbox()` at app open, conflict = server wins + event, rejected kept with reason, concurrent replays share one run | **11 Jest tests**; fixed a FIFO bug found by the tests (same-ms items: now ordered by rowid) |
+| Device security + PIN | `app/src/lib/security.ts` (matrix §1.2b → O10 variant, unlock & sensitive methods, "Plus tard" floor = device secret, trivial PINs incl. years 1900-2029, PBKDF2-SHA256 20k salted, 5 → 1 min / 10 → re-login, password strength, e-mail) + `platform/device.ts`, `platform/secure.ts`, `platform/crypto.ts` | **22 Jest tests** (pure part) |
+| API client | `app/src/lib/api.ts` (schema `api`, 15 s timeout, 2 retries, `ApiError{code,messageKey,status}`, Edge `fn()`, auth session stored in the SQLCipher `kv` table) | typechecks; not yet run live |
+| Web preview prep | `app/metro.config.js` (wasm + COOP/COEP for expo-sqlite web) | **untested** |
+
+Checks: `cd app && npx jest` → 45 passed; `npx tsc --noEmit` clean.
+
+### Assumed / decisions [B6.1]
+
+- `sync_transactions` is ascending by `(updated_at, id)` for first and incremental syncs (API.md said newest-first on first
+  sync): one code path, home's first paint comes from `get_home` anyway. Demo reset → app calls `resetTransactions()`.
+- `get_home.learning.active` = scoring active (learning done, §7.7: ≥ 30 days and ≥ 30 ops): show B5 card when **false**.
+- `get_home` has no recent operations: Home's "Dernières opérations" reads the local SQLite (synced rows).
+- `top_category` = `{category_id, spent_ref, share (0-1)}`; colour/icon from design C21 badge by the parent's French name.
+
+### Defects open
+
+- ~~GitHub PAT still refused~~ fixed by Franco (B5 note; `health.dispatch = ok` checked 2026-11-23 22:50).
+- Tecno Spark 50 specs still missing (SETUP §2) → needed only by B6.5.
+- API.md §2.11 / §6 rows for the 5 new RPCs not yet written (B6.2 step 1).
+
+### Plan by block and step — B6 (each part ends with commit, push, CHAIN_LOG, next session)
+
+| Part | Steps (one block each, with test or 360 × 800 screenshot) |
+|---|---|
+| **B6.2 UI kit** | 1. Docs: API.md rows for B6.1 RPCs; CI job `app` in `ci.yml` (npm ci, jest, tsc, lint). 2. Root `app/app/_layout.tsx` (fonts, ThemeContext, LangContext, SafeArea) + web preview working (`npx expo start --web` or `expo export -p web` + Playwright screenshot). 3. Txt, Icon (lucide map), Button C1, TopBar + StepDots C12/C17, StepScreen B19. 4. Card/ListRow C6/C7, Radio/Checkbox/Switch C16, Input C2, Banner C8. 5. PinDots C3 + Keypad C4, Sheet C9, Toast C11, Skeleton C18, EmptyState C19, Ring C17, Monogram C21, Sparkline G2. 6. Dev gallery route `/gallery` + screenshots dark/light, 100 %/200 % font. |
+| **B6.3 Onboarding** | 1. App store (phase machine: loading → update → onboarding step (persisted, resumes) → locked → ready) + DB/engine/api singletons. 2. O1 splash, O2 language, O3 country (search accent-insensitive, suggestions SIM/F CFA zone), O5. 3. O6 personas → anonymous sign-in + `account-demo-start` (+ `{warmup:true}` during the tour), `update_settings{first_name}`. 4. O7 sign-up / O8 e-mail code / O9 login (Supabase Auth; **test one real sign-up e-mail through Brevo SMTP**, tell Franco if it fails). 5. O10 (4 variants) + O11 PIN + O18 lock (AppState, `lock_delay_s`, biometric first, 5/10 rule, `device_security_changed` → wipe + re-login) + `register_device`. 6. O12 consents (`record_consents`, Sentry only if crash consent) + O17 min version (`health_public`/`bootstrap.min_version`). |
+| **B6.4 Home + sync** | 1. Tabs layout with C12 v2 floating pill bar (Accueil, Comptes, Dépenses, Placements; 3 placeholders "Bientôt"). 2. Home S2 v2: header, card carousel (gradient, peeking account cards), dots, alert banner / B5 learning card, 4 actions, 2 tiles, 3 recent rows from SQLite. 3. States: skeleton, empty, offline/stale banners, demo tag, hidden amounts (eye), 200 % font. 4. Sync wiring: open → cache paint → `bootstrap` + `get_home` refresh → `sync_transactions`; foreground outbox replay every 30 s; reconnect via expo-network; Realtime on alerts while foreground. 5. O14 questionnaire (4 sections, saved per answer via outbox) and T guided tour (bundled demo `get_home` JSON, 6 steps, works offline, replayable). |
+| **B6.5 Brand + motion** (cut by B6.5) | 0. Trader balance defect (generator). 1. Brand mark export (icon, adaptive, monochrome, splash, `ic_stat_gp`) + M14 opening (motion.md §4b, reduced motion, skip) + Home build + count-up + M13 sheen. |
+| **B6.6 Device + close** | 1. Android dev build (EAS with `EXPO_TOKEN` or `expo prebuild` + Gradle in CI) → installable APK. 2. Measurements: cold start p50, M14 fps (fallback: drop the guides), airplane-mode test on Home, tour offline (needs Franco's Tecno; specs asked by B6.5). 3. CHAIN_LOG B6 summary, PR #11 ready, create **B9.1** (new branch `build/b9-bank-dashboard` from this one, plan B9 by block and step first). |
+
+### Next: B6.2 — UI kit (same branch `build/b6-app-shell`)
+
+`create_session` was refused (lineage depth 8): Franco starts B6.2 by hand. PR #11 (draft) holds all B6 parts.
+Fix after B6.1 (CI): `scoring.test.sql` set `demo_persona = 'persona_dakar_salaried'`, a template that exists on dev
+(generator) but not on CI's empty local stack (templates load after pgTAP) → FK error, "planned 49 ran 46" on PRs #10
+and #11. The test now inserts the template row itself (`on conflict do nothing`); 49/49 on dev.
+Fix after B6.1 (deploy-dev): every `build/**` branch and `main` deploy to the one dev project. After B6.1 applied
+`20261129000100`, the push of the older B5 branch failed ("Remote migration versions not found in local migrations
+directory", run #19) — and merging PR #10 into `main` would fail the same way until #11 is merged. `deploy-dev.yml` now
+has a gate step: when dev holds migrations the commit lacks, the deploy is **skipped** (notice, job green) instead of
+failing or redeploying older Edge Functions over newer ones. Checked locally: B6 tree → deploy, B5 tree → skip.
+
+---
+
+## B6.2 — UI kit · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by Franco by hand (chain depth reset).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. API.md rows for the B6.1 RPCs (`sync_transactions`, `save_questionnaire`, `update_settings`, `record_security_event`, `apply_mutations` with its real `{results[…]}` shape, `bootstrap` additions); §2.10/§2.11 updated. CI job **`app`** (npm ci, jest, tsc, expo lint) | `docs/API.md`, `.github/workflows/ci.yml` | done |
+| 2. Root layout: Poppins GP via expo-font, ThemeContext (system), LangContext (device language), reduced motion, SafeArea, toasts, splash hold; `/` redirects to `/gallery` until B6.3. **Web preview works**: `npx expo export -p web` + Playwright at 360 × 800, scale 1, no console errors | `app/src/app/_layout.tsx`, `index.tsx` | done |
+| 3. `Txt` (F2 scale, tones, `fixed` for graphics, `maxFontSizeMultiplier`), `Icon` (Lucide map, one import per glyph, absolute stroke), `Button` C1 (5 variants, large/small, loading spinner + reduced-motion dots, press scale 0.97, 48 dp hit slop), `IconButton`, `TopBar` C12 sub-page, `StepDots` C17, `StepScreen` B19 (enter motion, 200 % = 64 dp circle + scroll under 40 dp fade, pinned buttons) | `app/src/ui/{base,icons,Button,TopBar,StepScreen}.tsx` | done, screenshots |
+| 4. `Card` C7 (plain / tappable / highlighted glow edge / list), `ListRow` C6 (value stacks under the title at ≥ 150 % font), `ListCard` (inset hairlines), `Switch` / `Checkbox` / `Radio` / `ChoiceList` / `SwitchRow` C16, `Input` C2 (field, password + strength word, search pill, error on blur by caller), `Banner` C8 (action wraps under the text at large font) | `app/src/ui/{Card,Choice,Input,Banner}.tsx` | done, screenshots |
+| 5. `PinDots` C3 (fill pop, shake −8/+7/−5/+3/0 over 360 ms, red dots, lock 40 %), `PinMessage` (18 dp reserved), `CodeBoxes` (e-mail code), `Keypad` C4 (pin / code / amount, long-press delete clears), `Sheet` C9 (short ≤ 60 % / tall 92 %, drag 1:1 down, 30 % or 1000 dp/s dismiss, snap back, scrim, back button, footer hairline when scrolled, reduced motion fade), `SheetOption`, `ToastProvider`/`useToast` C11 (unfold 0.12 → 1, 4 s / 8 s with TalkBack + action), `SkeletonBar`/`SkeletonIcon`/`SkeletonRow` C18 (shared 2.8 s wifi-arc clock), `EmptyState` C19 (piggy bank) + `FailedState` (wifi + "!"), `Ring` C17 (backOut 0.9 sweep, full-ring pulse), `InstitutionBadge`/`CategoryBadge`/`ProfileCircle` C21, `Sparkline` G2 | `app/src/ui/{Pin,Sheet,Toast,Loading,Data}.tsx` | done, screenshots |
+| 6. Dev gallery `/gallery` (+ `/gallery/step?v=O2\|O5\|O10strong\|O10weak\|O10secret\|O10none\|O17`), query `scheme`, `lang`, `scale` (simulated font scale on web), `reduced`, `open=sheet\|tallsheet\|toast` | `app/src/app/gallery/`, `app/src/dev/GalleryFrame.tsx` | done |
+| Screenshots (dark, light, 200 %, B19 steps, sheets, toast) | `docs/screens/b6/b6.2-*.png` | in PR #11 |
+
+Checks: `cd app && npx jest` → **50 passed** (5 new: badges, ring states, token refs used by the kit resolve to colours);
+`npx tsc --noEmit` clean; `npx expo lint` clean (React Compiler rules: Animated values held with `useState(() => …)[0]`).
+
+### Measured
+
+- Web export: entry bundle 1.1 MB (unminified-size report of Metro, all routes); gallery renders with no console error in Chromium.
+- 200 % font (simulated on web): rows stack the amount under the title, B19 shrinks its icon circle to 64 dp and scrolls
+  under the fade, buttons stay pinned and wrap, banners wrap their action; ring labels and keypad digits keep their size.
+- Not measured: fps / Tecno (no device yet — B6.5).
+
+### Decisions [B6.2] (one line each)
+
+- Routes live in **`app/src/app/`** (Expo Router's `src/app` convention, `app/AGENTS.md`), not `app/app/` as the B6 plan said.
+- RN `Animated` (+ react-native-svg for rings, sparklines, skeleton arcs, illustrations) instead of Reanimated/Skia: no new
+  native dependency in B6; B8 charts (G1, G3-G8) may add Skia/Victory Native when the dev build exists.
+- Sheet drag uses `PanResponder` (gesture-handler is not a direct dependency); revisit with Reanimated if the Tecno drops frames.
+- Lucide 1.x renamed `fingerprint` → `fingerprint-pattern`; the icon map keeps the design name `fingerprint`.
+- `pin.wrong` copy aligned with the design ("Code incorrect. Il vous reste {n} essais.").
+- Mini ring (44 dp / 6 / 11) is in components/chips-choice-progress.md §3.1 but not in tokens: taken from the doc.
+- Empty-state coin shapes (stack of 3, standing coin, flat coin) drawn from the C19 description; no SVG source exists in design/.
+- `/` redirects to the gallery until B6.3 builds the phase machine.
+
+### Defects open
+
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5.
+- Brevo sign-up e-mail not yet tested (B6.3 step 4).
+
+### Next: B6.3 — Onboarding (same branch, plan above unchanged)
+
+---
+
+## B6.3 — Onboarding · 2026-11-23 · branch `build/b6-app-shell`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. App store: pure phase machine (loading → update O17 → onboarding step, persisted in secure store, resumes → locked O18 → ready), back targets on a rebuilt stack, re-lock after `lock_delay_s`, device-security downgrade check; `AppProvider` (DB + API singletons, actions); root phase gate (gallery left alone) | `app/src/lib/flow.ts`, `app/src/state/app.tsx`, `app/src/app/_layout.tsx` | **12 new Jest tests** |
+| 2. O1 splash (wordmark + "Prototype · données fictives", no network wait), O2 language (flips the UI at once), O3 country (accent-insensitive search on FR/EN names, ISO, dial code; 5 suggestions = phone region then F CFA zone; tap = next), O5 | `app/src/screens/Splash.tsx`, `app/src/app/onboarding/{language,country,choice}.tsx`, `app/src/lib/countries.ts` | screenshots |
+| 3. O6 personas (3 C7 cards, C21 circle, "Préparation de votre démo" in the card, C8 error/offline) → `signInAnonymously` + `account-demo-start` + `update_settings{first_name, language, country, timezone}`; `{warmup:true}` sent from O3 and O5 | `persona.tsx` | **live on dev: clone 677 ms server, 1.85 s end to end** (3 accounts, 991 tx) |
+| 4. O7 sign-up (strength word, errors on blur/submit, exists/weak/rate), O8 e-mail code (6 boxes, auto-submit, resend 0:30), O9 login (forgot → recovery e-mail, `email_not_confirmed` → O8). **Auth config on dev** (Management API): OTP **6 digits, 10 min**, password ≥ 10, FR/EN code templates `supabase/templates/{confirmation,recovery}.html` (also in `config.toml`) | `signup.tsx`, `code.tsx`, `login.tsx` | **Brevo e-mail test FAILED** (below) |
+| 5. O10 (4 variants from the matrix; strong/secret: one system prompt before relying on it; none: "Verrouiller mon téléphone" opens Security settings), O11 PIN (create + confirm, trivial refused, PBKDF2 on device), O18 lock (system prompt first, PIN fallback, fingerprint key, 5 → 1 min countdown, 10 → re-login with wipe, `pin_failed` event, `device_security_changed` → wipe + re-login, Android back disabled), `register_device` (retried at next start when offline) | `security.tsx`, `pin.tsx`, `app/src/app/lock.tsx` | screenshots; register_device checked live |
+| 6. O12 consents (checkbox + 2 switches, control on the right, "Détails" C9 sheets with text version, primary disabled until service), `record_consents` v0.1 (offline: kept, finishing allowed), Sentry only after crash consent (`src/lib/crash.ts`); O17 from `health_public` in background (blocking B19) | `consents.tsx`, `app/src/app/update.tsx` | record_consents checked live `{ok, recorded:3}` |
+| Screenshots 360 × 800, scale 1 (light, dark, 200 %) | `docs/screens/b6/b6.3-*.png` | PR #11 |
+
+Checks: `npx jest` → **62 passed**; `npx tsc --noEmit` clean; `npx expo lint` clean; `expo export -p web` + Playwright: 14 routes, no console error.
+
+### Measured
+
+- Demo start (anonymous sign-in → clone → first name): 1.85 s end to end from the session (≤ 2 s target).
+- 200 % font: one defect found and fixed (O12 "Catégorisation" split mid-word → control goes under the text at ≥ 150 %).
+
+### Decisions [B6.3] (one line each)
+
+- O4 tour step exists (`/onboarding/tour`) but passes straight to O5 until B6.4 builds T.
+- O3 "SIM country" = phone region from expo-localization (no expo-cellular native dependency in B6).
+- O3 list = ScrollView of 249 rows in two C7 cards (one card per group as designed); move to FlashList if the Tecno stutters.
+- O6 loading shown inside the tapped card (spinner + "Préparation de votre démo"), others dimmed — no separate screen.
+- O10 strong/secret: a system prompt confirms the method before it is saved; cancelled = stay on O10.
+- O18 with a phone-only plan (no app PIN): B19 screen "Déverrouiller" re-opening the system prompt; "Code oublié ?" = re-login.
+- Consents recorded offline are not queued yet (outbox has no `record_consents` mutation) → B6.4 adds it.
+- Default `lockDelayS` 300 (server default); B6.4 syncs it from `bootstrap.profile.lock_delay_s`.
+- New copy keys: `O12.service.details`, `O12.details.a11y`, `O12.version`, `O18.unlock`, `home.signout` (dev only).
+- Home is a placeholder (`/home`, greeting + Démo tag + "Bientôt", dev sign-out) until B6.4.
+- Web preview: auth session in localStorage, query `?scheme=&scale=&lang=&reduced=` on any route (dev only).
+
+### Defects open
+
+- **Brevo SMTP: sign-up e-mail fails** — `POST /auth/v1/signup` → 500 "Error sending confirmation email" (2026-11-23, after the
+  template change; the auth log endpoint was not readable from the session). Sender field = a Gmail address, port 465.
+  Most likely the sender is not a **verified sender in Brevo**, or the SMTP key/login is wrong. Franco asked (French).
+  Until fixed, O7 → O8 cannot complete on dev; the demo branch works.
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5.
+- `sentryDsn` not in `app/src/data/env.dev.json` (public DSN, Franco's Sentry project) → crash reports stay off.
+
+### Next: B6.4 — Home + sync (same branch, plan above; add: `record_consents` outbox mutation, `lock_delay_s` from bootstrap, T tour replaces `/onboarding/tour`, `/home` becomes the tabs)
+
+---
+
+## B6.4 — Home + sync · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by B6.3's hand-over prompt (autonomous chain).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Tabs: `src/app/(tabs)/` with expo-router **headless tabs** (`expo-router/ui`, no new dependency) and the **C12 v2 floating pill** (4 tabs, labels always, active capsule, no icon animation, 150 dp `bg` fade, tap on the active tab scrolls to top); Comptes / Dépenses / Placements = large title + "Bientôt" (B7/B8). Root gate fixed for route groups (`(tabs)` is not in the path); `ready` only leaves the flow screens, so sub-pages stay | `ui/TabBar.tsx`, `app/(tabs)/*`, `screens/TabPlaceholder.tsx`, `app/_layout.tsx` | screenshots |
+| 2. **S2 Home v2**: header (avatar → Settings, greeting, `shield-alert` + red dot when an alert is open, C20 eye), carousel (net-worth gradient card 296 × 184 + ring decoration + pills + "Courbe", account cards, snap paging, peek 32, dots), alert banner (ask → "C'est bien vous ? · Répondre", bank → "Banque prévenue · Suivre", ≥ 2 → "{n} alertes") or B5 learning card, 4 actions (Classer badge = `uncategorised_count`), 2 tiles (top mover + G2 126 × 24; biggest category + C17 Mini ring in the category colour), 3 recent rows **from SQLite** | `screens/home/HomeScreen.tsx`, `lib/home.ts` (pure view model) | live on dev, screenshots |
+| 3. States: C18 skeleton (first load), C19 no-account, C8 offline / stale (> 15 min) / old (> 7 d) / error banners, Démo pill, hidden amounts (persisted `hideAmounts`; show = system prompt for account users, reveal lasts until the app closes — C20), 200 % font (actions → 2 × 2 grid so labels never break inside a word, tiles one column, card grows, amount capped at the hero ×1.5), skeleton rows until the first transactions sync ends | same + `state/app.tsx` | screenshots (dark, light, 200 %, hidden, offline, first sync) |
+| 4. Sync wiring: `state/data.tsx` — open → cache paint (payload_cache) → `bootstrap` + `get_home` (etag) → `sync_transactions` → recent rows; `lock_delay_s` from bootstrap → app state (O18); outbox wake + replay at open, every 30 s in foreground, on reconnect (expo-network) and back to foreground; conflict toast; **Realtime** on `core.alerts` (filter `user_id`, RLS) while foreground → Home refresh. **`record_consents` outbox mutation**: O12 offline → queued; server `apply_mutations` accepts it through `core.record_consents_once` (idempotent per client_id) | `state/data.tsx`, `state/engine.ts`, migration `20261130000100_outbox_consents.sql`, pgTAP `app_sync` | **applied on dev; app_sync 30/30**, api_skeleton 22/22, rls_core 75/75, schema_guard 11/11 |
+| 5. **O14 questionnaire** (B24 piece): 11 questions in 4 sections (C17 dots in the bar), C16 choice list, tap = saved through the outbox (`save_questionnaire` with the section so far) + next; risk r1..r5 scored 1-5. **T guided tour**: the same Home component on a bundled demo payload (`data/tour.json`, offline), scrim + spotlight + bubble, 6 steps, Passer / Suivant / Terminer; replaces `/onboarding/tour` (O4 → O5) and replayable at `/tour` | `app/questionnaire.tsx`, `lib/questionnaire.ts`, `screens/tour/*`, `app/tour.tsx`, `app/onboarding/tour.tsx` | live: answers reached `core.questionnaire` on dev; tour screenshots |
+| `/soon` sub-page for destinations of later sessions (Patrimoine, accounts, alerts B13/B14/L1, actions); for Settings it lists Questionnaire, Revoir la visite, Quitter la démo / Se déconnecter until S7 (B8) | `app/soon.tsx` | screenshot |
+
+Checks: `npx jest` → **72 passed** (10 new: view model, strip rules, freshness, categories → C21 badge, questionnaire, i18n FR/EN parity);
+`npx tsc --noEmit` clean; `npx expo lint` clean; `expo export -p web` + Playwright 360 × 800: no page error.
+Screenshots: `docs/screens/b6/b6.4-*.png` (scale 1, quantised).
+
+### Measured (web preview in Chromium, dev project, from the session)
+
+- Demo start (tap Awa/Moussa) → Home route 2.5 s; Home card painted 1.3 s after the route.
+- Offline reopen (Supabase blocked): **cache paint 0.9 s**, then the "Hors ligne" banner; recent rows from SQLite.
+- First full transactions sync, Koffi (1 502 rows, 8 pages) on web wasm SQLite: **7.1 s** (rows show as skeletons until then). Phone timing: B6.5.
+- Realtime: alert inserted on dev → event received **0.6 s** later on the user's channel (RLS filter); `get_home` then shows it.
+
+### Decisions [B6.4] (one line each)
+
+- Tabs: `expo-router/ui` headless `Tabs` + our pill (no `@react-navigation/bottom-tabs` dependency).
+- Carousel peek: the next card shows 32 dp after a 12 dp gap, as in the validated preview (spec text says "peeks 12").
+- Card amount uses the short "F" form like the preview ("13 439 800 F"); abbreviated (F6, "12,2 Md F") above 14 characters.
+- Account cards: `#1B1B1B` / `#FFFFFF` fill (preview `--peek`), 1 dp hairline, C21 monogram, kind line, balance 26/34.
+- Recent rows: C21 category badge when categorised, else a monogram; subtitle "catégorie · HH:MM" today, "hier" / date otherwise.
+- Tab bar labels scale up to ×1.3 (`typography.largeFont.fixedRowHeightUpToScale`) then shrink to fit; the pill keeps 68 dp.
+- Learning card B5 shows while `learning.active` is false (B6.1 rule); every demo persona is past learning, so it is unseen in demos.
+- Hidden amounts persist; showing them needs the system prompt for account users on a phone (demo / web: no prompt).
+- Tour (T, D13 delegated): S2 Home + C9 scrim colour + C7 bubble + C17 dots + C1 buttons; rectangular spotlight with a 2 dp brand outline; bundled alert + day change added to the demo payload so steps 1 and 3 have content.
+- O14 (B24 delegated): one question per screen, C16 list, tap = next; texts FR/EN in `lib/questionnaire.ts` (composed, not in design).
+- M13 sheen, Home entry stagger and amount count-up are **not** built yet → B6.5 with M14.
+
+### Defects open
+
+- **Abidjan trader demo: bank balance 12 158 195 571 XOF** after the clone (Home shows 12,2 Md F). Simulated-bank template / clone balance (B2) — fix in the backend (check `sim` template balances vs transaction sums); B6.5 looks first.
+- Brevo SMTP sign-up e-mail still failing (B6.3) — Franco asked.
+- Tecno Spark 50 specs still missing (SETUP §2) → B6.5 asks once.
+- `sentryDsn` still absent from `env.dev.json`.
+- Web preview only: `adjustsFontSizeToFit` is a no-op, so at simulated 200 % long tab labels / card amounts show "…" on web; native shrinks them.
+
+### Next: B6.5 — Device + close (same branch, plan above unchanged)
+
+Plus: M13 sheen + Home entry motion with M14; look at the trader balance defect first.
+
+---
+
+## B6.5 — Brand + motion · 2026-11-23 · branch `build/b6-app-shell`
+
+Started by B6.4's hand-over prompt. Part cut in two (session sizing): the Android build, phone measurements and the B6
+close move to **B6.6** (plan above updated).
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 0. **Trader balance defect fixed** (B6.4): the generator priced each `anomaly_amount` from the median of earlier entries **including earlier anomalies** → 6-10× per round, card payments up to 1.49 billion XOF and an opening balance of 12.27 billion XOF to cover them. `typical()` now ignores scenario-tagged entries; `GENERATOR_VERSION` b2.2, digest updated, new pytest `test_scenario_amounts_do_not_compound`. Dev templates reloaded (`scripts/sb_api.py load-sim`) | `batch/goldenpiece/generator/sim_templates.py`, `batch/tests/test_sim_templates.py`, `shared/fixtures/sim_templates.sha256` | **live: new Koffi demo → bank 6 965 571 XOF**, net worth 36.1 M F; pytest 330 passed |
+| 1. Brand mark export: one geometry → `app/assets/brand/*.svg` (mark dark/light, mono, background, full icon) → PNGs by Chromium: `icon.png`, adaptive foreground/background/monochrome, `splash-icon.png` (dark) + `splash-icon-light.png`, `notification-icon.png` (ic_stat_gp, 96 px white silhouette), favicon. `app.json`: adaptive background `#0B0B0B`, expo-splash-screen plugin (image width 200, `#F4F4F4` / dark `#060606`) | `app/scripts/export-brand.mjs`, `app/assets/` | done; `BrandMark` component + `markGeometry` shared with M14 |
+| 2. **M14 "Le plan"** (motion.md §4b, all times from tokens `motion.appOpening`): dot draws the ring, second dot the sparkle, 5 dashed guides, coins drop clockwise (back easing), sparkle turns gold, GOLDENPIECE letters bounce, hold, mark/wordmark leave, blank card grows at the centre, real Home card appears under it and moves up while Home builds (header, banner, actions scale 0.6 → 1 with 70 ms stagger, tiles, list, dots, pill bar). Cold start only (module flag; warm start = process alive = no replay); native splash kept until the opening is decided (≤ 3 s); tap after 600 ms skips to the Home end state (320 ms fade); reduced motion = 150 ms fade from the mark | `src/screens/opening/AppOpening.tsx`, `src/state/opening.tsx`, `src/app/_layout.tsx`, Home + TabBar entries | web: screenshots `docs/screens/b6/b6.5-m14-{dark,light}.png` (800 / 1300 / 1900 / 2600 / 3100 / 4600 ms); skip + reduced checked |
+| 3. M7 count-up of the Home card amount during M14 (2950-4050 ms, easeOutQuint), **M13 sheen** component (`ui/Sheen.tsx`: gaussian gold band from `glow.goldSheen`, 110°, layer 1.8 × width, −30 % → 130 %, fade 18 % / 70 %, 1400 ms morph, once when first visible + on each tap, none with reduced motion) on the bank account cards of the Home carousel | `HomeScreen.tsx`, `ui/Sheen.tsx` | done |
+
+Checks: `npx jest` → **75 passed** (3 new: mark geometry, sparkle path, M14 timeline); `npx tsc --noEmit` clean; `npx expo lint` clean;
+`expo export -p web` + Playwright 360 × 800: no page error.
+
+### Measured
+
+- Web (Chromium, this container): opening overlay visible 0.4 s after navigation (phase resolution); full opening 4.3 s; Home data painted under it.
+- Not measured: fps on the Tecno (B6.6).
+
+### Decisions [B6.5] (one line each)
+
+- M14 plays on a cold start that lands on **Home** (build) or on the **lock screen** (mark + wordmark, then a 300 ms fade to O18 — no Home build behind a lock); onboarding cold starts keep O1 (no M14).
+- Built with RN Animated + react-native-svg (no Skia, B6.2 rule): one native clock (ms) for every transform/opacity; the two path trims and the dots' positions on a JS clock that stops at 1350 ms. Coins are 8 translucent Views (overlaps brighten by stacking, as the icon).
+- The Home card "appears under the blank one" then moves (+12, +212 dp → 0) as one carousel block: the peek card travels with it instead of sliding in separately (+40 dp X).
+- Status bar is not animated (system bar); header −8 dp, banner +16 dp, list +24 dp, pill bar +24 dp, each ~500 ms as in §4b.
+- Sheen on Home **bank** account cards (they are the "bank cards" of the carousel); O13d / S3 reuse the component in B7.
+- Splash image width 200 dp (mark ≈ 122 dp inside the Android 12 icon circle); light splash uses the light mark (`#0A0A0A` 42 %, ember sparkle).
+- Web preview: `?opening=0` disables M14 for screenshots of other screens.
+
+### Defects open
+
+- Brevo SMTP sign-up e-mail still failing (B6.3) — Franco asked.
+- **Tecno Spark 50 specs** still missing (SETUP §2) — asked to Franco (French) at the end of B6.5; B6.6 measures on it.
+- `sentryDsn` still absent from `env.dev.json`.
+- Demo users cloned **before** the generator fix keep the old trader balances (anonymous, expire with the demo purge); new demos are correct.
+
+### Next: B6.6 — Device + close (same branch, plan above)
+
+---
+
+## B6.6 — Device + close · 2026-11-23 · branch `build/b6-app-shell`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Android test build: GitHub Actions workflow `android` (push on `build/**`/`main` touching `app/**`, or manual): `npm ci` → `expo prebuild -p android --clean` → `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a` → artifact `goldenpiece-apk` (`goldenpiece-<sha>-arm64.apk`, 30 days). Release build = JS bundled, standalone (no Metro), signed with the template debug key (test phones only; B10 adds the upload keystore + AAB). `SENTRY_DISABLE_AUTO_UPLOAD=true` (no Sentry org/project yet). Added `expo-system-ui` (prebuild warned: needed for `userInterfaceStyle: automatic` on Android) | `.github/workflows/android.yml`, `app/package.json` | **green** (run #1) |
+| 2. Phone checks script (cold start p50 ≤ 3 s, M14 fluidity, airplane mode on Home, tour offline, lock) for Franco or any session with the phone | `docs/DEVICE_TEST.md` | written; **not run (no phone in the chain)** |
+| 3. B6 close: this section, PR #11 ready, B9 plan below, B9.1 created | — | done |
+
+Checks: `npx jest` 75 passed; `npx tsc --noEmit` clean; local `expo prebuild -p android` OK.
+
+### Measured
+
+- First `android` run (#1, commit `ae73496`, 2026-11-23): **green**, job 15 min 15 s (Gradle cold cache 14 min 24 s); artifact `goldenpiece-apk` zip **18.3 MB** (one arm64 APK), expires 2026-12-23. Not installed on a phone yet (no phone in the chain).
+
+### Decisions [B6.6] (one line each)
+
+- Gradle in GitHub Actions rather than EAS: no Expo project id/`eas init` needed, no EAS queue or monthly build quota, and the build is reproducible from the repo; EAS (with `EXPO_TOKEN`) stays the B10 option for store builds.
+- arm64-v8a only (Tecno Spark 50 class phones are arm64; smaller APK, half the native build time). Add `armeabi-v7a` if a 32-bit test phone appears.
+
+### BUILD_PLAN B6 "Done"
+
+| Criterion | State |
+|---|---|
+| cold start ≤ 3 s p50 on the Tecno | **blocked: phone** (DEVICE_TEST #1) |
+| airplane-mode test on Home | **blocked: phone** (DEVICE_TEST #3); logic covered by sync Jest tests + web offline check (B6.4) |
+| tour works offline | **blocked: phone** (DEVICE_TEST #4); tour reads bundled JSON (B6.4) |
+
+### Defects open
+
+- Tecno Spark 50 specs + phone results missing (SETUP §2, DEVICE_TEST) — Franco.
+- Brevo SMTP sign-up e-mail failing (B6.3) — Franco asked.
+- `sentryDsn` absent from `env.dev.json`; Sentry source-map upload disabled in the APK build.
+- Web preview only: `adjustsFontSizeToFit` no-op at 200 % (B6.4).
+
+### Plan by block and step — B9 Bank dashboard (branch `build/b9-bank-dashboard`, one draft PR)
+
+| Part | Steps (each with a test or a 1280 × 800 screenshot) |
+|---|---|
+| **B9.1 Shell + login** | 1. `dashboard/` Vite + React + TS scaffold, tokens copied from `design/tokens.json` (checked identical by a test), Poppins GP, FR/EN strings of D §7, light + dark (delegated: same tokens as app dark). 2. Supabase client (dev URL + publishable key), route guard: analyst role + aal2 else login. 3. Login + TOTP (delegated: B18 form + C2/C3 code entry, centred card 400): password sign-in, MFA enrol (QR) on first login, challenge/verify → aal2; a dev analyst account created by script (e-mail/password from env, never in the repo). 4. Top bar (brand mark tile, tabs pills, "En direct"/"Hors ligne", analyst name). 5. CI job `dashboard` (vitest, tsc, lint, build). |
+| **B9.2 Queue + detail** | 1. Queue (`analyst_queue`, chips Statut/Score/Type/24 h, groups, rows, simulated tag, search `/`). 2. Realtime on `core.alerts` (row fade-in, title count, offline banner disables decisions). 3. Detail head + Opération / Pourquoi (`.analyst` reason sentences) / Score breakdown / Réponse. 4. 90-day bars (G3 style + median + text summary), security events, devices (B23). 5. States: empty, decided by another analyst, aal1 redirect. |
+| **B9.3 Decision** | 1. Decision bar (comment required for Fraude, L/F/C/J/K/?/Esc keys, disabled while typing). 2. Toast "Décision enregistrée · Annuler" 8 s: the RPC is sent when the toast closes (no undo RPC exists), then next alert. 3. Live check: decide a dev alert → app user receives the decided status via Realtime and `ops.param_changes` logs the change (BUILD_PLAN "Done"). |
+| **B9.4 Settings + Ops + legal** | 1. Réglages du modèle (`scoring_params`: table, change log paged by 20, reset dialog → `reset_params`). 2. Ops tab (delegated: `ops_metrics` → B7 tiles + G1/G3 charts, one chart per card). 3. `/legal` (`legal_texts`, text page). 4. Screenshots light/dark 1280, contrast pairs of D §6. |
+| **B9.5 Deploy + close** | 1. Cloudflare Pages project (direct upload via API from CI or session), SPA fallback, security headers (CSP to the Supabase host). 2. Playwright e2e against dev (login with TOTP secret from env, queue, decide). 3. CHAIN_LOG B9 summary, PR ready, create **B7.1** (new branch `build/b7-accounts-spending-markets` from this one, plan B7 by block and step first). |
+
+### Next: B9.1 — Shell + login (new branch `build/b9-bank-dashboard` from `build/b6-app-shell`)

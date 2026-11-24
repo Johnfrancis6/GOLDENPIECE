@@ -1,0 +1,57 @@
+# Android test build (B6.6): expo prebuild + Gradle → installable release APK
+# (JS bundled, signed with the template debug key — for test phones only, not
+# for the store; B10 adds the upload keystore and the AAB).
+name: android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['build/**', main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/android.yml'
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    name: release APK (arm64-v8a)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: app
+    env:
+      SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+      CI: '1'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v5
+      - run: npm ci --no-audit --no-fund
+      - name: Prebuild (android)
+        run: npx expo prebuild -p android --no-install --clean
+      - name: Gradle assembleRelease
+        working-directory: app/android
+        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+      - name: Name the APK
+        run: |
+          sha=$(git rev-parse --short HEAD)
+          mkdir -p ../out
+          cp android/app/build/outputs/apk/release/app-release.apk "../out/goldenpiece-${sha}-arm64.apk"
+          ls -l ../out
+      - uses: actions/upload-artifact@v5
+        with:
+          name: goldenpiece-apk
+          path: out/*.apk
+          retention-days: 30

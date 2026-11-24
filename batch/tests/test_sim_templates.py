@@ -125,3 +125,18 @@ def test_sql_statements_shape():
     kinds = Counter(k for _, k, _ in stmts)
     assert kinds["check"] == kinds["done"] == len(TEMPLATES)
     assert max(len(s) for *_x, s in stmts) < 2_000_000
+
+
+def test_scenario_amounts_do_not_compound():
+    """B6.5 defect: anomaly amounts were priced from a median that included earlier anomalies, so the
+    trader's card payments grew to 1.49 billion XOF. Every account's opening balance and largest entry now
+    stay within a sane multiple of its ordinary activity."""
+    for t in TEMPLATES:
+        for a in t.accounts:
+            plain = sorted(e.entry["amountMinor"] for e in t.events if e.acct == a.key and e.tag is None)
+            if not plain:
+                continue
+            med = plain[len(plain) // 2]
+            top = max(e.entry["amountMinor"] for e in t.events if e.acct == a.key)
+            assert top <= 200 * med, (t.id, a.key, top, med)  # was ~50 000x before the fix
+            assert a.opening <= 2000 * med, (t.id, a.key, a.opening)  # trader bank was 12.3 billion XOF
