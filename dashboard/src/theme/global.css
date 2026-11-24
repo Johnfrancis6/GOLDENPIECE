@@ -1,0 +1,96 @@
+/* Values come from tokens (CSS variables set by theme/index.ts) and the D
+   screen file (screens/d-bank-dashboard.md); sizes in px = dp at 1x. */
+@font-face { font-family: 'Poppins GP'; font-weight: 400; font-display: swap; src: url(/fonts/PoppinsGP-Regular.ttf) format('truetype'); }
+@font-face { font-family: 'Poppins GP'; font-weight: 500; font-display: swap; src: url(/fonts/PoppinsGP-Medium.ttf) format('truetype'); }
+@font-face { font-family: 'Poppins GP'; font-weight: 600; font-display: swap; src: url(/fonts/PoppinsGP-SemiBold.ttf) format('truetype'); }
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--tp); font: 400 15px/22px 'Poppins GP', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: 150ms !important; transition-duration: 150ms !important; } }
+
+/* C1 button */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 600 15px/20px 'Poppins GP'; transition: transform 220ms, background-color 220ms; }
+.btn-large { height: 52px; padding: 0 20px; }
+.btn-small { height: 40px; padding: 0 16px; font-size: 13px; line-height: 18px; }
+.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn-primary { background: var(--brand); color: var(--btn-primary-label); }
+.btn-primary:active:not(:disabled) { background: var(--brand-pressed); }
+.btn-secondary { background: var(--btn-secondary); color: var(--btn-secondary-label); }
+.btn-outlined { background: transparent; color: var(--loss); box-shadow: inset 0 0 0 1px var(--control); }
+.btn-danger { background: var(--btn-danger); color: var(--btn-danger-label); }
+.btn-text { background: transparent; color: var(--brt); padding: 0 8px; }
+.btn:disabled { background: var(--btn-disabled); color: var(--btn-disabled-label); cursor: default; }
+.btn-block { width: 100%; }
+.spin { animation: spin 900ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* C2 field */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label { font: 500 13px/18px 'Poppins GP'; color: var(--ts); }
+.field-box { display: flex; align-items: center; height: 52px; border-radius: 12px; background: var(--input-fill);
+  box-shadow: inset 0 0 0 1px var(--input-border); padding: 0 4px 0 16px; }
+.field-box:focus-within { box-shadow: inset 0 0 0 2px var(--focus); }
+.field-box.field-error { box-shadow: inset 0 0 0 2px var(--loss); }
+.field-box input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; outline: none; font: 400 15px/22px 'Poppins GP'; caret-color: var(--focus); }
+.field-box input::placeholder { color: var(--input-placeholder); }
+.field-msg { display: flex; gap: 6px; align-items: center; margin: 0; font: 500 13px/18px 'Poppins GP'; color: var(--loss); }
+.icon-btn { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 999px; background: transparent; color: var(--ts); cursor: pointer; }
+
+/* C3 code boxes */
+.code { position: relative; display: flex; justify-content: center; margin-top: 24px; }
+.code-input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: text; }
+.code-boxes { display: flex; gap: 8px; }
+.code-box { display: grid; place-items: center; width: 44px; height: 56px; border-radius: 12px; background: var(--input-fill);
+  box-shadow: inset 0 0 0 1px var(--input-border); font: 600 22px/28px 'Poppins GP'; font-variant-numeric: tabular-nums; }
+.code-current { box-shadow: inset 0 0 0 2px var(--focus); }
+.code-error .code-box { box-shadow: inset 0 0 0 2px var(--loss); }
+.code-msg { min-height: 18px; margin: 8px 0 0; text-align: center; font: 500 13px/18px 'Poppins GP'; color: var(--loss); }
+
+/* C8 banner */
+.banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; margin-bottom: 16px; font: 500 13px/18px 'Poppins GP'; }
+.banner-warning { background: var(--banner-warning); } .banner-warning .banner-icon { color: var(--banner-warning-icon); flex: none; }
+.banner-error { background: var(--banner-error); } .banner-error .banner-icon { color: var(--banner-error-icon); flex: none; }
+
+/* Login (delegated: centred card 400) */
+.login-page { min-height: 100%; display: grid; place-items: center; padding: 40px 16px; }
+.login-card { width: 400px; max-width: 100%; background: var(--s1); border-radius: 20px; padding: 32px; box-shadow: 0 0 0 1px var(--hl); }
+.login-brand { display: flex; align-items: center; gap: 8px; font: 600 15px/20px 'Poppins GP'; margin-bottom: 24px; }
+.login-title { margin: 0; font: 600 24px/32px 'Poppins GP'; }
+.login-sub { margin: 4px 0 24px; font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.login-card .btn-block { margin-top: 8px; }
+.qr { display: grid; place-items: center; margin: 0 auto; width: 192px; height: 192px; border-radius: 12px; background: #FFFFFF; }
+.qr-wait { width: 176px; height: 176px; border-radius: 8px; background: var(--s2); }
+.secret { margin: 12px 0 0; text-align: center; font: 400 12px/16px 'Poppins GP'; color: var(--ts); word-break: break-all; }
+
+/* Shell */
+.shell { min-width: 1100px; height: 100%; display: flex; flex-direction: column; }
+.shell-main { flex: 1; min-height: 0; display: flex; }
+.top { height: 56px; flex: none; display: flex; align-items: center; gap: 32px; padding: 0 24px; background: var(--s1); border-bottom: 1px solid var(--hl); }
+.top-brand { display: flex; align-items: center; gap: 8px; font: 600 15px/20px 'Poppins GP'; white-space: nowrap; }
+.brand-tile { display: block; border-radius: 8px; }
+.sep { color: var(--ts); }
+.bank { font: 500 14px/20px 'Poppins GP'; color: var(--ts); }
+.tabs { flex: 1; display: flex; gap: 4px; }
+.tab { padding: 8px 14px; min-height: 36px; border-radius: 999px; font: 500 14px/20px 'Poppins GP'; color: var(--ts); text-decoration: none; }
+.tab:hover { color: var(--tp); }
+.tab.active { background: var(--s3); color: var(--tp); font-weight: 600; }
+.top-right { display: flex; align-items: center; gap: 14px; font: 500 13px/18px 'Poppins GP'; color: var(--ts); white-space: nowrap; }
+.live { display: flex; align-items: center; gap: 6px; color: var(--live-text); }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--live-dot); }
+.live-off { color: var(--ts); } .live-off i { background: var(--td); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--s3); color: var(--tp); font: 600 12px/16px 'Poppins GP'; cursor: pointer; }
+.menu-wrap { position: relative; }
+.menu { position: absolute; right: 0; top: 40px; z-index: 10; min-width: 200px; padding: 6px; border-radius: 12px; background: var(--s1);
+  box-shadow: 0 0 0 1px var(--hl), 0 8px 24px rgba(0,0,0,0.12); display: flex; flex-direction: column; }
+.menu button, .menu a { text-align: left; padding: 8px 12px; min-height: 36px; border: 0; border-radius: 8px; background: transparent; cursor: pointer;
+  font: 500 14px/20px 'Poppins GP'; color: var(--tp); text-decoration: none; }
+.menu button:hover, .menu a:hover { background: var(--s2); }
+.menu .menu-danger { color: var(--loss); }
+.placeholder { padding: 28px; }
+.placeholder h1 { margin: 0 0 8px; font: 600 24px/32px 'Poppins GP'; }
+.placeholder p { margin: 0; color: var(--ts); font: 400 13px/18px 'Poppins GP'; }
+.page-loading { height: 100%; background: var(--bg); }
