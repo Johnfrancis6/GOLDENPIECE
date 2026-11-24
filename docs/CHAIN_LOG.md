@@ -775,7 +775,7 @@ Checks: `npx jest` → **75 passed** (3 new: mark geometry, sparkle path, M14 ti
 
 | Step | Where | State |
 |---|---|---|
-| 1. Android test build: GitHub Actions workflow `android` (push on `build/**`/`main` touching `app/**`, or manual): `npm ci` → `expo prebuild -p android --clean` → `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a` → artifact `goldenpiece-apk` (`goldenpiece-<sha>-arm64.apk`, 30 days). Release build = JS bundled, standalone (no Metro), signed with the template debug key (test phones only; B10 adds the upload keystore + AAB). `SENTRY_DISABLE_AUTO_UPLOAD=true` (no Sentry org/project yet). Added `expo-system-ui` (prebuild warned: needed for `userInterfaceStyle: automatic` on Android) | `.github/workflows/android.yml`, `app/package.json` | see "Measured" for the first run |
+| 1. Android test build: GitHub Actions workflow `android` (push on `build/**`/`main` touching `app/**`, or manual): `npm ci` → `expo prebuild -p android --clean` → `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a` → artifact `goldenpiece-apk` (`goldenpiece-<sha>-arm64.apk`, 30 days). Release build = JS bundled, standalone (no Metro), signed with the template debug key (test phones only; B10 adds the upload keystore + AAB). `SENTRY_DISABLE_AUTO_UPLOAD=true` (no Sentry org/project yet). Added `expo-system-ui` (prebuild warned: needed for `userInterfaceStyle: automatic` on Android) | `.github/workflows/android.yml`, `app/package.json` | **green** (run #1) |
 | 2. Phone checks script (cold start p50 ≤ 3 s, M14 fluidity, airplane mode on Home, tour offline, lock) for Franco or any session with the phone | `docs/DEVICE_TEST.md` | written; **not run (no phone in the chain)** |
 | 3. B6 close: this section, PR #11 ready, B9 plan below, B9.1 created | — | done |
 
@@ -783,7 +783,7 @@ Checks: `npx jest` 75 passed; `npx tsc --noEmit` clean; local `expo prebuild -p 
 
 ### Measured
 
-- APK_RESULT_PLACEHOLDER
+- First `android` run (#1, commit `ae73496`, 2026-11-23): **green**, job 15 min 15 s (Gradle cold cache 14 min 24 s); artifact `goldenpiece-apk` zip **18.3 MB** (one arm64 APK), expires 2026-12-23. Not installed on a phone yet (no phone in the chain).
 
 ### Decisions [B6.6] (one line each)
 
