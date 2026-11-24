@@ -70,6 +70,26 @@ jobs:
       - run: npx tsc --noEmit
       - run: npx expo lint
 
+  dashboard:
+    name: dashboard (vitest, tsc, lint, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npx vitest run
+      - run: npx tsc -b
+      - run: npx eslint .
+      - run: npx vite build
+
   db:
     name: db (migrations + pgTAP on local Supabase)
     runs-on: ubuntu-latest

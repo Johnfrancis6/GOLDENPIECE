@@ -816,3 +816,191 @@ Checks: `npx jest` 75 passed; `npx tsc --noEmit` clean; local `expo prebuild -p 
 | **B9.5 Deploy + close** | 1. Cloudflare Pages project (direct upload via API from CI or session), SPA fallback, security headers (CSP to the Supabase host). 2. Playwright e2e against dev (login with TOTP secret from env, queue, decide). 3. CHAIN_LOG B9 summary, PR ready, create **B7.1** (new branch `build/b7-accounts-spending-markets` from this one, plan B7 by block and step first). |
 
 ### Next: B9.1 — Shell + login (new branch `build/b9-bank-dashboard` from `build/b6-app-shell`)
+
+---
+
+## B9.1 — Shell + login · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Vite 8 + React 19 + TS 6 scaffold; `tokens.json` copied from design (identical, test), CSS variables per scheme from tokens + D values; Poppins GP + brand icon copied (test: byte-identical); FR/EN strings, D §7 copy checked verbatim by a test; light default, dark option (account menu, kept per browser) | `dashboard/` | done |
+| 2. Supabase client (dev URL + publishable key, `api` schema, `VITE_*` override); route guard `access()` = analyst role claim + aal2, else `/login` (keeps the requested path) | `src/lib`, `src/auth` | done, 6 unit cases |
+| 3. Login + TOTP: password → first login enrols TOTP (QR + grouped key; abandoned unverified factors removed first) → challenge/verify → aal2; non-analyst refused and signed out; dev analyst script (`npm run dev-analyst`, e-mail/password from env or generated, output gitignored) | `src/screens/Login.tsx`, `scripts/dev-analyst.mjs` | done; **real flow run against dev in Chromium** (enrol → aal2 → shell → sign out → challenge → aal2) |
+| 4. Top bar: brand mark 28 on its dark tile (r 8), "GOLDENPIECE · Banque de démonstration", tab pills (NavLink, selected `surface3` + SemiBold), "En direct"/"Hors ligne" (Realtime channel SUBSCRIBED + `navigator.onLine`), analyst name, avatar 32 → menu (theme, language, legal, sign out) | `src/shell` | done |
+| 5. CI job `dashboard` (vitest, tsc, eslint, vite build) | `.github/workflows/ci.yml` | added (runs on the PR) |
+
+Checks: `vitest` 23 passed (theme 7, i18n 3, access 8, login flow with an in-memory auth fake 6 — run 3× after a clean `npm ci`, stable); `tsc -b` clean; `eslint` clean; build OK. Screenshots 1280 × 800 scale 1 in `docs/screens/b9/` (login light/dark/error, TOTP enrol (QR + key blurred, factor rotated after), challenge dark, shell light/dark, menu).
+
+### Measured (2026-11-24, dev, from the session)
+
+- `npm run dev-analyst`: sign-in + enrol + verify → `aal2`; `api.analyst_queue('all')` → 12 items in 398-449 ms (session → eu-west-1 through the proxy).
+- Browser (vite preview, Chromium): login card visible 167 ms after navigation; code entered → shell 1.3 s; `analyst_queue` with the browser's aal2 token → HTTP 200, 12 items.
+- Bundle: 557 KB JS (165 KB gzip), 6.3 KB CSS. Code-splitting per tab left to B9.5 if needed.
+
+### Decisions [B9.1] (one line each, delegated items)
+
+- Login (delegated D §8): centred `surface1` card 400 wide, radius 20 (`radius.lg`), padding 32, brand row, title 24/32, sub 13/18, C2 fields (52, r 12), C1 primary full width; errors as C8 error banner above the fields.
+- TOTP: C3 boxes variant (6 × 44 × 56, gap 8, auto-submit, one real `one-time-code` input), QR 176 on a white 192 tile (scannable in dark), key grouped by 4 under it; wrong code → red boxes + message, boxes cleared.
+- Login/TOTP copy composed (FR/EN in `src/i18n`), e-mail/password wording reused from app O7/O9.
+- Dark theme (delegated): app dark tokens as is; "En direct" uses `gain` dark (no D dark value); selected row fill (B9.2) = dark `tint.brand`.
+- Bank name in the top bar: "Banque de démonstration" (no bank id on the analyst account yet).
+- Account menu on the avatar (theme · language · Mentions légales · Se déconnecter, destructive text per C1) — not in the D preview, needed for sign-out.
+- Router: `react-router` 8 (BrowserRouter) — B9.5 adds the Pages SPA fallback.
+
+### Defects open
+
+- One console 403 on sign-out in Chromium (session token already revoked by the challenge flow?); sign-out works. Check in B9.2.
+- Dark code boxes `surface2` on `surface1` card: weak field boundary (same as CHALLENGES S3-1 option).
+- Dev analyst credentials live only in each session's gitignored `.env.analyst.local`: every session reruns `npm run dev-analyst` (it rotates password + factor). Franco's own analyst account: not created (needs his e-mail; any session can run the script with `ANALYST_EMAIL`).
+
+### Next: B9.2 — Queue + detail (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`; the Realtime channel `dashboard-live` in `src/shell/useLive.ts` is where the `core.alerts` listener goes.
+
+
+---
+
+## B9.2 — Queue + detail · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Queue: `api.analyst_queue('all')` + "Afficher plus" (cursor); title + search (`/`, user U-…, alert A-…, payee); chips Statut · Score · Type · 24 h (C13, each a menu, black when set); groups "En analyse · {n}" (oldest first) · "Décidées aujourd'hui" · "Décidées plus tôt"; 2-line rows (C15 badge + score, or Légitime/Fraude outcome; kind; amount "−210 000 F"; reason short; "Décision simulée" tag; age); selected fill + 3 dp brand bar; listbox / options | `src/queue/{model,useQueue,QueuePane,QueuePage}.ts(x)` | done |
+| 2. Realtime: `postgres_changes` on `core.alerts` on the shell channel → queue refetch (250 ms debounce) → new rows fade in (F5 quick + 8 dp rise, 150 ms fade under reduced motion); title "(n) GOLDENPIECE" while the window is unfocused; detail refetches when its alert turns `decided_*`; offline → "Hors ligne" + C8 warning in the detail ("décisions désactivées"); catch-up refetch when live again | `src/shell/useLive.ts`, `src/queue/*` | done; **live on dev** |
+| 3. Detail head (C15 "Banque prévenue · 80", status, simulated tag, title op + payee, sub U-/bank/A-, K/J nav) + Opération / Pourquoi (`.analyst` long sentences, code tag, Compte beaucoup/un peu) / Score (A_thr, A_if, F + rules, M + bumps, total in band colour, formula, model/rules/params versions) / Réponse (notification delivered or not, answer, decision sent, previous decisions count) | `src/queue/Detail.tsx`, `src/i18n/alerts.ts` | done |
+| 4. 90 derniers jours (daily debit bars 360 × 112, grey, this operation's day orange, dashed median of days with debits, first/last date, payees · new, largest debit before; svg `role=img` + text summary), security events (30 d), devices (B23 wording: label · lock in words · since / added / signed out) | `src/queue/{history,Bars90}.ts(x)` | done |
+| 5. States: empty (C19), decided by another analyst (C8 info "Décidée par … à …" + outcome replaces the decision area), Realtime lost, aal1 (RPC refusal → session re-read → guard → TOTP challenge) | | done |
+
+Checks: `vitest` **42 passed** (×3 stable): queue model 4, history 1, formats 1, X/D copy verbatim 4 (every reason/feature/bump string found in `design/copy/fr-en.md`; categories byte-identical to the app's), queue page 9 (groups/sections, J/K + typing guard + search, chips, Realtime fade-in + title count, decided elsewhere, offline, Realtime re-auth order, empty, aal1). `tsc -b`, `eslint`, build clean.
+Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-queue-decided-light/dark`, `d-detail-scrolled-light`, `d-filter-menu`, `d-queue-pending-light`, `d-offline`, `d-queue-empty`. The pending/offline/empty ones use **real dev payloads re-routed in the browser** with status `in_review` (no pending alert on dev: the simulated analyst decides them after 10 min).
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- Code entered → queue listbox 2.3-2.8 s, → detail 2.5-3.1 s (verify + factors + `analyst_queue` + `analyst_alert`).
+- J → next detail rendered: 0.80 s (one `analyst_alert`, ~370 rows of history).
+- Realtime: `update core.alerts set updated_at = now()` (decided alert, no status change → no notification) → queue refetch request **1.2-1.4 s** after the SQL call started, of which ~0.9 s is the Management API round-trip and 0.25 s the debounce.
+- No console error during the run (B9.1's 403 fixed, below). Bundle 610 KB JS (184 KB gzip) — code-splitting stays a B9.5 item.
+
+### Fixed (earlier defects)
+
+- **Realtime silently empty for analysts**: supabase-js re-auths the socket on SIGNED_IN / TOKEN_REFRESHED but not on `MFA_CHALLENGE_VERIFIED`, so the channel kept the aal1 token and the `analyst_select` policy (aal2) dropped every event. `useLive` now calls `realtime.setAuth(aal2 token)` before joining and on each token change (test).
+- **B9.1 console 403**: it was `POST /auth/v1/factors` — AuthProvider published the session before the factor list, the guard flashed "enrol" and fired an enrolment Supabase refuses. Session and factor count are now set together.
+
+### Decisions [B9.2] (one line each, composed / delegated)
+
+- Third group "Décidées plus tôt" / "Decided earlier" (D lists two; dev has only older decisions, and the queue RPC returns them with `all`).
+- Chip menus: Statut Tous/En analyse/Décidées · Score Tous/Plus de 70/40 à 70/Moins de 40 · Type Tous/Anomalie/Fraude · 24 h Tous/Dernières 24 h; filtering is client-side on the loaded pages (≤ 50 per page).
+- Outcome badges in rows: Légitime = C15 Normal colours + `circle-check-big`; Fraude = C15 notified colours + `shield-x`.
+- Queue amounts always shown as debits (−): only payments the user initiates are scored (`core.is_scored`: cash-out, P2P out, merchant, bank out, bill, airtime, card); the queue payload has no direction. Detail uses `cdt_dbt_ind`.
+- Title: "{op} vers {payee}" for transfers / P2P / withdrawals, "{op} chez {payee}" for card / merchant; op labels composed (Paiement carte, Virement, Transfert, Retrait, Paiement marchand, Facture, Crédit téléphone, Opération).
+- Sub line: "Utilisateur U-{user_ref} · {bank} · alerte A-{8 first id chars}"; bank name from `bank_id` ("banque_lagune" → "Banque Lagune") — no masked account in the payload.
+- "Compte beaucoup" when reason weight ≥ 50, else "Compte un peu".
+- Réponse: "opened at" is not in the payload (no event) → not shown; push status `no_token` → "Notification non remise … (aucun téléphone avec notifications)".
+- Security event and lock-method wording composed (FR/EN in `src/i18n/index.ts`, keys `se.*`, `lock.*`).
+- Empty state (C19 "alerts illustration", delegated): Lucide `shield-check` 3.4× on the C19 ground line, no coins.
+- Dark theme 90-day bars: dark `border.control` (#737373) for the grey bars (D gives light #BDBDBD only).
+- Score/detail numbers: 2 decimals with the FR comma; formula line as in the D preview.
+- First visit auto-opens the longest-waiting alert under review (D preview shows a selected row); URL `/alerts/:id` keeps the selection.
+- J/K and "/" built now (cheap, head nav needs them); L/F/C/?/Esc stay with the decision bar (B9.3).
+
+### Defects open
+
+- Pending alerts: none on dev right now — B9.3 needs one to decide live. Options: let a demo persona's scheduled scenario escalate one (sim sync) or insert a test transaction for a dev user and call `core.score_transaction`; act within 10 min or the simulated analyst takes it.
+- Queue filtering is client-side: with > 50 alerts, filters only see loaded pages (server filters would need new RPC params).
+- Bundle > 500 KB warning (B9.5).
+
+### Next: B9.3 — Decision (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. The decision bar goes in the `footer` prop of `Detail` (`src/queue/Detail.tsx`, rendered only for pending alerts; decided alerts already show the outcome); keyboard handler is in `src/queue/QueuePage.tsx` (`isTyping` guard exists). Browser runs: Playwright from the global install (`createRequire(npm root -g)`), launch with the session proxy + `bypass: 'localhost'`, context `locale: 'fr-FR'`.
+
+---
+
+## B9.3 — Decision · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Decision bar (D §2) pinned under the detail: comment C2 48 → 3 lines (500 chars), "Légitime L" C1 secondary, "Fraude F" C1 destructive confirm, both 48 high; Fraude with an empty comment focuses it + error hint, Enter confirms; keys L / F / C, "?" shortcut sheet, Esc leaves the field / closes the sheet, all off while typing; offline → buttons and keys disabled; legend line above the bar only once the detail is scrolled | `src/decision/{DecisionBar,ShortcutSheet}.tsx`, `src/queue/QueuePage.tsx` | done |
+| 2. C11 toast "Décision enregistrée · Annuler" 8 s (unfold animation, 150 ms fade under reduced motion): the decision is **held** and `api.analyst_decide` is sent when the toast closes, when a second decision replaces it, or when the queue is left (tab change / sign-out); closing the browser tab while held asks first (`beforeunload`). Annuler → nothing sent, back to the alert. Held/sent decisions show at once in the queue (row moves to "Décidées aujourd'hui"); next alert under review opens (newer first, then wrap). Refused RPC → toast "Décision non enregistrée" and the alert returns under review; `already_decided` → "Déjà décidée par un autre analyste" | `src/decision/{useDecision.ts,Toast.tsx}` | done |
+| 3. **Live check on dev** (BUILD_PLAN B9 "Done"): demo user (Dakar) + SIM swap + 80 % cash-out at a new agent → score 100, `escalated`; analyst decides "Fraude" with a comment in the browser → the app user's Realtime channel on `core.alerts` gets `decided_fraud`; `ops.param_changes` logs `z0 transfers.cash 2.5 → 2.25, cause analyst_fraud`; `core.analyst_decisions` has the comment, `simulated=false`; `ops.push_log` has `fraud` (status `no_token`, no phone) | `dashboard/scripts/live-decision-check.mjs` | **passed** |
+
+Checks: `vitest` **48 passed** (×3 stable after one fix: tests wait until Realtime is up before pressing keys): 6 new decision cases (L + 8 s timing, F without comment → focus → Enter → Annuler sends nothing, Fraude button + a second decision sends the first at once, refused RPC, offline, "?" / Esc / C). `tsc -b`, `eslint`, build clean. D §7 copy (comment placeholder, Légitime · Fraude, Décision enregistrée) checked verbatim by the i18n test.
+Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-decision-bar-light`, `d-decision-fraud-needs-comment`, `d-decision-toast`, `d-decision-after`, `d-shortcuts-dark`, `d-decision-bar-dark-scrolled` (legend). The light ones were taken before the operator-name fix (title shows `teranga_mobile`).
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- `analyst_decide` request → app user's Realtime `decided_fraud` event: **1.34 s** (one run; includes the RPC round-trip through the proxy). Key press → event 9.3 s (8 s undo window by design).
+- Code entered → detail with the decision bar enabled: ~6.6 s this run (includes one `mfa_ip_address_mismatch` retry, below).
+- Bundle 620 KB JS (187 KB gzip) — code-splitting stays a B9.5 item.
+
+### Fixed (earlier defects)
+
+- **TOTP verify refused with `mfa_ip_address_mismatch`** (422) when the network changes its exit IP between challenge and verify (the session proxy does; mobile networks can): `useVerify` now retries `challengeAndVerify` twice on that error only. Before, the analyst saw "wrong code".
+- Detail title showed the raw operator id ("Retrait teranga_mobile …") → "Retrait Teranga Mobile …".
+
+### Decisions [B9.3] (one line each, composed / delegated)
+
+- No undo RPC exists, so "Annuler" is client-side: the RPC is held for the 8 s of the toast (D §3 "Annuler is allowed until the toast closes").
+- Leaving the queue sends the held decision at once (never lost); closing the browser tab asks first.
+- Comment required for Fraude is client-side only (`core.decide_alert` accepts null); comment trimmed, empty → null.
+- Toast sits centred over the detail column, 104 above the bottom (above the decision bar); light/dark colours from `component.toast`.
+- Held alert footer: outcome badge + "Décision : Fraude · envoyée à la fermeture du message" + Annuler (secondary small), so Annuler is also reachable from the item (C11 accessibility rule).
+- Shortcut sheet (delegated look): `surface1` card 380 wide, radius 16, bottom-right above the bar, `kbd` + description rows; legend hidden while the sheet is open.
+- Shortcut legend: an in-flow row at the top of the bar (not over the content), only after scrolling.
+
+### Defects open
+
+- Test data left on dev: 4 anonymous Dakar demo users (`account-demo-cleanup` removes old anonymous accounts) and their B9.3 alerts; 3 of them were left `escalated` by the failed login runs — the simulated analyst decides them after 10 min.
+- Queue filtering client-side (B9.2), bundle > 500 KB (B9.5).
+- Dev analyst credentials: each session reruns `npm run dev-analyst` (unchanged).
+
+### Next: B9.4 — Settings + Ops + legal (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. Tabs `/settings` and `/ops` are placeholders (`src/screens/Placeholder.tsx`); RPCs `api.scoring_params`, `api.reset_params(p_scope)`, `api.ops_metrics`, `legal_texts`. Browser runs: see `scripts/live-decision-check.mjs` for the login + TOTP helper (proxy, `bypass: 'localhost'`, `locale: 'fr-FR'`).
+
+---
+
+## B9.4 — Settings + Ops + legal · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 0. Backend for the panels: migration `20261201000100_scoring_params_actor` — `api.scoring_params()` adds `rules_version`, `model`, and per change `by` / `simulated`; new `api.ops_series(p_days)` (daily alerts by band, push p95, score p95). Applied to dev (registered in `schema_migrations`); docs/API.md updated; 4 pgTAP checks added to `scoring.test.sql` | `supabase/migrations`, `supabase/tests/scoring.test.sql` | done; **scoring.test.sql 53/53 run on dev, rolled back** |
+| 1. Réglages du modèle (D §4): title + intro, outlined "Rétablir les valeurs par défaut" (`rotate-ccw`, loss text) → C10 dialog (D copy, Esc / scrim cancel, focus on the title) → `api.reset_params('all')` → banner with the counts → reload; table Paramètre · Groupe · Valeur · Défaut · Bornes · Changé (22 global params, grouped, values ≠ default SemiBold `brand.text`, "fixe" when min = max); right column 380 "Journal des changements" (title "U-… · z0 Catégorie : a → b" / "Poids R4 : 50 → 47", cause · alerte A-… · analyste · dd/mm hh:mm), paged by 20, per-user count line, model version line | `src/settings/{params.ts,SettingsPage.tsx}`, `src/ui/Dialog.tsx` | done; **real reset on dev**: 22 user z0 overrides → defaults, 22 `reset` rows logged, older rows kept (log 22 → 44), banner 0.8 s after the click |
+| 2. Ops tab (delegated): 8 B7 tiles in two sections (Temps de réponse: push / ingest→alert / score p95 with median + count, last nightly batch with C14 "Échec"; Données et modèle: Groq backlog, market credits by vendor, model version + parity, bank precision + recall + false prompts) and 3 chart cards (G1 line+area of push p95 per day with keyboard/hover scrub driving the card head; G3-style bars: alerts 24 h by band, 7-day funnel), text summaries as accessible names, G0 empty state | `src/ops/{OpsPage,LineChart,HBars,model}.ts(x)` | done |
+| 3. `/legal` (delegated): public (anon `legal_texts`), brand bar + Retour, 720 column, disclaimer as C8 info banner, Conditions then Confidentialité (Markdown subset rendered as React, no HTML injection), version line, FR/EN | `src/screens/Legal.tsx`, `src/lib/markdown.tsx` | done; anonymous English visitor checked in the browser |
+| 4. Screenshots 1280 × 800 scale 1 + contrast | `docs/screens/b9/d-settings-*`, `d-ops-*`, `d-legal-*`; `__tests__/contrast.test.ts` | done |
+
+Checks: `vitest` **87 passed** (×3 stable): pages 8 (settings table/groups/changed/fixed, log paging, reset dialog Esc + confirm + reload, reset error, Ops tiles/insufficient/failed batch/summaries, scrub + empty chart, /legal public + order + Markdown, D §4/§7 copy verbatim), model 6, contrast 25 (12 pairs × 2 themes). `tsc -b`, `eslint`, `vite build` clean. Browser run `scripts/b94-screens.mjs [--reset]`: no console error.
+
+Contrast (WCAG, translucent fills over surface1), light · dark: loss text on page 4.99 · 7.37; brand text on selected row 5.21 · 6.06; secondary on selected 6.14 · 6.25; white on Fraude 5.49 · 7.37; "En direct" 6.61 · 10.07; secondary on chips 5.31 · 6.31; changed value 5.67 · 7.26; secondary on card 6.69 · 7.49; secondary on page 6.08 · 8.03; dialog body 6.69 · 7.04; "Échec" tag 5.51 · 5.53; G1 line on card 3.97 · 7.26 (graphic ≥ 3). The six light D §6 pairs match the values measured by the design.
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- Code entered → settings table 2.6-3.1 s; `/ops` tiles 1.34 s; `/legal` 0.82 s. RPCs from Node: `scoring_params` 572 ms (9.1 KB), `ops_metrics` 437 ms, `legal_texts` 150-355 ms.
+- Reset: click → banner 0.81 s.
+
+### Decisions [B9.4] (one line each, composed / delegated)
+
+- All 22 global params listed (preview showed 9): groups Habitudes / Combinaison / Règles / Contexte; R1-R6 and "Bonus nouvel appareil" labels from the D preview, the others composed from ARCHITECTURE §7.3-7.4.
+- Value format: weights integer, bonuses "+0,10", other values 1 or 2 decimals; "Changé" = `updated_at` when value ≠ default, else "—".
+- The panel has no analyst names (privacy): actor shown as "analyste A-{user_ref}" (same as the queue), "analyste simulé", or nothing for batch; the weekly line says "Lot hebdomadaire · précision des règles sur 28 jours" (precision number not stored per change).
+- Reset uses scope `all` (dialog: "Tous les paramètres …"); dialog action = C1 primary "Rétablir" (not destructive: the log is kept).
+- Log paging is client-side over the RPC's last 100 changes (20 per page, "1–20 sur N", Plus récents / Plus anciens).
+- Ops: tiles 4 per row; latencies "95 % sous {p95}" with the median in the sentence; batch status as C14 loss tag when failed (B7 values stay neutral otherwise); G1 line starts at the first day with data (dev has 2 days) and fills the card width; bars use F1 chart series (orange/violet/aqua), funnel in one colour.
+- `/legal`: disclaimer as C8 info banner (`history` icon of the info kind), texts as `surface1` cards radius 12.
+
+### Defects open
+
+- **Nightly batch failed on 2026-11-24 02:00** (`batch-nightly` run 45309112933): `pipeline.load_users` with all users → Management API HTTP 500 on `core.accounts where user_id = any({ids})` (very long literal list; many anonymous demo users). Next part or B10: chunk the id list or select by join. Visible in the Ops tab.
+- Reset on dev wiped the 22 learned per-user z0 values (intended by the button; demo calibration relearns from decisions).
+- Queue filtering client-side, bundle > 500 KB (B9.5), dev analyst credentials per session (unchanged).
+
+### Next: B9.5 — Deploy + close (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. Browser helper with login + TOTP: `scripts/b94-screens.mjs`. If cheap, fix the nightly batch defect above before the Pages deploy.
