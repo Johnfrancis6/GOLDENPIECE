@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { useAuth } from '../auth/AuthProvider';
 import { initials } from '../auth/access';
 import { useT, LangContext } from '../i18n';
@@ -11,6 +11,8 @@ import { BrandTile } from './BrandTile';
 export function TopBar({ live }: { live: boolean }) {
   const t = useT();
   const { name } = useAuth();
+  const { pathname } = useLocation();
+  const onQueue = pathname === '/' || pathname.startsWith('/alerts');
   return (
     <header className="top">
       <div className="top-brand">
@@ -20,7 +22,7 @@ export function TopBar({ live }: { live: boolean }) {
         <span className="bank">{t('bank.demo')}</span>
       </div>
       <nav className="tabs" aria-label={t('brand')}>
-        <NavLink to="/" end className="tab">{t('tabs.queue')}</NavLink>
+        <NavLink to="/" end className={() => `tab${onQueue ? ' active' : ''}`} aria-current={onQueue ? 'page' : undefined}>{t('tabs.queue')}</NavLink>
         <NavLink to="/settings" className="tab">{t('tabs.settings')}</NavLink>
         <NavLink to="/ops" className="tab">{t('tabs.ops')}</NavLink>
       </nav>

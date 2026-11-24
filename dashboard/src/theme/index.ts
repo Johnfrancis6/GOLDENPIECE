@@ -34,6 +34,13 @@ const D = tokens.screen.bankDashboard;
 const btn = tokens.component.button;
 const input = tokens.component.input;
 const banner = tokens.component.banner;
+const badge = tokens.component.scoreBadge;
+const tag = tokens.component.tag;
+
+/** 90-day bars: D gives #BDBDBD (light); dark (delegated) uses the dark control border grey. */
+/** C19 ground line (components/loading-empty.md). */
+const EMPTY_GROUND = { dark: '#3A3A3A', light: '#D6D6D6' };
+const BARS = { light: D.history.bar, dark: tokens.colour.dark.border.control };
 
 /** D §6 measured pairs (light); dark uses the app dark tokens (delegated). */
 const LIVE = { light: { text: '#0B6B3A', dot: '#16894F' }, dark: { text: tokens.colour.dark.gain, dot: tokens.colour.dark.gain } };
@@ -88,6 +95,25 @@ export function cssVars(scheme: Scheme): Record<string, string> {
     '--banner-warning-icon': banner.kinds.warning[scheme].icon,
     '--banner-error': banner.kinds.error[scheme].fill,
     '--banner-error-icon': banner.kinds.error[scheme].icon,
+    '--banner-info': banner.kinds.info[scheme].fill,
+    '--banner-info-icon': banner.kinds.info[scheme].icon,
+    '--badge-normal': badge[scheme].normal.fill,
+    '--badge-normal-text': badge[scheme].normal.text,
+    '--badge-ask': badge[scheme].confirm.fill,
+    '--badge-ask-text': badge[scheme].confirm.text,
+    '--badge-bank': badge[scheme].notified.fill,
+    '--badge-bank-text': badge[scheme].notified.text,
+    '--tag-neutral': tag[scheme].neutral.fill,
+    '--tag-neutral-text': tag[scheme].neutral.text,
+    '--tag-brand': tag[scheme].brand.fill,
+    '--tag-brand-text': tag[scheme].brand.text,
+    '--tag-loss': tag[scheme].loss.fill,
+    '--tag-loss-text': tag[scheme].loss.text,
+    '--bar': BARS[scheme],
+    '--empty-ground': EMPTY_GROUND[scheme],
+    '--bar-current': c.brand.fill,
+    '--quick': `${tokens.motion.duration.quick}ms`,
+    '--rise': `${tokens.motion.distance.enterTranslateDp}px`,
   };
 }
 

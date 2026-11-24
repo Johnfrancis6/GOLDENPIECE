@@ -859,3 +859,59 @@ Checks: `vitest` 23 passed (theme 7, i18n 3, access 8, login flow with an in-mem
 
 Start: `cd dashboard && npm ci && npm run dev-analyst`; the Realtime channel `dashboard-live` in `src/shell/useLive.ts` is where the `core.alerts` listener goes.
 
+
+---
+
+## B9.2 — Queue + detail · 2026-11-24 · branch `build/b9-bank-dashboard`
+
+### Done
+
+| Step | Where | State |
+|---|---|---|
+| 1. Queue: `api.analyst_queue('all')` + "Afficher plus" (cursor); title + search (`/`, user U-…, alert A-…, payee); chips Statut · Score · Type · 24 h (C13, each a menu, black when set); groups "En analyse · {n}" (oldest first) · "Décidées aujourd'hui" · "Décidées plus tôt"; 2-line rows (C15 badge + score, or Légitime/Fraude outcome; kind; amount "−210 000 F"; reason short; "Décision simulée" tag; age); selected fill + 3 dp brand bar; listbox / options | `src/queue/{model,useQueue,QueuePane,QueuePage}.ts(x)` | done |
+| 2. Realtime: `postgres_changes` on `core.alerts` on the shell channel → queue refetch (250 ms debounce) → new rows fade in (F5 quick + 8 dp rise, 150 ms fade under reduced motion); title "(n) GOLDENPIECE" while the window is unfocused; detail refetches when its alert turns `decided_*`; offline → "Hors ligne" + C8 warning in the detail ("décisions désactivées"); catch-up refetch when live again | `src/shell/useLive.ts`, `src/queue/*` | done; **live on dev** |
+| 3. Detail head (C15 "Banque prévenue · 80", status, simulated tag, title op + payee, sub U-/bank/A-, K/J nav) + Opération / Pourquoi (`.analyst` long sentences, code tag, Compte beaucoup/un peu) / Score (A_thr, A_if, F + rules, M + bumps, total in band colour, formula, model/rules/params versions) / Réponse (notification delivered or not, answer, decision sent, previous decisions count) | `src/queue/Detail.tsx`, `src/i18n/alerts.ts` | done |
+| 4. 90 derniers jours (daily debit bars 360 × 112, grey, this operation's day orange, dashed median of days with debits, first/last date, payees · new, largest debit before; svg `role=img` + text summary), security events (30 d), devices (B23 wording: label · lock in words · since / added / signed out) | `src/queue/{history,Bars90}.ts(x)` | done |
+| 5. States: empty (C19), decided by another analyst (C8 info "Décidée par … à …" + outcome replaces the decision area), Realtime lost, aal1 (RPC refusal → session re-read → guard → TOTP challenge) | | done |
+
+Checks: `vitest` **42 passed** (×3 stable): queue model 4, history 1, formats 1, X/D copy verbatim 4 (every reason/feature/bump string found in `design/copy/fr-en.md`; categories byte-identical to the app's), queue page 9 (groups/sections, J/K + typing guard + search, chips, Realtime fade-in + title count, decided elsewhere, offline, Realtime re-auth order, empty, aal1). `tsc -b`, `eslint`, build clean.
+Screenshots 1280 × 800 scale 1 (`docs/screens/b9/`): `d-queue-decided-light/dark`, `d-detail-scrolled-light`, `d-filter-menu`, `d-queue-pending-light`, `d-offline`, `d-queue-empty`. The pending/offline/empty ones use **real dev payloads re-routed in the browser** with status `in_review` (no pending alert on dev: the simulated analyst decides them after 10 min).
+
+### Measured (2026-11-24, vite preview in Chromium → dev, through the session proxy)
+
+- Code entered → queue listbox 2.3-2.8 s, → detail 2.5-3.1 s (verify + factors + `analyst_queue` + `analyst_alert`).
+- J → next detail rendered: 0.80 s (one `analyst_alert`, ~370 rows of history).
+- Realtime: `update core.alerts set updated_at = now()` (decided alert, no status change → no notification) → queue refetch request **1.2-1.4 s** after the SQL call started, of which ~0.9 s is the Management API round-trip and 0.25 s the debounce.
+- No console error during the run (B9.1's 403 fixed, below). Bundle 610 KB JS (184 KB gzip) — code-splitting stays a B9.5 item.
+
+### Fixed (earlier defects)
+
+- **Realtime silently empty for analysts**: supabase-js re-auths the socket on SIGNED_IN / TOKEN_REFRESHED but not on `MFA_CHALLENGE_VERIFIED`, so the channel kept the aal1 token and the `analyst_select` policy (aal2) dropped every event. `useLive` now calls `realtime.setAuth(aal2 token)` before joining and on each token change (test).
+- **B9.1 console 403**: it was `POST /auth/v1/factors` — AuthProvider published the session before the factor list, the guard flashed "enrol" and fired an enrolment Supabase refuses. Session and factor count are now set together.
+
+### Decisions [B9.2] (one line each, composed / delegated)
+
+- Third group "Décidées plus tôt" / "Decided earlier" (D lists two; dev has only older decisions, and the queue RPC returns them with `all`).
+- Chip menus: Statut Tous/En analyse/Décidées · Score Tous/Plus de 70/40 à 70/Moins de 40 · Type Tous/Anomalie/Fraude · 24 h Tous/Dernières 24 h; filtering is client-side on the loaded pages (≤ 50 per page).
+- Outcome badges in rows: Légitime = C15 Normal colours + `circle-check-big`; Fraude = C15 notified colours + `shield-x`.
+- Queue amounts always shown as debits (−): only payments the user initiates are scored (`core.is_scored`: cash-out, P2P out, merchant, bank out, bill, airtime, card); the queue payload has no direction. Detail uses `cdt_dbt_ind`.
+- Title: "{op} vers {payee}" for transfers / P2P / withdrawals, "{op} chez {payee}" for card / merchant; op labels composed (Paiement carte, Virement, Transfert, Retrait, Paiement marchand, Facture, Crédit téléphone, Opération).
+- Sub line: "Utilisateur U-{user_ref} · {bank} · alerte A-{8 first id chars}"; bank name from `bank_id` ("banque_lagune" → "Banque Lagune") — no masked account in the payload.
+- "Compte beaucoup" when reason weight ≥ 50, else "Compte un peu".
+- Réponse: "opened at" is not in the payload (no event) → not shown; push status `no_token` → "Notification non remise … (aucun téléphone avec notifications)".
+- Security event and lock-method wording composed (FR/EN in `src/i18n/index.ts`, keys `se.*`, `lock.*`).
+- Empty state (C19 "alerts illustration", delegated): Lucide `shield-check` 3.4× on the C19 ground line, no coins.
+- Dark theme 90-day bars: dark `border.control` (#737373) for the grey bars (D gives light #BDBDBD only).
+- Score/detail numbers: 2 decimals with the FR comma; formula line as in the D preview.
+- First visit auto-opens the longest-waiting alert under review (D preview shows a selected row); URL `/alerts/:id` keeps the selection.
+- J/K and "/" built now (cheap, head nav needs them); L/F/C/?/Esc stay with the decision bar (B9.3).
+
+### Defects open
+
+- Pending alerts: none on dev right now — B9.3 needs one to decide live. Options: let a demo persona's scheduled scenario escalate one (sim sync) or insert a test transaction for a dev user and call `core.score_transaction`; act within 10 min or the simulated analyst takes it.
+- Queue filtering is client-side: with > 50 alerts, filters only see loaded pages (server filters would need new RPC params).
+- Bundle > 500 KB warning (B9.5).
+
+### Next: B9.3 — Decision (same branch, plan above unchanged)
+
+Start: `cd dashboard && npm ci && npm run dev-analyst`. The decision bar goes in the `footer` prop of `Detail` (`src/queue/Detail.tsx`, rendered only for pending alerts; decided alerts already show the outcome); keyboard handler is in `src/queue/QueuePage.tsx` (`isTyping` guard exists). Browser runs: Playwright from the global install (`createRequire(npm root -g)`), launch with the session proxy + `bypass: 'localhost'`, context `locale: 'fr-FR'`.

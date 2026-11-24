@@ -94,3 +94,109 @@ button, input { font: inherit; color: inherit; }
 .placeholder h1 { margin: 0 0 8px; font: 600 24px/32px 'Poppins GP'; }
 .placeholder p { margin: 0; color: var(--ts); font: 400 13px/18px 'Poppins GP'; }
 .page-loading { height: 100%; background: var(--bg); }
+
+/* C8 info banner */
+.banner-info { background: var(--banner-info); } .banner-info .banner-icon { color: var(--banner-info-icon); flex: none; }
+
+/* C14 tags · C15 score badge (radius 4, padding 2 × 6, gap 4, 12/16 SemiBold, icon 14) */
+.badge, .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; font: 600 12px/16px 'Poppins GP'; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.badge-normal { background: var(--badge-normal); color: var(--badge-normal-text); }
+.badge-ask { background: var(--badge-ask); color: var(--badge-ask-text); }
+.badge-bank { background: var(--badge-bank); color: var(--badge-bank-text); }
+.tag-neutral { background: var(--tag-neutral); color: var(--tag-neutral-text); }
+.tag-brand { background: var(--tag-brand); color: var(--tag-brand-text); }
+.tag-loss { background: var(--tag-loss); color: var(--tag-loss-text); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 4px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--control);
+  font: 600 11px/16px 'Poppins GP'; color: inherit; }
+
+/* D master-detail */
+.qd { flex: 1; min-width: 0; display: flex; }
+.q { width: 420px; flex: none; display: flex; flex-direction: column; background: var(--s1); border-right: 1px solid var(--hl); min-height: 0; }
+.q-title { display: flex; align-items: center; justify-content: space-between; padding: 16px 12px 8px 20px; }
+.q-title h2 { margin: 0; font: 600 20px/28px 'Poppins GP'; }
+.icon-btn-36 { width: 36px; height: 36px; } .icon-btn-28 { width: 32px; height: 32px; }
+.icon-btn:hover { background: var(--s2); }
+.q-search { display: flex; align-items: center; gap: 8px; margin: 0 20px 8px; height: 40px; padding: 0 4px 0 12px; border-radius: 12px;
+  background: var(--input-fill); box-shadow: inset 0 0 0 1px var(--input-border); color: var(--ts); }
+.q-search:focus-within { box-shadow: inset 0 0 0 2px var(--focus); }
+.q-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: 400 14px/20px 'Poppins GP'; color: var(--tp); }
+.q-search input::placeholder { color: var(--input-placeholder); }
+.chips { display: flex; gap: 6px; padding: 4px 20px 12px; }
+.chip { display: inline-flex; align-items: center; gap: 2px; height: 32px; padding: 0 8px 0 12px; border: 0; border-radius: 999px; background: var(--s3);
+  font: 500 13px/18px 'Poppins GP'; color: var(--tp); cursor: pointer; white-space: nowrap; }
+.chip.on { background: var(--inverse); color: var(--inverse-on); }
+.menu-left { left: 0; right: auto; }
+.menu .checked { font-weight: 600; background: var(--s2); }
+.q-rows { flex: 1; overflow-y: auto; }
+.q-head { padding: 14px 20px 6px; font: 600 12px/16px 'Poppins GP'; color: var(--ts); text-transform: uppercase; letter-spacing: 0.4px; border-top: 1px solid var(--hl); }
+.q-rows [role=group]:first-child .q-head { border-top: 0; }
+.q-row { position: relative; padding: 10px 20px; border-top: 1px solid var(--hl); cursor: pointer; }
+.q-row:hover { background: var(--s2); }
+.q-row.sel { background: var(--selected); }
+.q-row.sel::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--brand); }
+.q-row.fresh { animation: rise var(--quick) cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(var(--rise)); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .q-row.fresh { animation: fade 150ms linear both; } @keyframes fade { from { opacity: 0; } } }
+.l1, .l2 { display: flex; align-items: center; gap: 8px; }
+.l2 { margin-top: 4px; }
+.kd { font: 500 13px/18px 'Poppins GP'; color: var(--ts); }
+.qa { margin-left: auto; font: 600 14px/20px 'Poppins GP'; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rs { flex: 1; min-width: 0; font: 400 13px/18px 'Poppins GP'; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ag { display: flex; align-items: center; gap: 6px; font: 400 12px/16px 'Poppins GP'; color: var(--ts); white-space: nowrap; }
+.q-msg { padding: 24px 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.q-msg p { margin: 0; }
+.q-more { display: flex; justify-content: center; padding: 8px 0 16px; border-top: 1px solid var(--hl); }
+.skel-row { padding: 12px 20px; border-top: 1px solid var(--hl); display: flex; flex-direction: column; gap: 8px; }
+.skel-row i { display: block; height: 14px; border-radius: 4px; background: var(--s2); width: 70%; } .skel-row i + i { width: 45%; }
+
+/* C19 empty state */
+.empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 20px; }
+.empty-art { color: var(--ts); stroke: currentColor; }
+.empty-ground { stroke: var(--empty-ground); }
+.empty-title { margin: 20px 0 0; font: 600 18px/26px 'Poppins GP'; }
+.empty-body { margin: 4px 0 0; font: 400 15px/22px 'Poppins GP'; color: var(--ts); max-width: 320px; }
+
+/* Detail */
+.d { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.d-scroll { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+.d-msg { align-items: center; justify-content: center; gap: 12px; color: var(--ts); font: 400 13px/18px 'Poppins GP'; }
+.d-msg p { margin: 0; }
+.d-skel { padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+.d-skel i { display: block; height: 20px; border-radius: 6px; background: var(--s2); width: 40%; } .d-skel i:nth-child(2) { height: 32px; width: 60%; } .d-skel i:nth-child(3) { height: 240px; width: 100%; border-radius: 12px; }
+.dh { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 28px 4px; }
+.dh-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dh h1 { margin: 8px 0 2px; font: 600 24px/32px 'Poppins GP'; }
+.st { font: 500 13px/18px 'Poppins GP'; color: var(--ts); }
+.sub { font: 400 13px/18px 'Poppins GP'; color: var(--ts); }
+.nav { display: flex; align-items: center; gap: 2px; font: 500 13px/18px 'Poppins GP'; color: var(--ts); white-space: nowrap; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 6px; border: 0; border-radius: 8px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.nav-btn:hover { background: var(--s2); color: var(--tp); }
+.d-banners { padding: 8px 28px 0; }
+.d-banners .banner { margin-bottom: 0; } .d-banners .banner + .banner { margin-top: 8px; }
+.cols { display: flex; gap: 20px; padding: 0 28px; }
+.c1 { flex: 1.15; min-width: 0; } .c2 { flex: 1; min-width: 0; }
+.sect h3 { margin: 14px 0 8px; font: 600 15px/22px 'Poppins GP'; }
+.card { background: var(--s1); border-radius: 12px; padding: 6px 16px; }
+.kv { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; border-top: 1px solid var(--hl); font: 400 13px/18px 'Poppins GP'; }
+.kv:first-child { border-top: 0; } .kv span { color: var(--ts); white-space: nowrap; } .kv b { font-weight: 500; font-variant-numeric: tabular-nums; text-align: right; }
+.rr { display: flex; gap: 12px; padding: 7px 0; border-top: 1px solid var(--hl); } .rr:first-child { border-top: 0; }
+.ri { color: var(--ts); flex: none; margin-top: 1px; }
+.rt { font: 400 13px/18px 'Poppins GP'; }
+.rc { display: flex; gap: 8px; align-items: center; margin-top: 4px; font: 500 12px/16px 'Poppins GP'; color: var(--ts); }
+.sr { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--hl); font: 400 13px/18px 'Poppins GP'; }
+.sr:first-child { border-top: 0; } .sv { font-weight: 500; font-variant-numeric: tabular-nums; text-align: right; }
+.sr.tot { font: 600 14px/20px 'Poppins GP'; } .sr.tot .sv { font-weight: 600; }
+.tot-bank .sv { color: var(--badge-bank-text); } .tot-ask .sv { color: var(--badge-ask-text); } .tot-normal .sv { color: var(--badge-normal-text); }
+.fx { font: 400 11px/16px 'Poppins GP'; color: var(--ts); padding: 2px 0 8px; }
+.ev { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--hl); font: 400 13px/18px 'Poppins GP'; }
+.ev:first-child { border-top: 0; } .ei { color: var(--ts); flex: none; } .et { flex: 1; min-width: 0; } .ed { color: var(--ts); font-size: 12px; white-space: nowrap; }
+.muted { color: var(--ts); }
+.cap { font: 400 12px/16px 'Poppins GP'; color: var(--ts); padding: 8px 0 10px; }
+.hs { display: flex; justify-content: space-between; gap: 12px; font: 400 12px/16px 'Poppins GP'; color: var(--ts); padding: 8px 0 10px; border-top: 1px solid var(--hl); margin-top: 6px; }
+.bars { margin: 0; }
+.bars svg { display: block; max-width: 100%; height: auto; }
+.bar { fill: var(--bar); } .bar-cur { fill: var(--bar-current); }
+.bar-median { stroke: var(--ts); } .bar-label { font: 400 11px 'Poppins GP'; fill: var(--ts); }
+.ft { height: 84px; flex: none; display: flex; align-items: center; gap: 16px; padding: 0 28px; background: var(--s1); border-top: 1px solid var(--hl); }
+.ft-outcome { font: 500 14px/20px 'Poppins GP'; color: var(--ts); }

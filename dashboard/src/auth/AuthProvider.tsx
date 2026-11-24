@@ -21,13 +21,16 @@ export function AuthProvider({ client, children }: { client: SupabaseClient; chi
 
   const refresh = useCallback(async () => {
     const { data } = await client.auth.getSession();
-    setSession(data.session);
+    // Read the factors before publishing the session: otherwise the guard sees
+    // "signed in, 0 verified factors" for a moment, mounts the enrolment and
+    // fires an enrol request Supabase refuses (403) — B9.1 defect.
+    let n = 0;
     if (data.session) {
       const f = await client.auth.mfa.listFactors();
-      setVerified(f.data?.totp.filter((x) => x.status === 'verified').length ?? 0);
-    } else {
-      setVerified(0);
+      n = f.data?.totp.filter((x) => x.status === 'verified').length ?? 0;
     }
+    setSession(data.session);
+    setVerified(n);
     setLoading(false);
   }, [client]);
 

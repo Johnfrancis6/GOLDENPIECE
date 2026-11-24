@@ -1,20 +1,21 @@
-import { Outlet } from 'react-router';
+import { Outlet, useOutletContext } from 'react-router';
 import { useAuth } from '../auth/AuthProvider';
-import { useT } from '../i18n';
-import { Banner } from '../ui/Banner';
 import { TopBar } from './TopBar';
-import { useLive } from './useLive';
+import { useLive, type Live } from './useLive';
 
 export function Layout() {
-  const { client, state } = useAuth();
-  const live = useLive(client, state === 'ok');
-  const t = useT();
+  const { client, state, session } = useAuth();
+  const live = useLive(client, state === 'ok', session?.access_token);
   return (
     <div className="shell">
-      <TopBar live={live} />
+      <TopBar live={live.live} />
       <div className="shell-main">
-        <Outlet context={{ live, offlineBanner: <Banner kind="warning">{t('offline')}</Banner> }} />
+        <Outlet context={live satisfies Live} />
       </div>
     </div>
   );
+}
+
+export function useShell(): Live {
+  return useOutletContext<Live>();
 }

@@ -34,7 +34,8 @@ function fakeClient(opts: { role?: string; factor?: boolean; password?: string; 
         },
       },
     },
-    channel: () => ({ subscribe: (cb: (s: string) => void) => { cb('SUBSCRIBED'); return {}; } }),
+    channel: () => { const ch = { on: () => ch, subscribe: (cb: (s: string) => void) => { cb('SUBSCRIBED'); return ch; } }; return ch; },
+    rpc: async () => ({ data: { items: [], next_cursor: null }, error: null }),
     removeChannel: async () => {},
   };
   return { client: client as unknown as Client, calls, state };
